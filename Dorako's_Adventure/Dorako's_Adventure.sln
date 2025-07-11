@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36221.1 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dorako's_Adventure", "Dorako's_Adventure.vcxproj", "{88FC348E-BC80-4C6E-9134-346E46ABD88D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{88FC348E-BC80-4C6E-9134-346E46ABD88D}.Debug|x64.ActiveCfg = Debug|x64
+		{88FC348E-BC80-4C6E-9134-346E46ABD88D}.Debug|x64.Build.0 = Debug|x64
+		{88FC348E-BC80-4C6E-9134-346E46ABD88D}.Debug|x86.ActiveCfg = Debug|Win32
+		{88FC348E-BC80-4C6E-9134-346E46ABD88D}.Debug|x86.Build.0 = Debug|Win32
+		{88FC348E-BC80-4C6E-9134-346E46ABD88D}.Release|x64.ActiveCfg = Release|x64
+		{88FC348E-BC80-4C6E-9134-346E46ABD88D}.Release|x64.Build.0 = Release|x64
+		{88FC348E-BC80-4C6E-9134-346E46ABD88D}.Release|x86.ActiveCfg = Release|Win32
+		{88FC348E-BC80-4C6E-9134-346E46ABD88D}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3B0CD153-06D1-4D79-B3ED-CBBA93A6DF64}
+	EndGlobalSection
+EndGlobal
