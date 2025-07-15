@@ -1,0 +1,60 @@
+#include "Actor.h"
+
+void Actor::update(float) {}
+
+void Actor::late_update(float) {}
+
+void Actor::draw()const {}
+
+void Actor::draw_transparent()const {}
+
+void Actor::draw_gui()const {}
+
+void Actor::react(Actor&) {}
+
+void Actor::handle_message(const std::string& message, void* param) {}
+
+void Actor::collide(Actor& other) {
+	if (enable_collider_ && other.enable_collider_) {
+		if (is_collide(other)) {
+			react(other);
+			other.react(*this);
+		}
+	}
+}
+
+void Actor::die() {
+	dead_ = true;
+}
+
+bool Actor::is_collide(const Actor& other)const {
+	return collider().intersects(other.collider());
+}
+
+bool Actor::is_dead()const {
+	return dead_;
+}
+
+const std::string& Actor::name()const {
+	return name_;
+}
+
+const std::string& Actor::tag()const {
+	return tag_;
+}
+
+const GStransform& Actor::transform()const {
+	return transform_;
+}
+
+GStransform& Actor::transform() {
+	return transform_;
+}
+
+GSvector3 Actor::velocity()const {
+	return velocity_;
+}
+
+BoundingSphere Actor::collider()const {
+	return collider_.transform(transform_.localToWorldMatrix());
+}

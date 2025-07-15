@@ -131,6 +131,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Actor\Actor.cpp" />
+    <ClCompile Include="Src\Actor\ActorManager.cpp" />
+    <ClCompile Include="Src\Collider\BoundingSphere.cpp" />
     <ClCompile Include="Src\main.cpp" />
     <ClCompile Include="Src\Scene\GamePlayScene.cpp" />
     <ClCompile Include="Src\Scene\SceneManager.cpp" />
@@ -138,7 +141,9 @@
     <ClCompile Include="Src\stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Actor\Actor.h" />
     <ClInclude Include="Src\Actor\ActorManager.h" />
+    <ClInclude Include="Src\Collider\BoundingSphere.h" />
     <ClInclude Include="Src\GV.h" />
     <ClInclude Include="Src\Scene\GamePlayScene.h" />
     <ClInclude Include="Src\Scene\IScene.h" />
