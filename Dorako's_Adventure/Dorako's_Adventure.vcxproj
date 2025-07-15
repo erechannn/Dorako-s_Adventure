@@ -136,6 +136,7 @@
     <ClCompile Include="Src\Actor\Player\Player.cpp" />
     <ClCompile Include="Src\Camera\CameraRotateAround.cpp" />
     <ClCompile Include="Src\Collider\BoundingSphere.cpp" />
+    <ClCompile Include="Src\Light\MainLight.cpp" />
     <ClCompile Include="Src\main.cpp" />
     <ClCompile Include="Src\Mesh\AnimatedMesh.cpp" />
     <ClCompile Include="Src\Scene\GamePlayScene.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="Src\Camera\CameraRotateAround.h" />
     <ClInclude Include="Src\Collider\BoundingSphere.h" />
     <ClInclude Include="Src\GV.h" />
+    <ClInclude Include="Src\Light\MainLight.h" />
     <ClInclude Include="Src\Mesh\AnimatedMesh.h" />
     <ClInclude Include="Src\Scene\GamePlayScene.h" />
     <ClInclude Include="Src\Scene\IScene.h" />
