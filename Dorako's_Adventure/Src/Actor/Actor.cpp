@@ -1,5 +1,17 @@
 #include "Actor.h"
 
+Actor::Actor(GSuint mesh)
+{
+	mesh_ = { new AnimatedMesh(mesh) };
+}
+
+Actor::~Actor()
+{
+	delete mesh_;
+	mesh_ = nullptr;
+}
+
+
 void Actor::update(float) {}
 
 void Actor::late_update(float) {}

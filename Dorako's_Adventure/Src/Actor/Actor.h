@@ -5,14 +5,17 @@
 #include<GStransform.h>
 #include<string>
 #include"Collider/BoundingSphere.h"
+#include"../Mesh/AnimatedMesh.h"
 
 class IWorld;
 
 class Actor {
 public:
-	Actor() = default;
-
-	virtual ~Actor() = default;
+	// コンストラクタ
+	Actor() {};
+	Actor(GSuint mesh);
+	// 仮想デストラクタ
+	virtual ~Actor();
 
 	virtual void update(float delta_time);
 
@@ -51,6 +54,7 @@ public:
 	Actor& operator=(const Actor& other) = delete;
 
 protected:
+	AnimatedMesh* mesh_{};
 	IWorld* world_{ nullptr };
 	std::string tag_;
 	std::string name_;
