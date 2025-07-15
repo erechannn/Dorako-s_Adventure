@@ -1,6 +1,8 @@
 #include<GSgame.h>
 #include"GV.h"
 #include"Scene/SceneManager.h"
+#include"World/World.h"
+#include"Scene/GamePlayScene.h"
 
 class MyGame : public::gslib::Game {
 public:
@@ -9,6 +11,9 @@ public:
         GLOBAL.screen_size_ = GSvector2{ (GSfloat)width, (GSfloat)height };
     }
     void start()override {
+        World world;
+        scene_manager_.add("GamePlayScene", new GamePlayScene());
+        scene_manager_.change("GamePlayScene");
 
     }
     void update(float delta_time)override {
