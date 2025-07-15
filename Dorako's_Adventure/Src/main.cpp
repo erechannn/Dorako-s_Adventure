@@ -22,6 +22,7 @@ public:
     }
     void end()override {
         scene_manager_.end();
+        scene_manager_.clear();
     }
 private:
     SceneManager scene_manager_;
