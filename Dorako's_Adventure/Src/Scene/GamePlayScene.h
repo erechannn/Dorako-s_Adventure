@@ -2,6 +2,7 @@
 #define GAME_PLAY_SCENE_H_
 
 #include"IScene.h"
+#include"../World/World.h"
 
 class GamePlayScene :public IScene {
 public:
@@ -18,6 +19,7 @@ public:
     //èIóπ
     virtual void end() override;
 private:
+    World world_;
     bool is_end_{ false };
     bool is_start_{ false };
     float start_timer_{ 0.0f };

@@ -4,6 +4,14 @@
 enum {
 	Mesh_Player,
 };
+enum {
+	Texture_Skybox,
+};
+enum {
+	Octree_TestStage,
+	Octree_TestStageCollider,
+};
+
 
 
 
