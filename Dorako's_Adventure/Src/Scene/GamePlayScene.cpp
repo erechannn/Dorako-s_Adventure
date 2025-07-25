@@ -39,6 +39,8 @@ void GamePlayScene::start() {
     //デフォルトシェーダーの初期化（メッシュファイルを読み込む前に有効にする）
     gsInitDefaultShader();
 
+    gsLoadSkinMesh(Mesh_Player, "Assets/Mesh/Player/Player.mshb");
+
     gsLoadTexture(Texture_Skybox, "Assets/Skybox/TestStageSkybox.dds");
     gsLoadOctree(Octree_TestStage, "Assets/Stage/TestStage.oct");
     gsLoadOctree(Octree_TestStageCollider, "Assets/Stage/TestStageCollider.oct");
@@ -55,5 +57,27 @@ void GamePlayScene::start() {
 	is_start_ = false;
 	start_timer_ = 0.0f;
 	next_scene_ = "StageSelectScene";
+    // 視錐台カリングを有効にする
+    gsEnable(GS_FRUSTUM_CULLING);
 
+}
+void GamePlayScene::update(float delta_time) {
+    // ワールドクラスの更新
+    world_.update(delta_time);
+    if (is_start_)          start_timer_ += delta_time; //タイマー増加
+    if (start_timer_ >= 60.0f)          is_end_ = true; //シーンを終了
+
+}
+bool GamePlayScene::is_end()const {
+    return is_end_;
+}
+std::string GamePlayScene::next()const {
+    return "";
+}
+void GamePlayScene::draw()const {
+    // ワールドの描画
+    world_.draw();
+}
+void GamePlayScene::end() {
+    world_.clear();
 }

@@ -142,6 +142,7 @@
     <ClCompile Include="Src\Scene\GamePlayScene.cpp" />
     <ClCompile Include="Src\Scene\SceneManager.cpp" />
     <ClCompile Include="Src\Scene\TitleScene.cpp" />
+    <ClCompile Include="Src\State\StateMachine.cpp" />
     <ClCompile Include="Src\stdafx.cpp" />
     <ClCompile Include="Src\World\Field.cpp" />
     <ClCompile Include="Src\World\World.cpp" />
@@ -163,6 +164,9 @@
     <ClInclude Include="Src\Scene\TitleScene.h" />
     <ClInclude Include="Src\Shape\Line.h" />
     <ClInclude Include="Src\Shape\Ray.h" />
+    <ClInclude Include="Src\State\IState.h" />
+    <ClInclude Include="Src\State\StateMachine.h" />
+    <ClInclude Include="Src\State\StateNull.h" />
     <ClInclude Include="Src\stdafx.h" />
     <ClInclude Include="Src\World\Field.h" />
     <ClInclude Include="Src\World\IWorld.h" />
