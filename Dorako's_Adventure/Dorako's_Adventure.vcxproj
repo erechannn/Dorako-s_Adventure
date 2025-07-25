@@ -134,6 +134,8 @@
     <ClCompile Include="Src\Actor\Actor.cpp" />
     <ClCompile Include="Src\Actor\ActorManager.cpp" />
     <ClCompile Include="Src\Actor\Player\Player.cpp" />
+    <ClCompile Include="Src\Actor\Player\PlayerState\PlayerStateDamage.cpp" />
+    <ClCompile Include="Src\Actor\Player\PlayerState\PlayerStateMove.cpp" />
     <ClCompile Include="Src\Camera\CameraRotateAround.cpp" />
     <ClCompile Include="Src\Collider\BoundingSphere.cpp" />
     <ClCompile Include="Src\Input\GamePadInput.cpp" />
@@ -157,6 +159,8 @@
     <ClInclude Include="Src\Actor\Player\Player.h" />
     <ClInclude Include="Src\Actor\Player\PlayerMotion.h" />
     <ClInclude Include="Src\Actor\Player\PlayerState\PlayerState.h" />
+    <ClInclude Include="Src\Actor\Player\PlayerState\PlayerStateDamage.h" />
+    <ClInclude Include="Src\Actor\Player\PlayerState\PlayerStateMove.h" />
     <ClInclude Include="Src\Assets.h" />
     <ClInclude Include="Src\Camera\CameraRotateAround.h" />
     <ClInclude Include="Src\Collider\BoundingSphere.h" />
