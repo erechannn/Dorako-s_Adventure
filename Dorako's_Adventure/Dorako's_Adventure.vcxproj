@@ -136,6 +136,10 @@
     <ClCompile Include="Src\Actor\Player\Player.cpp" />
     <ClCompile Include="Src\Camera\CameraRotateAround.cpp" />
     <ClCompile Include="Src\Collider\BoundingSphere.cpp" />
+    <ClCompile Include="Src\Input\GamePadInput.cpp" />
+    <ClCompile Include="Src\Input\InputAction.cpp" />
+    <ClCompile Include="Src\Input\InputManager.cpp" />
+    <ClCompile Include="Src\Input\InputMap.cpp" />
     <ClCompile Include="Src\Light\MainLight.cpp" />
     <ClCompile Include="Src\main.cpp" />
     <ClCompile Include="Src\Mesh\AnimatedMesh.cpp" />
@@ -151,10 +155,16 @@
     <ClInclude Include="Src\Actor\Actor.h" />
     <ClInclude Include="Src\Actor\ActorManager.h" />
     <ClInclude Include="Src\Actor\Player\Player.h" />
+    <ClInclude Include="Src\Actor\Player\PlayerMotion.h" />
+    <ClInclude Include="Src\Actor\Player\PlayerState\PlayerState.h" />
     <ClInclude Include="Src\Assets.h" />
     <ClInclude Include="Src\Camera\CameraRotateAround.h" />
     <ClInclude Include="Src\Collider\BoundingSphere.h" />
     <ClInclude Include="Src\GV.h" />
+    <ClInclude Include="Src\Input\GamePadInput.h" />
+    <ClInclude Include="Src\Input\InputAction.h" />
+    <ClInclude Include="Src\Input\InputManager.h" />
+    <ClInclude Include="Src\Input\InputMap.h" />
     <ClInclude Include="Src\Light\MainLight.h" />
     <ClInclude Include="Src\Mesh\AnimatedMesh.h" />
     <ClInclude Include="Src\Scene\GamePlayScene.h" />
