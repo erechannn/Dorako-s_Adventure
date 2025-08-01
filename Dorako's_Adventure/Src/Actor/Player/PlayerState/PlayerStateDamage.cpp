@@ -1,13 +1,11 @@
 #include"PlayerStateDamage.h"
 
 PlayerStateDamage::PlayerStateDamage(Player* owner)
-	:PlayerState(owner) {
+	:PlayerState::PlayerState(owner) {
 
 }
 void PlayerStateDamage::update(float delta_time) {
-	owner_->mesh_->change_motion(PlayerMotion::Damage, false);
-	if (!owner_->mesh_->is_end_motion())return;
-	owner_->change_state(PlayerState::StateMove);
+	owner_->jump(delta_time);
 }
 void PlayerStateDamage::start() {
 

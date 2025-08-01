@@ -2,9 +2,10 @@
 #include"Assets.h"
 #include"World/IWorld.h"
 #include"World/Field.h"
-#include"Input/GamePadInput.h"
+#include"../../Shape/Line.h"
 #include"PlayerMotion.h"
 #include"PlayerState/PlayerStateDamage.h"
+#include"PlayerState/PlayerStateMove.h"
 
 const float PlayerHeight{ 1.0f };
 const float PlayerRadius{ 0.5f };
@@ -20,18 +21,20 @@ Player::Player(IWorld* world, GSvector3 position) :
 	transform_.position(position);
 
 	state_.add_state(PlayerState::StateDamage, new PlayerStateDamage(this));
+	state_.add_state(PlayerState::StateMove, new PlayerStateMove(this));
+	state_.change_state(PlayerState::StateMove);
 }
 void Player::update(float delta_time) {
 	state_.update(delta_time);
+	if (state_.now_state_ == PlayerState::StateMove && gsXBoxPadButtonTrigger(0,GS_XBOX_PAD_A)) {
+		state_.change_state(PlayerState::StateJumpStart);
+	}
 }
 void Player::draw()const {
-
+	mesh_->draw();
 }
 void Player::react(Actor& other) {
 
-}
-GSvector2 Player::move_input() {
-	return enable_collider_ ? GamePadInput::get_stick(PadVec2::LeftStick, 0) : GSvector2::zero();
 }
 void Player::move(float delta_time) {
 	GSvector2 result;
@@ -80,4 +83,40 @@ void Player::move(float delta_time) {
 
 	//平行移動する（ワールド基準）
 	transform_.translate(velocity_, GStransform::Space::World);
+}
+void Player::jump(float delta_time) {
+	if (state_.now_state_ != PlayerState::StateJumpStart) return;
+}void Player::flying(float delta_time) {
+
+}
+void Player::landing(float delta_time) {
+
+}
+void Player::attack() {
+
+}
+void Player::collide_field() {
+	// 壁との衝突判定（球体との判定）
+	GSvector3 center; // 押し戻し後の球体の中心座標
+	if (world_->field()->collide(collider(), &center)) {
+		// y座標は変更しない
+		center.y = transform_.position().y;
+		// 補正後の座標に変更する
+		transform_.position(center);
+	}
+	// 地面との衝突判定（線分との交差判定）
+	GSvector3 position = transform_.position();
+	Line line;
+	line.start = position + collider_.center;
+	line.end = position + GSvector3{ 0.0f, -FootOffset, 0.0f };
+	GSvector3 intersect;  // 地面との交点
+	if (world_->field()->collide(line, &intersect)) {
+		// 交点の位置からy座標のみ補正する
+		position.y = intersect.y;
+		// 座標を変更する
+		transform_.position(position);
+		// 重力を初期化する
+		velocity_.y = 0.0f;
+	}
+
 }

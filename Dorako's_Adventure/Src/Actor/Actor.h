@@ -51,12 +51,12 @@ public:
 	BoundingSphere collider()const;
 
 
-	AnimatedMesh* mesh_{};
 
 	Actor(const Actor& other) = delete;
 	Actor& operator=(const Actor& other) = delete;
 
 protected:
+	AnimatedMesh* mesh_{};
 	IWorld* world_{ nullptr };
 	std::string tag_;
 	std::string name_;

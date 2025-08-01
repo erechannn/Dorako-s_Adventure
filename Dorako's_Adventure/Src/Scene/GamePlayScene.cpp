@@ -3,6 +3,7 @@
 #include"../World/Field.h"
 #include"../Light/MainLight.h"
 #include"../Assets.h"
+#include"../Actor/Player/Player.h"
 #include <GSstandard_shader.h>
 
 void GamePlayScene::start() {
@@ -44,6 +45,8 @@ void GamePlayScene::start() {
     gsLoadTexture(Texture_Skybox, "Assets/Skybox/TestStageSkybox.dds");
     gsLoadOctree(Octree_TestStage, "Assets/Stage/TestStage.oct");
     gsLoadOctree(Octree_TestStageCollider, "Assets/Stage/TestStageCollider.oct");
+
+    world_.add_actor(new Player{ &world_,{0.0f,0.0f,0.0f} });
 
     world_.add_field(new Field{ Octree_TestStage,Octree_TestStageCollider,Texture_Skybox });
 

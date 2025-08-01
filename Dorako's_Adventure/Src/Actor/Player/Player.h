@@ -17,7 +17,6 @@ public:
 	void attack();
 	void change_state(int next_state);
 protected:
-	GSvector2 move_input();
 	StateMachine state_;
 	void collide_field();
 };
