@@ -19,6 +19,8 @@ void World::update(float delta_time) {
 void World::draw()const {
 	camera_->draw();
 	light_->draw();
+	gsDrawShadowMap(World::shadow_map_callback, (void*)this);
+
 	field_->draw();
 	actors_.draw();
 	actors_.draw_transparent();
@@ -76,4 +78,9 @@ Actor* World::light() {
 
 Field* World::field() {
 	return field_;
+}
+void World::shadow_map_callback(void* param, const GSmatrix4*, const GSmatrix4*) {
+	World* self = (World*)param;
+	// シャドウマップにはアクターのみ描画
+	self->actors_.draw();
 }

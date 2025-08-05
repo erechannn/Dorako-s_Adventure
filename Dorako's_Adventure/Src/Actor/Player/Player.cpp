@@ -6,6 +6,7 @@
 #include"PlayerMotion.h"
 #include"PlayerState/PlayerStateDamage.h"
 #include"PlayerState/PlayerStateMove.h"
+#include"PlayerState/PlayerStateJump.h"
 
 const float PlayerHeight{ 1.0f };
 const float PlayerRadius{ 0.5f };
@@ -19,16 +20,27 @@ Player::Player(IWorld* world, GSvector3 position) :
 	tag_ = "PlayerTag";
 	collider_ = BoundingSphere{ PlayerRadius,GSvector3{0,PlayerHeight,0} };
 	transform_.position(position);
+	mesh_->transform(transform_.localToWorldMatrix());
 
 	state_.add_state(PlayerState::StateDamage, new PlayerStateDamage(this));
 	state_.add_state(PlayerState::StateMove, new PlayerStateMove(this));
+	state_.add_state(PlayerState::StateJumpStart, new PlayerStateJump(this));
 	state_.change_state(PlayerState::StateMove);
 }
 void Player::update(float delta_time) {
 	state_.update(delta_time);
+	//メッシュのモーションを更新
+	mesh_->update(delta_time);
+	//ワールド変換行列を設定
+	mesh_->transform(transform_.localToWorldMatrix());
+
 	if (state_.now_state_ == PlayerState::StateMove && gsXBoxPadButtonTrigger(0,GS_XBOX_PAD_A)) {
 		state_.change_state(PlayerState::StateJumpStart);
 	}
+	if (state_.now_state_ == PlayerState::StateMove || state_.now_state_ == PlayerState::StateJumpStart) {
+		is_move_ = true;
+	}
+	else is_move_ = false;
 }
 void Player::draw()const {
 	mesh_->draw();
@@ -43,7 +55,7 @@ void Player::move(float delta_time) {
 	//スティックの移動量の数値化
 	float result_normalize = std::sqrt(result.x * result.x + result.y * result.y);
 
-	if (state_.now_state_ != PlayerState::StateMove)return;
+	if (!is_move_)return;
 	// カメラの前方向ベクトルを取得
 	GSvector3 forward = world_->camera()->transform().forward();
 	forward.y = 0.0f;
@@ -79,13 +91,15 @@ void Player::move(float delta_time) {
 	velocity_.x = velocity.x;
 	velocity_.z = velocity.z;
 
-
+	mesh_->change_motion(motion, true);
 
 	//平行移動する（ワールド基準）
 	transform_.translate(velocity_, GStransform::Space::World);
 }
 void Player::jump(float delta_time) {
 	if (state_.now_state_ != PlayerState::StateJumpStart) return;
+	
+
 }void Player::flying(float delta_time) {
 
 }

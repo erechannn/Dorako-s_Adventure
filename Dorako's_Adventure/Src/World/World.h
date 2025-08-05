@@ -2,6 +2,7 @@
 #define WORLD_H_
 
 #include "IWorld.h"
+#include<gslib.h>
 #include"Actor/ActorManager.h"
 
 class World :public IWorld {
@@ -31,6 +32,9 @@ public:
 	virtual Actor* camera()override;
 	virtual Actor* light()override;
 	virtual Field* field()override;
+
+	static void shadow_map_callback(void* param, const GSmatrix4*, const GSmatrix4*);
+
 
 	World(const World& other) = delete;
 	World& operator=(const World& other) = delete;

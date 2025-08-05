@@ -19,6 +19,8 @@ public:
 protected:
 	StateMachine state_;
 	void collide_field();
+private:
+	bool is_move_{ false };
 };
 
 

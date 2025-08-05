@@ -40,7 +40,7 @@ void GamePlayScene::start() {
     //デフォルトシェーダーの初期化（メッシュファイルを読み込む前に有効にする）
     gsInitDefaultShader();
 
-    gsLoadSkinMesh(Mesh_Player, "Assets/Mesh/Player/Player.mshb");
+    gsLoadSkinMesh(Mesh_Player, "Assets/Mesh/Player/DragonSpark.mshb");
 
     gsLoadTexture(Texture_Skybox, "Assets/Skybox/TestStageSkybox.dds");
     gsLoadOctree(Octree_TestStage, "Assets/Stage/TestStage.oct");
@@ -82,5 +82,6 @@ void GamePlayScene::draw()const {
     world_.draw();
 }
 void GamePlayScene::end() {
+    gsDeleteSkinMesh(Mesh_Player);
     world_.clear();
 }
