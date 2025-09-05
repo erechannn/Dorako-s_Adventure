@@ -3,6 +3,7 @@
 
 enum {
 	Mesh_Player,
+	Mesh_Planet,
 };
 enum {
 	Texture_Skybox,

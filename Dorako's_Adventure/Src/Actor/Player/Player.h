@@ -19,8 +19,11 @@ public:
 protected:
 	StateMachine state_;
 	void collide_field();
+	void collide_actor(Actor& other);
 private:
 	bool is_move_{ false };
+	float gravity_{ -0.003f };
+	Actor* planet;
 };
 
 

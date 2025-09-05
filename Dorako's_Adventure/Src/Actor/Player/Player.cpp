@@ -26,6 +26,7 @@ Player::Player(IWorld* world, GSvector3 position) :
 	state_.add_state(PlayerState::StateMove, new PlayerStateMove(this));
 	state_.add_state(PlayerState::StateJumpStart, new PlayerStateJump(this));
 	state_.change_state(PlayerState::StateMove);
+
 }
 void Player::update(float delta_time) {
 	state_.update(delta_time);
@@ -33,6 +34,15 @@ void Player::update(float delta_time) {
 	mesh_->update(delta_time);
 	//ワールド変換行列を設定
 	mesh_->transform(transform_.localToWorldMatrix());
+	planet = world_->find_actor("Planet");
+
+	//惑星との方向ベクトル
+	GSvector3 planet_position = planet->transform().position();
+	GSvector3 position = transform_.position();
+	GSvector3 gravity = position -planet_position;
+	GSvector3 gravity_normalize = gravity.normalize();
+	velocity_ += gravity_normalize*gravity_ * delta_time;
+	transform_.translate(velocity_);
 
 	if (state_.now_state_ == PlayerState::StateMove && gsXBoxPadButtonTrigger(0,GS_XBOX_PAD_A)) {
 		state_.change_state(PlayerState::StateJumpStart);
@@ -46,7 +56,6 @@ void Player::draw()const {
 	mesh_->draw();
 }
 void Player::react(Actor& other) {
-
 }
 void Player::move(float delta_time) {
 	GSvector2 result;
@@ -132,5 +141,24 @@ void Player::collide_field() {
 		// 重力を初期化する
 		velocity_.y = 0.0f;
 	}
+
+}
+void Player::collide_actor(Actor& other) {
+	// ｙ座標を除く座標を求める
+	GSvector3 position = transform_.position();
+	position.y = 0.0f;
+	GSvector3 target = other.transform().position();
+	target.y = 0.0f;
+	// 相手との距離
+	float distance = GSvector3::distance(position, target);
+	// 衝突判定球の半径同士を加えた長さを求める
+	float length = collider_.radius + other.collider().radius;
+	// 衝突判定球の重なっている長さを求める
+	float overlap = length - distance;
+	// 重なっている部分の半分の距離だけ離れる移動量を求める
+	GSvector3 v = (position - target).getNormalized() * overlap * 0.5f;
+	transform_.translate(v, GStransform::Space::World);
+	// フィールドとの衝突判定
+	collide_field();
 
 }
