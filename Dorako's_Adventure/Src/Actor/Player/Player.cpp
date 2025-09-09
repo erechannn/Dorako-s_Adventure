@@ -34,15 +34,18 @@ void Player::update(float delta_time) {
 	mesh_->update(delta_time);
 	//ワールド変換行列を設定
 	mesh_->transform(transform_.localToWorldMatrix());
-	planet = world_->find_actor("Planet");
+
+	collide_field();
 
 	//惑星との方向ベクトル
-	GSvector3 planet_position = planet->transform().position();
+	GSvector3 planet_position{0.0f,-20.0f,0.0f};
 	GSvector3 position = transform_.position();
 	GSvector3 gravity = position -planet_position;
 	GSvector3 gravity_normalize = gravity.normalize();
 	velocity_ += gravity_normalize*gravity_ * delta_time;
 	transform_.translate(velocity_);
+
+	player_rotate(delta_time);
 
 	if (state_.now_state_ == PlayerState::StateMove && gsXBoxPadButtonTrigger(0,GS_XBOX_PAD_A)) {
 		state_.change_state(PlayerState::StateJumpStart);
@@ -160,5 +163,23 @@ void Player::collide_actor(Actor& other) {
 	transform_.translate(v, GStransform::Space::World);
 	// フィールドとの衝突判定
 	collide_field();
+
+}
+void Player::player_rotate(float delta_time) {
+	// 地面との衝突判定（線分との交差判定）
+	GSvector3 line_start = transform_.position() + GSvector3{ 0.0f, 1.0f, 0.0f };
+	GSvector3 line_end = transform_.position() + GSvector3{ 0.0f,-0.2f, 0.0f };
+	GSvector3 collision_point;    // 衝突した地面との交点
+	GSplane ground_plane;         // 衝突した地面の平面
+	if (gsOctreeCollisionLine(gsGetOctree(1),
+		&line_start, &line_end, &collision_point, &ground_plane)) {
+		// 衝突した位置に座標を補正する
+		transform_.position(collision_point);
+		// 斜面に合わせてキャラクタを傾かせる
+		GSvector3 up = GSvector3::rotateTowards(transform_.up(), ground_plane.normal, 0.1f * delta_time, 0.0);
+		GSvector3 left = GSvector3::cross(up, transform_.forward());
+		GSvector3 forward = GSvector3::cross(left, up);
+		transform_.rotation(GSquaternion::lookRotation(forward, up));
+	}
 
 }

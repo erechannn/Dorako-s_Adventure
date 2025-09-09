@@ -1,5 +1,6 @@
 #include"GamePlayScene.h"
 #include"../Camera/CameraRotateAround.h"
+#include"../Camera/MainCamera.h"
 #include"../World/Field.h"
 #include"../Light/MainLight.h"
 #include"../Assets.h"
@@ -42,20 +43,18 @@ void GamePlayScene::start() {
     gsInitDefaultShader();
 
     gsLoadSkinMesh(Mesh_Player, "Assets/Mesh/Player/DragonSpark.mshb");
-    gsLoadMesh(Mesh_Planet, "Assets/Mesh/Planet/planet.mshb");
+    gsLoadMesh(Mesh_Planet, "Assets/Mesh/Planet/planet_.mshb");
 
     gsLoadTexture(Texture_Skybox, "Assets/Skybox/TestStageSkybox.dds");
-    gsLoadOctree(Octree_TestStage, "Assets/Stage/TestStage.oct");
-    gsLoadOctree(Octree_TestStageCollider, "Assets/Stage/TestStageCollider.oct");
+    gsLoadOctree(Octree_TestStage, "Assets/Stage/testStage.oct");
+    gsLoadOctree(Octree_TestStageCollider, "Assets/Stage/testStageOctree.oct");
 
     world_.add_actor(new Player{ &world_,{0.0f,0.0f,0.0f} });
-    world_.add_actor(new Planet{ &world_,{0.0f,40.0f,0.0f} });
 
     world_.add_field(new Field{ Octree_TestStage,Octree_TestStageCollider,Texture_Skybox });
 
-    world_.add_camera(
-        new CameraRotateAround{
-            &world_,GSvector3{0.0f,3.18f,-4.8f},GSvector3{0.0f,1.93f,0.0f}});
+    world_.add_camera(new MainCamera{
+                 &world_, GSvector3{ 0.0f, 2.0f, -4.0f }, GSvector3{ 0.0f, 1.0f, 0.0f } });
 
     world_.add_light(new Light{ &world_ });
 

@@ -21,9 +21,10 @@ protected:
 	void collide_field();
 	void collide_actor(Actor& other);
 private:
+	void player_rotate(float delta_time);
+private:
 	bool is_move_{ false };
 	float gravity_{ -0.003f };
-	Actor* planet;
 };
 
 
