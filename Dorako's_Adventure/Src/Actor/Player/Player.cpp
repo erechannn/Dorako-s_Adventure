@@ -42,9 +42,9 @@ void Player::update(float delta_time) {
 	GSvector3 planet_position{0.0f,-20.0f,0.0f};
 	GSvector3 position = transform_.position();
 	GSvector3 gravity = position - planet_position;
-	//GSvector3 gravity_normalize = gravity.normalize();
-	velocity_ += gravity*gravity_ * delta_time;
-	transform_.translate(velocity_);
+	GSvector3 gravity_normalize = gravity.normalize();
+	gravity_vro += gravity_normalize*gravity_ * delta_time;
+	transform_.translate(gravity_vro, GStransform::Space::World);
 	//プレイヤーを地面に対して垂直に立たせる
 	player_rotate(delta_time);
 	//プレイヤーの状態管理
@@ -60,6 +60,8 @@ void Player::update(float delta_time) {
 	//デバック表示
 	ImGui::Begin("Player");
 	ImGui::Text("x:%f y:%f z:%f", transform_.position().x, transform_.position().y, transform_.position().z);
+	ImGui::Text("x:%f y:%f z:%f", velocity_.x, velocity_.y, velocity_.z);
+
 	ImGui::End();
 }
 void Player::draw()const {
@@ -111,15 +113,17 @@ void Player::move(float delta_time) {
 
 	player_rotate(delta_time);
 
+	velocity = transform_.transformDirection(velocity);
 
 	// 移動量のxz成分だけ更新
-	velocity_.x = velocity.x;
-	velocity_.z = velocity.z;
+	velocity_ = velocity;
 
 	mesh_->change_motion(motion, true);
 
 	//平行移動する（ワールド基準）
 	transform_.translate(velocity_, GStransform::Space::World);
+
+	
 }
 void Player::jump(float delta_time) {
 	if (state_.now_state_ != PlayerState::StateJumpStart) return;
@@ -197,16 +201,7 @@ void Player::player_rotate(float delta_time) {
 		std::cout << "x:" << collision_point.x << "y:" << collision_point.y << "z:" << collision_point.z << std::endl;
 		//斜面方向の移動量を求める
 		GSvector3 slope_velocity = GSvector3{ 0.0f, velocity_.y, 0.0 } - ground_plane.normal * ground_plane.normal.y * velocity_.y;
-
-		//移動量の更新
-		velocity_.x += slope_velocity.x;
-		velocity_.z += slope_velocity.z;
-		velocity_.y = slope_velocity.y;
-
-		//減速させる
-		velocity_.x *= 1.0f - (0.05f * delta_time);
-		velocity_.z *= 1.0f - (0.05f * delta_time);
-
+		
 		// 斜面に合わせてキャラクタを傾かせる
 		//GSvector3 up = GSvector3::rotateTowards(transform_.up(), ground_plane.normal, 0.1f * delta_time, 0.0);
 		GSvector3 planet_position{ 0.0f,-20.0f,0.0f };
