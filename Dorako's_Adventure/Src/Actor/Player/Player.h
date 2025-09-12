@@ -25,6 +25,7 @@ private:
 private:
 	bool is_move_{ false };
 	float gravity_{ -0.003f };
+	float gravityXZ_{ -0.3f };
 };
 
 
