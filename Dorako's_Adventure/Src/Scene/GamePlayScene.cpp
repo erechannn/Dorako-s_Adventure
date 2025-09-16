@@ -1,6 +1,7 @@
 #include"GamePlayScene.h"
 #include"../Camera/CameraRotateAround.h"
 #include"../Camera/MainCamera.h"
+#include "../Camera/TestCamera.h"
 #include"../World/Field.h"
 #include"../Light/MainLight.h"
 #include"../Assets.h"
@@ -46,14 +47,14 @@ void GamePlayScene::start() {
     gsLoadMesh(Mesh_Planet, "Assets/Mesh/Planet/planet_.mshb");
 
     gsLoadTexture(Texture_Skybox, "Assets/Skybox/TestStageSkybox.dds");
-    gsLoadOctree(Octree_TestStage, "Assets/Stage/testStage.oct");
-    gsLoadOctree(Octree_TestStageCollider, "Assets/Stage/testStageCollider.oct");
+    gsLoadOctree(Octree_TestStage, "Assets/Stage/testStage2.oct");
+    gsLoadOctree(Octree_TestStageCollider, "Assets/Stage/testStage2Collider.oct");
 
-    world_.add_actor(new Player{ &world_,{0.0f,1.0f,0.0f} });
+    world_.add_actor(new Player{ &world_,{0.0f,0.0f,0.0f} });
 
     world_.add_field(new Field{ Octree_TestStage,Octree_TestStageCollider,Texture_Skybox });
 
-    world_.add_camera(new MainCamera{
+    world_.add_camera(new TestCamera{
                  &world_, GSvector3{ 0.0f, 2.0f, -4.0f }, GSvector3{ 0.0f, 1.0f, 0.0f } });
 
     world_.add_light(new Light{ &world_ });
