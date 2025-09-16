@@ -26,7 +26,7 @@ void CameraRotateAround::update(float delta_time) {
 	float result_normalize = std::sqrt(result.x * result.x + result.y * result.y);
 	Actor* player = world_->find_actor("Player");
 	if (player == nullptr)return;
-
+	transform_.parent(player->transform().parent());
 	if (gsGetKeyState(GKEY_LEFT)) yaw_ += 3.0f * delta_time;
 	if (gsGetKeyState(GKEY_RIGHT))yaw_ -= 3.0f * delta_time;
 	//右スティックの移動量からカメラの移動

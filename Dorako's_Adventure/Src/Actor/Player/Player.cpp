@@ -104,11 +104,12 @@ void Player::move(float delta_time) {
 	GSint motion{ PlayerMotion::Idle };
 	// ˆÚ“®‚µ‚Ä‚¢‚é‚©H
 	if (velocity.length() != 0.0f) {
-		//// Œü‚«‚Ì•âŠÔ
+		// Œü‚«‚Ì•âŠÔ
+		GSvector3 velocity_world = transform_.transformDirection(velocity);
 		GSquaternion rotation =
 			GSquaternion::rotateTowards(
-				transform_.rotation(),
-				GSquaternion::lookRotation(velocity), 10.0f * delta_time);
+				transform_.localRotation(),
+				GSquaternion::lookRotation(velocity_world), 15.0f * delta_time);
 		transform_.rotation(rotation);
 		if (result_normalize <= 0.2f) {
 			motion = PlayerMotion::Walk;
@@ -119,6 +120,7 @@ void Player::move(float delta_time) {
 	}
 
 	velocity = transform_.transformDirection(velocity);
+
 
 	std::cout << "velocity " << "x:" << velocity.x << "y:" << velocity.y << "z:" << velocity.z << std::endl;
 
