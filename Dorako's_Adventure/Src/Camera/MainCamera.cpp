@@ -17,6 +17,7 @@ MainCamera::MainCamera(IWorld* world, const GSvector3& position, const GSvector3
 void MainCamera::update(float delta_time) {
 	Actor* player = world_->find_actor("Player");
 	if (player == nullptr)return;
+	transform_.parent(player->transform().parent());
 	GSvector3 position = PlayerOffset * player->transform().localToWorldMatrix();
 	GSvector3 at = player->transform().position() + ReferencePointOffset;
 	Line line(at, position);

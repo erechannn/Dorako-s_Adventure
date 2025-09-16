@@ -81,13 +81,17 @@ void Player::move(float delta_time) {
 
 	if (!is_move_)return;
 	// カメラの前方向ベクトルを取得
-	//GSvector3 forward = world_->camera()->transform().forward();
-	//forward.y = 0.0f;
-	//GSvector3 right = world_->camera()->transform().right();
-	//right.y = 0.0f;
+	GSvector3 forward = world_->camera()->transform().forward();
+	forward = transform_.inverseTransformVector(forward);
+	forward.y = 0.0f;
+	forward = forward.normalize();
+	GSvector3 right = world_->camera()->transform().right();
+	right = transform_.inverseTransformDirection(right);
+	right.y = 0.0f;
+	right = right.normalize();
 	//プレイヤー基準
-	GSvector3 forward = transform_.forward();
-	GSvector3 right = transform_.right();
+	//GSvector3 forward = transform_.forward();
+	//GSvector3 right = transform_.right();
 	// スティックの移動値から移動ベクトルを計算
 	GSvector3 velocity{ 0.0f, 0.0f, 0.0f };
 	//右スティックで移動
@@ -114,7 +118,7 @@ void Player::move(float delta_time) {
 		}
 	}
 
-	//velocity = transform_.transformDirection(velocity);
+	velocity = transform_.transformDirection(velocity);
 
 	std::cout << "velocity " << "x:" << velocity.x << "y:" << velocity.y << "z:" << velocity.z << std::endl;
 

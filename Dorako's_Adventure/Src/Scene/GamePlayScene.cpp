@@ -54,7 +54,7 @@ void GamePlayScene::start() {
 
     world_.add_field(new Field{ Octree_TestStage,Octree_TestStageCollider,Texture_Skybox });
 
-    world_.add_camera(new TestCamera{
+    world_.add_camera(new MainCamera{
                  &world_, GSvector3{ 0.0f, 2.0f, -4.0f }, GSvector3{ 0.0f, 1.0f, 0.0f } });
 
     world_.add_light(new Light{ &world_ });
