@@ -34,7 +34,7 @@ void CameraRotateAround::update(float delta_time) {
 	if (result.x > 0.0f)yaw_ -= 2.0f * result_normalize * delta_time;
 	if (result.y < 0.0f)pitch_ += 1.0f * result_normalize * delta_time;
 	if (result.y > 0.0f) pitch_ -= 1.0f * result_normalize * delta_time;
-	pitch_ = CLAMP(pitch_, -50.0f, 45.0f);
+	pitch_ = CLAMP(pitch_, -50.0f, 30.0f);
 
 	GSvector3 at = player->transform().position()+ReferencePointOffset;
 	//ピッチとヨウの単一ベクトル
@@ -46,7 +46,7 @@ void CameraRotateAround::update(float delta_time) {
 	GSvector3 intersect;
 	if (world_->field()->collide(line, &intersect)) {
 		//当たった位置にカメラの位置を補正する
-		//position = intersect;
+		position = intersect;
 	}
 	//カメラの移動
 	transform_.position(position);
