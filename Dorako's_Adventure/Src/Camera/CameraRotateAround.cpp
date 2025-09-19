@@ -8,7 +8,7 @@
 
 const GSvector3 PlayerOffset{ 0.0f,0.0f,-7.0f };
 
-const GSvector3 ReferencePointOffset{ 0.0f,1.0f,0.0f };
+const GSvector3 ReferencePointOffset{ 0.0f,2.0f,0.0f };
 
 CameraRotateAround::CameraRotateAround(IWorld* world,
 	const GSvector3& position, const GSvector3& at) {
@@ -24,9 +24,9 @@ void CameraRotateAround::update(float delta_time) {
 	gsXBoxPadGetRightAxis(0, &result);
 	//スティックの移動量の数値化
 	float result_normalize = std::sqrt(result.x * result.x + result.y * result.y);
-	Actor* player = world_->find_actor("Player");
+	Actor* player = world_->find_actor("DummyPlayer");
 	if (player == nullptr)return;
-	transform_.parent(player->transform().parent());
+	player_up_ = player->transform().up();
 	if (gsGetKeyState(GKEY_LEFT)) yaw_ += 3.0f * delta_time;
 	if (gsGetKeyState(GKEY_RIGHT))yaw_ -= 3.0f * delta_time;
 	//右スティックの移動量からカメラの移動
@@ -34,18 +34,23 @@ void CameraRotateAround::update(float delta_time) {
 	if (result.x > 0.0f)yaw_ -= 2.0f * result_normalize * delta_time;
 	if (result.y < 0.0f)pitch_ += 1.0f * result_normalize * delta_time;
 	if (result.y > 0.0f) pitch_ -= 1.0f * result_normalize * delta_time;
-	pitch_ = CLAMP(pitch_, -30.0f, 45.0f);
+	pitch_ = CLAMP(pitch_, -50.0f, 45.0f);
 
-	GSvector3 at = player->transform().position() + ReferencePointOffset;
-	GSvector3 position = at + GSquaternion::euler(pitch_, yaw_, 0.0f) * PlayerOffset;
+	GSvector3 at = player->transform().position()+ReferencePointOffset;
+	//ピッチとヨウの単一ベクトル
+	GSvector3 view = GSvector3::createFromPitchYaw(pitch_, yaw_)*10.0f;
+	//プレイヤーの上方向ベクトルを軸に回転
+	GSvector3 position = player->transform().transformPoint(view);
+	//フィールドとの当たり判定
 	Line line{ at, position };
 	GSvector3 intersect;
 	if (world_->field()->collide(line, &intersect)) {
-		position = intersect;
+		//当たった位置にカメラの位置を補正する
+		//position = intersect;
 	}
-
+	//カメラの移動
 	transform_.position(position);
-	transform_.lookAt(at);
+	transform_.lookAt(at,player->transform().up());
 
 }
 void CameraRotateAround::draw()const {

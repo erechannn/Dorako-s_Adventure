@@ -13,7 +13,9 @@ public:
 private:
 	float yaw_{ 0.0f };
 	float pitch_{ 0.0f };
+	GSvector3 view_{ 0.0f,0.0f,0.0f };
 	GSvector2 result;
+	GSvector3 player_up_{ 0.0f,0.0f,0.0f };
 
 };
 

@@ -18,6 +18,7 @@ void MainCamera::update(float delta_time) {
 	Actor* player = world_->find_actor("Player");
 	if (player == nullptr)return;
 	transform_.parent(player->transform().parent());
+	player_up_ = player->transform().up();
 	GSvector3 position = PlayerOffset * player->transform().localToWorldMatrix();
 	GSvector3 at = player->transform().position() + ReferencePointOffset;
 	Line line(at, position);
@@ -35,12 +36,13 @@ void MainCamera::update(float delta_time) {
 void MainCamera::draw()const {
 	GSvector3 eye = transform_.position();
 	GSvector3 at = eye + transform_.forward();
+	GSvector3 up = player_up_;
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluLookAt(
 		eye.x, eye.y, eye.z,     // 視点の位置
 		at.x, at.y, at.z,      // 注視点の位置
-		0.0f, 1.0f, 0.0f       // 視点の上方向
+		up.x, up.y, up.z       // 視点の上方向
 	);
 
 }

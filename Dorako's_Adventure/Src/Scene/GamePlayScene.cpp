@@ -2,6 +2,7 @@
 #include"../Camera/CameraRotateAround.h"
 #include"../Camera/MainCamera.h"
 #include "../Camera/TestCamera.h"
+#include "../Camera/DummyPlayer.h"
 #include"../World/Field.h"
 #include"../Light/MainLight.h"
 #include"../Assets.h"
@@ -16,15 +17,15 @@ void GamePlayScene::start() {
     // 視錐台カリングを有効にする
     gsEnable(GS_FRUSTUM_CULLING);
 
-    // シャドウマップの作成
-    static const GSuint shadow_map_size[] = { 2048, 2048 };
-    gsCreateShadowMap(2, shadow_map_size, GS_TRUE);
-    // シャドウマップを適用する距離(視点からの距離）
-    gsSetShadowMapDistance(60.0f);
-    // カスケードシャドウマップの分割位置を調整（デフォルトは0.5）
-    gsSetShadowMapCascadeLamda(0.7f);
-    // シャドウの濃さを設定(0.0:濃い～1.0:薄い)
-    gsSetShadowMapAttenuation(0.0f);
+    //// シャドウマップの作成
+    //static const GSuint shadow_map_size[] = { 2048, 2048 };
+    //gsCreateShadowMap(2, shadow_map_size, GS_TRUE);
+    //// シャドウマップを適用する距離(視点からの距離）
+    //gsSetShadowMapDistance(60.0f);
+    //// カスケードシャドウマップの分割位置を調整（デフォルトは0.5）
+    //gsSetShadowMapCascadeLamda(0.7f);
+    //// シャドウの濃さを設定(0.0:濃い～1.0:薄い)
+    //gsSetShadowMapAttenuation(0.0f);
 
     gsLoadLightmap(0, "Assets/Lightmap/Lightmap.txt");
 
@@ -51,6 +52,7 @@ void GamePlayScene::start() {
     gsLoadOctree(Octree_TestStageCollider, "Assets/Stage/testStage2Collider.oct");
 
     world_.add_actor(new Player{ &world_,{0.0f,0.0f,0.0f} });
+    world_.add_actor(new DummyPlayer{ &world_ });
 
     world_.add_field(new Field{ Octree_TestStage,Octree_TestStageCollider,Texture_Skybox });
 

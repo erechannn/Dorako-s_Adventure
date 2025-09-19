@@ -40,20 +40,22 @@ void Player::update(float delta_time) {
 	collide_field();
 	if (!is_ground_) {
 		//重力
-		//GSvector3 planet_position{ 0.0f,-20.0f,0.0f };
-		//GSvector3 position = transform_.position();
-		//GSvector3 gravity = position - planet_position;
-		//GSvector3 gravity_normalize = gravity.normalize();
-		//gravity_vro += gravity_normalize * gravity_ * delta_time;
-		//transform_.translate(gravity_vro, GStransform::Space::World);
+		GSvector3 planet_position{ 0.0f,-20.0f,0.0f };//星の中心
+		GSvector3 position = transform_.position();//自分の位置
+		GSvector3 gravity = position - planet_position;//方向ベクトルを求める
+		gravity = gravity.normalize();//単一ベクトル
+		gravity_vro += gravity * gravity_ * delta_time;//重力の移動量
+		transform_.translate(gravity_vro, GStransform::Space::World);//移動
 
 	}
 	//プレイヤーを地面に対して垂直に立たせる
 	player_rotate(delta_time);
 	//プレイヤーの状態管理
 	if (state_.now_state_ == PlayerState::StateMove && gsXBoxPadButtonTrigger(0,GS_XBOX_PAD_A)) {
+		//Aボタンでジャンプ
 		state_.change_state(PlayerState::StateJumpStart);
 	}
+	//動ける状態か
 	if (state_.now_state_ == PlayerState::StateMove || state_.now_state_ == PlayerState::StateJumpStart) {
 		is_move_ = true;
 	}
@@ -82,7 +84,7 @@ void Player::move(float delta_time) {
 	if (!is_move_)return;
 	// カメラの前方向ベクトルを取得
 	GSvector3 forward = world_->camera()->transform().forward();
-	forward = transform_.inverseTransformVector(forward);
+	forward = transform_.inverseTransformVector(forward);//
 	forward.y = 0.0f;
 	forward = forward.normalize();
 	GSvector3 right = world_->camera()->transform().right();

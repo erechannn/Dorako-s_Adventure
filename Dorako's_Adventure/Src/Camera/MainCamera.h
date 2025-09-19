@@ -9,6 +9,8 @@ public:
 
 	virtual void update(float delta_time)override;
 	virtual void draw()const override;
+private:
+	GSvector3 player_up_{ 0.0f,0.0f,0.0f };
 };
 
 
