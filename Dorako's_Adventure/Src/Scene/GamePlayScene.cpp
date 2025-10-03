@@ -7,6 +7,7 @@
 #include"../Light/MainLight.h"
 #include"../Assets.h"
 #include"../Actor/Player/Player.h"
+#include "../Actor/Enemy/Kuribo.h"
 #include <GSstandard_shader.h>
 
 void GamePlayScene::start() {
@@ -44,14 +45,16 @@ void GamePlayScene::start() {
     gsInitDefaultShader();
 
     gsLoadSkinMesh(Mesh_Player, "Assets/Mesh/Player/DragonSpark.mshb");
+    gsLoadSkinMesh(Mesh_Kuribo, "Assets/Mesh/Enemy/FirePig/FirePig.mshb");
     gsLoadMesh(Mesh_Planet, "Assets/Mesh/Planet/planet_.mshb");
 
     gsLoadTexture(Texture_Skybox, "Assets/Skybox/TestStageSkybox.dds");
     gsLoadOctree(Octree_TestStage, "Assets/Stage/testStage2.oct");
     gsLoadOctree(Octree_TestStageCollider, "Assets/Stage/testStage2Collider.oct");
 
-    world_.add_actor(new Player{ &world_,{0.0f,0.0f,0.0f} });
+    world_.add_actor(new Player{ &world_,{3.0f,0.0f,1.0f} });
     world_.add_actor(new DummyPlayer{ &world_ });
+    world_.add_actor(new Kuribo{ &world_,{0.0f,0.0f,0.0f} });
 
     world_.add_field(new Field{ Octree_TestStage,Octree_TestStageCollider,Texture_Skybox });
 

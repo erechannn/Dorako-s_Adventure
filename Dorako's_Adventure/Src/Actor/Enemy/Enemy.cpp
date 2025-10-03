@@ -8,6 +8,9 @@ Enemy::Enemy(GSuint mesh) :
 	Actor{ mesh } {
 
 }
+void Enemy::change_state(int next_state) {
+	state_.change_state(next_state);
+}
 void Enemy::collide_field() {
 	// 壁との衝突判定（球体との判定）
 	GSvector3 center; // 押し戻し後の球体の中心座標

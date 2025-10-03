@@ -11,8 +11,17 @@ public:
 	virtual void update(float delta_time)override {};
 	virtual void start()override {};
 	virtual void end()override {};
-private:
-	Enemy*owner_
+	enum State {
+		Idle,
+		Search,
+		Chase,
+		Attack,
+		Damage,
+		Dead,
+	};
+
+protected:
+	Enemy* owner_;
 };
 
 

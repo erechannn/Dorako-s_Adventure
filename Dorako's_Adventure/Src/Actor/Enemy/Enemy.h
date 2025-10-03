@@ -7,9 +7,16 @@
 class Enemy :public Actor {
 public:
 	Enemy(GSuint mesh);
-	void update(float delta_time)override {}
-	void draw()const override {};
-	void react(Actor& other) {};
+	virtual void update(float delta_time)override {}
+	virtual void draw()const override {}
+	virtual void react(Actor& other) {}
+	virtual void idle(float delta_time) {}
+	virtual void search(float delta_time) {}
+	virtual void chase(float delta_time) {}
+	virtual void attack(float delta_time) {}
+	virtual void damage(float delta_time) {}
+	virtual void dead(float delta_time) {}
+	void change_state(int next_state);
 protected:
 	StateMachine state_;
 	void collide_field();
@@ -22,6 +29,7 @@ protected:
 	int health_{ 1 };
 	float foot_offset_{ 0.1f };
 	float enemy_height_{ 1.0f };
+	float walk_speed_{ 0.15f };
 
 
 };

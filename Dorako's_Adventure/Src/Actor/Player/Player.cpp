@@ -74,6 +74,9 @@ void Player::draw()const {
 }
 void Player::react(Actor& other) {
 }
+void Player::change_state(int next_state) {
+	state_.change_state(next_state);
+}
 void Player::move(float delta_time) {
 	GSvector2 result;
 	//左スティックの取得
