@@ -139,6 +139,7 @@
   <ItemGroup>
     <ClCompile Include="Src\Actor\Actor.cpp" />
     <ClCompile Include="Src\Actor\ActorManager.cpp" />
+    <ClCompile Include="Src\Actor\Character.cpp" />
     <ClCompile Include="Src\Actor\Enemy\Enemy.cpp" />
     <ClCompile Include="Src\Actor\Enemy\EnemyState\EnemyStateSearch.cpp" />
     <ClCompile Include="Src\Actor\Enemy\Kuribo.cpp" />
@@ -165,6 +166,7 @@
   <ItemGroup>
     <ClInclude Include="Src\Actor\Actor.h" />
     <ClInclude Include="Src\Actor\ActorManager.h" />
+    <ClInclude Include="Src\Actor\Character.h" />
     <ClInclude Include="Src\Actor\Enemy\EnemiesMotion.h" />
     <ClInclude Include="Src\Actor\Enemy\Enemy.h" />
     <ClInclude Include="Src\Actor\Enemy\EnemyState\EnemyState.h" />
