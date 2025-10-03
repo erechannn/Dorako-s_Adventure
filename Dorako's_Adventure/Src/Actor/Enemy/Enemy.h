@@ -27,9 +27,10 @@ protected:
 	GSvector3 gravity_velocity_{ 0.0f,0.0f,0.0f };
 	int max_health_{ 1 };
 	int health_{ 1 };
-	float foot_offset_{ 0.1f };
+	float foot_offset_{ 5.0f };
 	float enemy_height_{ 1.0f };
 	float walk_speed_{ 0.15f };
+	bool is_ground_{ false };
 
 
 };

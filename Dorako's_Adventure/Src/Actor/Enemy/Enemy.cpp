@@ -39,6 +39,7 @@ void Enemy::collide_actor(Actor& other) {
 }
 //重力
 void Enemy::gravity_update(float delta_time) {
+	if (is_ground_)return;
 	GSvector3 planet_position{ 0.0f,-20.0f,0.0f };//星の中心
 	GSvector3 position = transform_.position();//自分の位置
 	GSvector3 gravity = position - planet_position;//方向ベクトルを求める
@@ -55,6 +56,7 @@ void Enemy::collide_ground() {
 	GSplane ground_plane;         // 衝突した地面の平面
 	if (gsOctreeCollisionLine(gsGetOctree(Octree_TestStageCollider),
 		&line_start, &line_end, &collision_point, &ground_plane)) {
+		is_ground_ = true;
 		// 衝突した位置に座標を補正する
 		transform_.position(collision_point);
 		// 斜面に合わせてキャラクタを傾かせる
@@ -64,4 +66,5 @@ void Enemy::collide_ground() {
 		GSvector3 forward = GSvector3::cross(left, up);
 		transform_.rotation(GSquaternion::lookRotation(forward, up));
 	}
+	else  is_ground_ = false;
 }
