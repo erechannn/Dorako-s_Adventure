@@ -55,9 +55,10 @@ void Character::collide_ground() {
 	GSplane ground_plane;         // 衝突した地面の平面
 	if (gsOctreeCollisionLine(gsGetOctree(Octree_TestStageCollider),
 		&line_start, &line_end, &collision_point, &ground_plane)) {
-		is_ground_ = true;
 		// 衝突した位置に座標を補正する
 		transform_.position(collision_point);
+		is_ground_ = true;
+		gravity_velocity_ = GSvector3::zero();
 		// 斜面に合わせてキャラクタを傾かせる
 		GSvector3 planet_position{ 0.0f,-20.0f,0.0f };
 		GSvector3 up = transform_.position() - planet_position;
