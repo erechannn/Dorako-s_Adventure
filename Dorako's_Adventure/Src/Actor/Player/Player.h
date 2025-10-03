@@ -16,6 +16,14 @@ public:
 	void landing(float delta_time);
 	void attack();
 	void change_state(int next_state);
+//ステートマシンに送る数値
+public:
+	//モーションの終わり
+	bool is_motion_end();
+	//最大体力
+	int max_health_();
+	//現在の体力
+	int now_health_();
 protected:
 	StateMachine state_;
 	void collide_field();
@@ -27,7 +35,8 @@ private:
 	float gravity_{ -0.003f };
 	GSvector3 gravity_vro;
 	bool is_ground_{ false };
-	float gravityXZ_{ -0.3f };
+	int max_health_{ 3 };
+	int health_{ 3 };
 };
 
 
