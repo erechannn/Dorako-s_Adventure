@@ -11,7 +11,6 @@
 
 const float PlayerHeight{ 1.0f };
 const float PlayerRadius{ 0.5f };
-const float FootOffset{ 0.1f };
 const float WalkSpeed{ 0.15f };
 
 Player::Player(IWorld* world, GSvector3 position) :

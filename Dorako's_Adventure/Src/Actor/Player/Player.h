@@ -23,9 +23,6 @@ public:
 	int now_health_(){}
 private:
 	bool is_move_{ false };
-	float gravity_{ -0.003f };
-	GSvector3 gravity_vro;
-	bool is_ground_{ false };
 	int max_health_{ 3 };
 	int health_{ 3 };
 };

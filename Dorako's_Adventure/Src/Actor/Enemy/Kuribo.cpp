@@ -12,11 +12,11 @@ Kuribo::Kuribo(IWorld* world, GSvector3 position) :
 	world_ = world;
 	name_ = "Kuribo";
 	tag_ = "EnemyTag";
-	collider_ = BoundingSphere(1.0f, GSvector3{ 0.0f,enemy_height_,0.0f });
+	collider_ = BoundingSphere(1.0f, GSvector3{ 0.0f,height_,0.0f });
 	transform_.position(position);
 	mesh_->transform(transform_.localToWorldMatrix());
 	walk_speed_ = 0.5f;
-
+	foot_offset_ = 5.0f;
 	set_next_point();
 	state_.add_state(EnemyState::Search, new EnemyStateSearch(this));
 	state_.change_state(EnemyState::Search);
@@ -45,25 +45,25 @@ void Kuribo::react(Actor& other) {
 
 }
 void Kuribo::search(float delta_time) {
-	float distance = GSvector3::distance(transform_.position(), target_point_);
-	if (distance > 0.1f && walk_timer_ <= 200.0f) {
+	//float distance = GSvector3::distance(transform_.position(), target_point_);
+	//if (distance > 0.1f && walk_timer_ <= 200.0f) {
 
-		GSvector3 target_forward = target_point_ - transform_.position();
-		angle_set(target_point_, transform_.forward());
+	//	GSvector3 target_forward = target_point_ - transform_.position();
+	//	angle_set(target_point_, transform_.forward());
 
-		float angle = GSvector3::angle(target_forward, transform_.forward());
+	//	float angle = GSvector3::angle(target_forward, transform_.forward());
 
-		if (angle <= 0.1) {
-			// 前進する（ローカル座標基準）
-			transform_.translate(0.0f, 0.0f, walk_speed_ * delta_time);
-			walk_timer_ += delta_time;
-		}
-	}
-	else {
-		set_next_point();
-		walk_timer_ = 0.0f;
-	}
-
+	//	if (angle <= 0.1) {
+	//		// 前進する（ローカル座標基準）
+	//		transform_.translate(0.0f, 0.0f, walk_speed_ * delta_time);
+	//		walk_timer_ += delta_time;
+	//	}
+	//}
+	//else {
+	//	set_next_point();
+	//	walk_timer_ = 0.0f;
+	//}
+	transform_.translate(0.0f, 0.0f, walk_speed_ * delta_time);
 }
 void Kuribo::angle_set(GSvector3 target, GSvector3 forward) {
 	// ターゲット方向のベクトルを求める
