@@ -63,6 +63,8 @@ void Kuribo::search(float delta_time) {
 	//	set_next_point();
 	//	walk_timer_ = 0.0f;
 	//}
+
+	//‚Æ‚è‚ ‚¦‚¸‚Ü‚Á‚·‚®‚ÉˆÚ“®
 	transform_.translate(0.0f, 0.0f, walk_speed_ * delta_time);
 }
 void Kuribo::angle_set(GSvector3 target, GSvector3 forward) {

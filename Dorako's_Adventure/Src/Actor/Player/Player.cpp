@@ -21,7 +21,7 @@ Player::Player(IWorld* world, GSvector3 position) :
 	collider_ = BoundingSphere{ PlayerRadius,GSvector3{0,PlayerHeight,0} };
 	transform_.position(position);
 	mesh_->transform(transform_.localToWorldMatrix());
-
+	//状態の追加
 	state_.add_state(PlayerState::StateDamage, new PlayerStateDamage(this));
 	state_.add_state(PlayerState::StateMove, new PlayerStateMove(this));
 	state_.add_state(PlayerState::StateJumpStart, new PlayerStateJump(this));
@@ -62,46 +62,55 @@ void Player::update(float delta_time) {
 	ImGui::End();
 }
 void Player::draw()const {
+	//メッシュの表示
 	mesh_->draw();
 }
+//当たり判定
 void Player::react(Actor& other) {
+	//特になし
 }
 void Player::move(float delta_time) {
+	//スティックの2次元ベクトル
 	GSvector2 result;
 	//左スティックの取得
 	gsXBoxPadGetLeftAxis(0, &result);
 	//スティックの移動量の数値化
 	float result_normalize = std::sqrt(result.x * result.x + result.y * result.y);
-
+	//動ける状態か
 	if (!is_move_)return;
 	// カメラの前方向ベクトルを取得
 	GSvector3 forward = world_->camera()->transform().forward();
-	forward = transform_.inverseTransformVector(forward);//
-	forward.y = 0.0f;
-	forward = forward.normalize();
+	forward = transform_.inverseTransformVector(forward);//ワールドからローカルに
+	forward.y = 0.0f;//Yは無効
+	forward = forward.normalize();//正規化
+	//カメラの右向きベクトルを取得
 	GSvector3 right = world_->camera()->transform().right();
-	right = transform_.inverseTransformDirection(right);
-	right.y = 0.0f;
-	right = right.normalize();
+	right = transform_.inverseTransformDirection(right);//ワールドからローカル
+	right.y = 0.0f;//Yは無効
+	right = right.normalize();//正規化
 	// スティックの移動値から移動ベクトルを計算
 	GSvector3 velocity{ 0.0f, 0.0f, 0.0f };
 	//右スティックで移動
+	//前後ろに倒して前方向に加算し移動
 	if (result.y > 0.0f) velocity += forward;
 	if (result.y < 0.0f) velocity -= forward;
+	//右左に倒して右方向に加算し移動
 	if (result.x < 0.0f) velocity -= right;
 	if (result.x > 0.0f) velocity += right;
+	//移動量を倒した量によってスピードを調整
 	velocity = velocity.normalized() * WalkSpeed  *result_normalize* delta_time;
 	// 移動してなければアイドル状態
 	GSint motion{ PlayerMotion::Idle };
 	// 移動しているか？
 	if (velocity.length() != 0.0f) {
-		// 向きの補間
-		GSvector3 velocity_world = transform_.transformDirection(velocity);
+		// 移動方向に向く
+		GSvector3 velocity_world = transform_.transformDirection(velocity);//ローカルからワールド
 		GSquaternion rotation =
 			GSquaternion::rotateTowards(
 				transform_.localRotation(),
 				GSquaternion::lookRotation(velocity_world), 15.0f * delta_time);
 		transform_.rotation(rotation);
+		//プレイヤーの移動量に合わせてモーションの変化
 		if (result_normalize <= 0.2f) {
 			motion = PlayerMotion::Walk;
 		}
@@ -109,14 +118,14 @@ void Player::move(float delta_time) {
 			motion = PlayerMotion::Run;
 		}
 	}
-
+	//移動量をローカルからワールドに
 	velocity = transform_.transformDirection(velocity);
 
 
 
 	// 移動量のxz成分だけ更新
 	velocity_ = velocity;
-
+	//モーションの変更
 	mesh_->change_motion(motion, true);
 
 	//平行移動する（ワールド基準）

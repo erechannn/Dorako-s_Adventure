@@ -38,6 +38,7 @@ void Character::collide_actor(Actor& other) {
 	collide_field();
 }
 void Character::gravity_update(float delta_time) {
+	//地上についていたら無視
 	if (is_ground_)return;
 	GSvector3 planet_position{ 0.0f,-20.0f,0.0f };//星の中心
 	GSvector3 position = transform_.position();//自分の位置
@@ -57,6 +58,7 @@ void Character::collide_ground() {
 		&line_start, &line_end, &collision_point, &ground_plane)) {
 		// 衝突した位置に座標を補正する
 		transform_.position(collision_point);
+		//重力を無効
 		is_ground_ = true;
 		gravity_velocity_ = GSvector3::zero();
 		// 斜面に合わせてキャラクタを傾かせる

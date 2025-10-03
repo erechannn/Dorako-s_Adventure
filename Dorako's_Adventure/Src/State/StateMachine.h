@@ -15,6 +15,7 @@ public:
 private:
 	int now_state_{ 0 };
 	IState* current_state_;
+	//ƒyƒA‚Ì§ì
 	std::unordered_map<int, IState*>states_;
 	friend class Player;
 };
