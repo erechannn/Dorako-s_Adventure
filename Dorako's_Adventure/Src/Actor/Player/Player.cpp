@@ -1,18 +1,17 @@
-#include"Player.h"
-#include"Assets.h"
-#include"World/IWorld.h"
-#include"World/Field.h"
-#include"../../Shape/Line.h"
-#include"PlayerMotion.h"
-#include"PlayerState/PlayerStateDamage.h"
-#include"PlayerState/PlayerStateMove.h"
-#include"PlayerState/PlayerStateJump.h"
-#include<imgui/imgui.h>
-#include<iostream>
+#include "Player.h"
+#include "Assets.h"
+#include "World/IWorld.h"
+#include "World/Field.h"
+#include "../../Shape/Line.h"
+#include "PlayerMotion.h"
+#include "PlayerState/PlayerStateDamage.h"
+#include "PlayerState/PlayerStateMove.h"
+#include "PlayerState/PlayerStateJump.h"
+#include <imgui/imgui.h>
 
 const float PlayerHeight{ 1.0f };
 const float PlayerRadius{ 0.5f };
-const float FootOffset{ 1.0f };
+const float FootOffset{ 0.1f };
 const float WalkSpeed{ 0.15f };
 
 Player::Player(IWorld* world, GSvector3 position) :
@@ -52,7 +51,7 @@ void Player::update(float delta_time) {
 	//プレイヤーの状態管理
 	if (state_.now_state_ == PlayerState::StateMove && gsXBoxPadButtonTrigger(0,GS_XBOX_PAD_A)) {
 		//Aボタンでジャンプ
-		gravity_ = 2.0f;
+		gravity_ = 0.016f;
 		state_.change_state(PlayerState::StateJumpStart);
 	}
 
@@ -122,7 +121,6 @@ void Player::move(float delta_time) {
 	velocity = transform_.transformDirection(velocity);
 
 
-	std::cout << "velocity " << "x:" << velocity.x << "y:" << velocity.y << "z:" << velocity.z << std::endl;
 
 	// 移動量のxz成分だけ更新
 	velocity_ = velocity;
@@ -136,6 +134,7 @@ void Player::move(float delta_time) {
 }
 void Player::jump(float delta_time) {
 	if (state_.now_state_ != PlayerState::StateJumpStart) return;
+	
 	
 
 }void Player::flying(float delta_time) {
@@ -151,10 +150,8 @@ void Player::collide_field() {
 	// 壁との衝突判定（球体との判定）
 	GSvector3 center; // 押し戻し後の球体の中心座標
 	if (world_->field()->collide(collider(), &center)) {
-		// y座標は変更しない
-		//center.y = transform_.position().y;
 		// 補正後の座標に変更する
-		//transform_.position(center);
+		transform_.position(center);
 	}
 }
 void Player::collide_actor(Actor& other) {

@@ -7,7 +7,6 @@
 #include"../Light/MainLight.h"
 #include"../Assets.h"
 #include"../Actor/Player/Player.h"
-#include"../Actor/Planets/Planet.h"
 #include <GSstandard_shader.h>
 
 void GamePlayScene::start() {

@@ -5,8 +5,8 @@ class PlayerMotion {
 public:
 	enum Motion{
 		Idle=0,
-		Walk,
-		Run,
+		Walk=1,
+		Run=2,
 		JumpStart,
 		Flying,
 		JumpEnd,

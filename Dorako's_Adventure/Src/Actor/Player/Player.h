@@ -20,10 +20,8 @@ public:
 public:
 	//ƒ‚[ƒVƒ‡ƒ“‚ÌI‚í‚è
 	bool is_motion_end();
-	//Å‘å‘Ì—Í
-	int max_health_();
 	//Œ»İ‚Ì‘Ì—Í
-	int now_health_();
+	int now_health_(){}
 protected:
 	StateMachine state_;
 	void collide_field();
