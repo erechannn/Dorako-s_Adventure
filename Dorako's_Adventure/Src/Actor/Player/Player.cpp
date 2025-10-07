@@ -7,6 +7,8 @@
 #include "PlayerState/PlayerStateDamage.h"
 #include "PlayerState/PlayerStateMove.h"
 #include "PlayerState/PlayerStateJump.h"
+#include "PlayerState/PlayerStateFlying.h"
+#include "PlayerState/PlayerStateJumpEnd.h"
 #include <imgui/imgui.h>
 
 const float PlayerHeight{ 1.0f };
@@ -25,6 +27,8 @@ Player::Player(IWorld* world, GSvector3 position) :
 	state_.add_state(PlayerState::StateDamage, new PlayerStateDamage(this));
 	state_.add_state(PlayerState::StateMove, new PlayerStateMove(this));
 	state_.add_state(PlayerState::StateJumpStart, new PlayerStateJump(this));
+	state_.add_state(PlayerState::StateFlying, new PlayerStateFlying(this));
+	state_.add_state(PlayerState::StateJumpEnd, new PlayerStateJumpEnd(this));
 	state_.change_state(PlayerState::StateMove);
 
 }
@@ -135,7 +139,10 @@ void Player::move(float delta_time) {
 	
 }
 void Player::flying(float delta_time) {
-
+	if (gsXBoxPadButtonState(0, GS_XBOX_PAD_A)) {
+		gravity_ = 0.0f;
+	}
+	else gravity_ = -0.003f;
 }
 void Player::landing(float delta_time) {
 

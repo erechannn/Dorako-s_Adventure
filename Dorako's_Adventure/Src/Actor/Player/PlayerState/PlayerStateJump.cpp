@@ -14,7 +14,7 @@ void PlayerStateJump::update(float delta_time) {
 	jump_velocity += jump * jump_power_ * delta_time;
 	owner_->transform().translate(jump_velocity, GStransform::Space::World);//ˆÚ“®
 	if (owner_->is_motion_end() ) {
-		owner_->change_state(PlayerState::StateMove);
+		owner_->change_state(PlayerState::StateFlying);
 	}
 }
 void PlayerStateJump::start() {

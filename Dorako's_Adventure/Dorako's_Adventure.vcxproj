@@ -147,6 +147,7 @@
     <ClCompile Include="Src\Actor\Player\PlayerState\PlayerStateDamage.cpp" />
     <ClCompile Include="Src\Actor\Player\PlayerState\PlayerStateFlying.cpp" />
     <ClCompile Include="Src\Actor\Player\PlayerState\PlayerStateJump.cpp" />
+    <ClCompile Include="Src\Actor\Player\PlayerState\PlayerStateJumpEnd.cpp" />
     <ClCompile Include="Src\Actor\Player\PlayerState\PlayerStateMove.cpp" />
     <ClCompile Include="Src\Camera\CameraRotateAround.cpp" />
     <ClCompile Include="Src\Camera\DummyPlayer.cpp" />
@@ -179,6 +180,7 @@
     <ClInclude Include="Src\Actor\Player\PlayerState\PlayerStateDamage.h" />
     <ClInclude Include="Src\Actor\Player\PlayerState\PlayerStateFlying.h" />
     <ClInclude Include="Src\Actor\Player\PlayerState\PlayerStateJump.h" />
+    <ClInclude Include="Src\Actor\Player\PlayerState\PlayerStateJumpEnd.h" />
     <ClInclude Include="Src\Actor\Player\PlayerState\PlayerStateMove.h" />
     <ClInclude Include="Src\Assets.h" />
     <ClInclude Include="Src\Camera\CameraRotateAround.h" />
