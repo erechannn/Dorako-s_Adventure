@@ -9,6 +9,8 @@ public:
 	void update(float delta_time)override;
 	void start()override;
 	void end()override;
+private:
+	float jump_power_{ 0.15f };
 };
 
 

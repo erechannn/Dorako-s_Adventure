@@ -41,9 +41,8 @@ void Player::update(float delta_time) {
 	collide_ground();
 
 	//プレイヤーの状態管理
-	if (state_.now_state_ == PlayerState::StateMove && gsXBoxPadButtonTrigger(0,GS_XBOX_PAD_A)) {
-		//Aボタンでジャンプ
-		gravity_ = 0.016f;
+	if (state_.now_state_ == PlayerState::StateMove && gsXBoxPadButtonTrigger(0,GS_XBOX_PAD_A)) {	//Aボタンでジャンプ
+
 		state_.change_state(PlayerState::StateJumpStart);
 	}
 
@@ -58,6 +57,8 @@ void Player::update(float delta_time) {
 	ImGui::Begin("Player");
 	ImGui::Text("x:%f y:%f z:%f", transform_.position().x, transform_.position().y, transform_.position().z);
 	ImGui::Text("x:%f y:%f z:%f", velocity_.x, velocity_.y, velocity_.z);
+	ImGui::Text("gravity:%f", gravity_);
+	ImGui::Checkbox("地上にいるか", &is_ground_);
 
 	ImGui::End();
 }
@@ -133,12 +134,7 @@ void Player::move(float delta_time) {
 
 	
 }
-void Player::jump(float delta_time) {
-	if (state_.now_state_ != PlayerState::StateJumpStart) return;
-	
-	
-
-}void Player::flying(float delta_time) {
+void Player::flying(float delta_time) {
 
 }
 void Player::landing(float delta_time) {

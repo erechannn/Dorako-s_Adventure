@@ -11,7 +11,6 @@ public:
 	void draw()const override;
 	void react(Actor& other);
 	void move(float delta_time);
-	void jump(float delta_time);
 	void flying(float delta_time);
 	void landing(float delta_time);
 	void attack();
@@ -25,6 +24,7 @@ private:
 	bool is_move_{ false };
 	int max_health_{ 3 };
 	int health_{ 3 };
+	friend class PlayerState;
 };
 
 

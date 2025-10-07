@@ -16,6 +16,8 @@ public:
 	virtual void react(Actor& other) override{}
 	//状態の変更
 	void change_state(int next_state);
+public:
+	bool is_ground();
 protected:
 	//ステートマシン
 	StateMachine state_;

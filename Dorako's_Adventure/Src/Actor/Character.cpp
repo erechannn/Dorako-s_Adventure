@@ -71,3 +71,7 @@ void Character::collide_ground() {
 	else  is_ground_ = false;
 
 }
+
+bool Character::is_ground() {
+	return is_ground_;
+}
