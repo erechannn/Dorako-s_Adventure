@@ -41,6 +41,7 @@ protected:
 	float height_{ 1.0f };
 	//d—Í‚ğ“K‰‚·‚é‚©
 	bool is_ground_{ false };
+	bool is_zero_gravity_{ false };
 };
 
 

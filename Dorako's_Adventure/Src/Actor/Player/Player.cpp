@@ -51,7 +51,7 @@ void Player::update(float delta_time) {
 	}
 
 	//動ける状態か
-	if (state_.now_state_ == PlayerState::StateMove || state_.now_state_ == PlayerState::StateJumpStart) {
+	if (state_.now_state_ == PlayerState::StateMove || state_.now_state_ == PlayerState::StateFlying) {
 		is_move_ = true;
 	}
 	else is_move_ = false;
@@ -116,6 +116,9 @@ void Player::move(float delta_time) {
 				GSquaternion::lookRotation(velocity_world), 15.0f * delta_time);
 		transform_.rotation(rotation);
 		//プレイヤーの移動量に合わせてモーションの変化
+		//if (!is_ground_) {
+		//	motion = PlayerMotion::Flying;
+		//}
 		if (result_normalize <= 0.2f) {
 			motion = PlayerMotion::Walk;
 		}
@@ -125,9 +128,9 @@ void Player::move(float delta_time) {
 	}
 	//移動量をローカルからワールドに
 	velocity = transform_.transformDirection(velocity);
-
-
-
+	if (!is_ground_) {
+		motion = PlayerMotion::Flying;
+	}
 	// 移動量のxz成分だけ更新
 	velocity_ = velocity;
 	//モーションの変更
@@ -140,9 +143,10 @@ void Player::move(float delta_time) {
 }
 void Player::flying(float delta_time) {
 	if (gsXBoxPadButtonState(0, GS_XBOX_PAD_A)) {
-		gravity_ = 0.0f;
+		is_zero_gravity_ = true;
 	}
-	else gravity_ = -0.003f;
+	else is_zero_gravity_ = false;
+	move(delta_time);
 }
 void Player::landing(float delta_time) {
 

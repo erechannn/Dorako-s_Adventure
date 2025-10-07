@@ -24,9 +24,9 @@ void CameraRotateAround::update(float delta_time) {
 	gsXBoxPadGetRightAxis(0, &result);
 	//スティックの移動量の数値化
 	float result_normalize = std::sqrt(result.x * result.x + result.y * result.y);
-	Actor* player = world_->find_actor("DummyPlayer");
-	if (player == nullptr)return;
-	player_up_ = player->transform().up();
+	Actor* dummy_player = world_->find_actor("DummyPlayer");
+	if (dummy_player == nullptr)return;
+	player_up_ = dummy_player->transform().up();
 	if (gsGetKeyState(GKEY_LEFT)) yaw_ += 3.0f * delta_time;
 	if (gsGetKeyState(GKEY_RIGHT))yaw_ -= 3.0f * delta_time;
 	//右スティックの移動量からカメラの移動
@@ -36,11 +36,11 @@ void CameraRotateAround::update(float delta_time) {
 	if (result.y > 0.0f) pitch_ -= 1.0f * result_normalize * delta_time;
 	pitch_ = CLAMP(pitch_, -50.0f, 30.0f);
 
-	GSvector3 at = player->transform().position()+ReferencePointOffset;
+	GSvector3 at = dummy_player->transform().position()+ReferencePointOffset;
 	//ピッチとヨウの単一ベクトル
 	GSvector3 view = GSvector3::createFromPitchYaw(pitch_, yaw_)*10.0f;
 	//プレイヤーの上方向ベクトルを軸に回転
-	GSvector3 position = player->transform().transformPoint(view);
+	GSvector3 position = dummy_player->transform().transformPoint(view);
 	//フィールドとの当たり判定
 	Line line{ at, position };
 	GSvector3 intersect;
@@ -50,7 +50,7 @@ void CameraRotateAround::update(float delta_time) {
 	}
 	//カメラの移動
 	transform_.position(position);
-	transform_.lookAt(at,player->transform().up());
+	transform_.lookAt(at,dummy_player->transform().up());
 
 }
 void CameraRotateAround::draw()const {
