@@ -71,12 +71,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\gslib_2021\inc;$(ProjectDir)\Src;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\gslib_2021\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\gslib_2021\inc;$(ProjectDir)\Src;C:\gseffect_2022\inc;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\gslib_2021\lib;C:\gseffect_2022\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\gslib_2021\inc;$(ProjectDir)\Src;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\gslib_2021\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\gslib_2021\inc;$(ProjectDir)\Src;C:\gseffect_2022\inc;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\gslib_2021\lib;C:\gseffect_2022\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -139,6 +139,7 @@
   <ItemGroup>
     <ClCompile Include="Src\Actor\Actor.cpp" />
     <ClCompile Include="Src\Actor\ActorManager.cpp" />
+    <ClCompile Include="Src\Actor\BulletClass.cpp" />
     <ClCompile Include="Src\Actor\Character.cpp" />
     <ClCompile Include="Src\Actor\Enemy\Enemy.cpp" />
     <ClCompile Include="Src\Actor\Enemy\EnemyState\EnemyStateSearch.cpp" />
@@ -169,6 +170,7 @@
   <ItemGroup>
     <ClInclude Include="Src\Actor\Actor.h" />
     <ClInclude Include="Src\Actor\ActorManager.h" />
+    <ClInclude Include="Src\Actor\BulletClass.h" />
     <ClInclude Include="Src\Actor\Character.h" />
     <ClInclude Include="Src\Actor\Enemy\EnemiesMotion.h" />
     <ClInclude Include="Src\Actor\Enemy\Enemy.h" />

@@ -1,0 +1,48 @@
+#include "BulletClass.h"
+#include "../World/IWorld.h"
+#include "../Assets.h"
+#include "../World/Field.h"
+#include "../Shape/Line.h"
+
+BulletClass::BulletClass(IWorld* world, const GSvector3& position, const GSvector3& velocity, GSint effect_handle,
+	const std::string& tag,const std::string& name,const std::string& owner_tag) :
+	Character{ 0 } {
+	world_ = world;
+	tag_ = tag;
+	name_ = name;
+	velocity_ = velocity;
+	collider_ = BoundingSphere{ 0.5,{0.0f,1.0f,0.0f} };
+	transform_.position(position);
+	owner_tag_ = owner_tag;
+	lifespan_timer_ = 300.0f;
+}
+
+void BulletClass::update(float delta_time) {
+	if (lifespan_timer_ <= 0.0f) {
+		die();
+		return;
+	}
+	GSmatrix4 world = transform_.localToWorldMatrix();
+	lifespan_timer_ -= delta_time;
+	// フィールドとの衝突判定
+	Line line;
+	line.start = transform_.position();
+	line.end = transform_.position() + velocity_ * delta_time;
+	GSvector3 intersect;
+	if (world_->field()->collide(line, &intersect)) {
+		// 交点の座標に補正
+		transform_.position(intersect);
+		// フィールドに衝突したら死亡
+		die();
+		return;
+	}
+	// 移動する（ワールド座標系基準）
+	transform_.translate(velocity_ * delta_time, GStransform::Space::World);
+}
+void BulletClass::draw()const {
+	collider_.draw();
+}
+void BulletClass::react(Actor& other) {
+	if (other.tag() == tag() || other.tag() == owner_tag_) return;
+	die();
+}
