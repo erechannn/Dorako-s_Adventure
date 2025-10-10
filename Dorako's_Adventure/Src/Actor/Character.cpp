@@ -76,3 +76,9 @@ void Character::collide_ground() {
 bool Character::is_ground() {
 	return is_ground_;
 }
+int Character::now_health() {
+	return health_;
+}
+void Character::take_damage() {
+	health_ -= 1;
+}

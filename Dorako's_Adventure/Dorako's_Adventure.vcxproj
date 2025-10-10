@@ -145,6 +145,7 @@
     <ClCompile Include="Src\Actor\Enemy\Kuribo.cpp" />
     <ClCompile Include="Src\Actor\Player\Player.cpp" />
     <ClCompile Include="Src\Actor\Player\PlayerState\PlayerStateDamage.cpp" />
+    <ClCompile Include="Src\Actor\Player\PlayerState\PlayerStateDead.cpp" />
     <ClCompile Include="Src\Actor\Player\PlayerState\PlayerStateFlying.cpp" />
     <ClCompile Include="Src\Actor\Player\PlayerState\PlayerStateJump.cpp" />
     <ClCompile Include="Src\Actor\Player\PlayerState\PlayerStateJumpEnd.cpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="Src\Actor\Player\PlayerMotion.h" />
     <ClInclude Include="Src\Actor\Player\PlayerState\PlayerState.h" />
     <ClInclude Include="Src\Actor\Player\PlayerState\PlayerStateDamage.h" />
+    <ClInclude Include="Src\Actor\Player\PlayerState\PlayerStateDead.h" />
     <ClInclude Include="Src\Actor\Player\PlayerState\PlayerStateFlying.h" />
     <ClInclude Include="Src\Actor\Player\PlayerState\PlayerStateJump.h" />
     <ClInclude Include="Src\Actor\Player\PlayerState\PlayerStateJumpEnd.h" />

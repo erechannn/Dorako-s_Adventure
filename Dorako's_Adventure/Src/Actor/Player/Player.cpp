@@ -9,6 +9,7 @@
 #include "PlayerState/PlayerStateJump.h"
 #include "PlayerState/PlayerStateFlying.h"
 #include "PlayerState/PlayerStateJumpEnd.h"
+#include "PlayerState/PlayerStateDead.h"
 #include <imgui/imgui.h>
 
 const float PlayerHeight{ 1.0f };
@@ -23,12 +24,15 @@ Player::Player(IWorld* world, GSvector3 position) :
 	collider_ = BoundingSphere{ PlayerRadius,GSvector3{0,PlayerHeight,0} };
 	transform_.position(position);
 	mesh_->transform(transform_.localToWorldMatrix());
+	max_health_ = 300000;
+	health_ = max_health_;
 	//状態の追加
 	state_.add_state(PlayerState::StateDamage, new PlayerStateDamage(this));
 	state_.add_state(PlayerState::StateMove, new PlayerStateMove(this));
 	state_.add_state(PlayerState::StateJumpStart, new PlayerStateJump(this));
 	state_.add_state(PlayerState::StateFlying, new PlayerStateFlying(this));
 	state_.add_state(PlayerState::StateJumpEnd, new PlayerStateJumpEnd(this));
+	state_.add_state(PlayerState::StateDead, new PlayerStateDead(this));
 	state_.change_state(PlayerState::StateMove);
 
 }
@@ -51,7 +55,7 @@ void Player::update(float delta_time) {
 	}
 
 	//動ける状態か
-	if (state_.now_state_ == PlayerState::StateMove || state_.now_state_ == PlayerState::StateFlying) {
+	if (state_.now_state_ == PlayerState::StateMove || state_.now_state_ == PlayerState::StateFlying||state_.now_state_==PlayerState::StateJumpStart) {
 		is_move_ = true;
 	}
 	else is_move_ = false;
@@ -73,6 +77,22 @@ void Player::draw()const {
 //当たり判定
 void Player::react(Actor& other) {
 	//特になし
+	if (other.tag() == "EnemyTag") {
+		if (is_above_enemy(other)) {
+			state_.change_state(PlayerState::StateJumpStart);
+		}
+		else {
+			//ノックバック
+			GSvector3 now_pos{ transform().position() };
+			GSvector3 knock_pos{ now_pos };
+			knock_pos -= transform().forward() * 0.5f;
+			// 補正後の座標に変更する
+			transform_.position(knock_pos);
+			health_ -= 1;
+			state_.change_state(PlayerState::StateDamage);
+
+		}
+	}
 }
 void Player::move(float delta_time) {
 	//スティックの2次元ベクトル
@@ -116,9 +136,6 @@ void Player::move(float delta_time) {
 				GSquaternion::lookRotation(velocity_world), 15.0f * delta_time);
 		transform_.rotation(rotation);
 		//プレイヤーの移動量に合わせてモーションの変化
-		//if (!is_ground_) {
-		//	motion = PlayerMotion::Flying;
-		//}
 		if (result_normalize <= 0.2f) {
 			motion = PlayerMotion::Walk;
 		}
@@ -130,12 +147,21 @@ void Player::move(float delta_time) {
 	velocity = transform_.transformDirection(velocity);
 	if (!is_ground_) {
 		motion = PlayerMotion::Flying;
+		GSvector3 planet_position{ 0.0f,-20.0f,0.0f };
+		GSvector3 up = transform_.position() - planet_position;
+		GSvector3 left = GSvector3::cross(up, transform_.forward());
+		GSvector3 forward = GSvector3::cross(left, up);
+		transform_.rotation(GSquaternion::lookRotation(forward, up));
+
 	}
 	// 移動量のxz成分だけ更新
 	velocity_ = velocity;
-	//モーションの変更
-	mesh_->change_motion(motion, true);
+	if (state_.now_state_ != PlayerState::StateJumpStart) {
+		//モーションの変更
+		mesh_->change_motion(motion, true);
 
+
+	}
 	//平行移動する（ワールド基準）
 	transform_.translate(velocity, GStransform::Space::World);
 
@@ -156,4 +182,12 @@ void Player::attack() {
 }
 bool Player::is_motion_end() {
 	return mesh_->is_end_motion();
+}
+bool Player::is_above_enemy(Actor&other) {
+	GSvector3 position = transform_.position();
+	GSvector3 other_position = other.transform().position();
+	GSvector3 other_up = other.transform().up();
+	GSvector3 to_other = position - other_position;
+	float dot = to_other.dot(other_up);
+	return dot > 0;
 }

@@ -19,6 +19,7 @@ public:
 		StateJumpEnd,
 		StateAttack,
 		StateDamage,
+		StateDead,
 		StateMotionOverride
 	};
 

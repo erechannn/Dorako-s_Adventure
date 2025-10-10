@@ -21,10 +21,8 @@ public:
 	//Œ»İ‚Ì‘Ì—Í
 	int now_health_(){}
 private:
+	bool is_above_enemy(Actor& other);
 	bool is_move_{ false };
-	int max_health_{ 3 };
-	int health_{ 3 };
-	friend class PlayerState;
 };
 
 

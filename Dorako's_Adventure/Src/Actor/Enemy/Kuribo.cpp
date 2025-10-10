@@ -17,7 +17,6 @@ Kuribo::Kuribo(IWorld* world, GSvector3 position) :
 	mesh_->transform(transform_.localToWorldMatrix());
 	walk_speed_ = 0.5f;
 	foot_offset_ = 5.0f;
-	set_next_point();
 	state_.add_state(EnemyState::Search, new EnemyStateSearch(this));
 	state_.change_state(EnemyState::Search);
 }
@@ -36,37 +35,35 @@ void Kuribo::update(float delta_time) {
 	ImGui::Text("x:%f y:%f z:%f", transform_.position().x, transform_.position().y, transform_.position().z);
 	ImGui::Text("x:%f y:%f z:%f", velocity_.x, velocity_.y, velocity_.z);
 	ImGui::Text("x:%f y:%f z:%f", target_point_.x, target_point_.y, target_point_.z);
+	ImGui::Checkbox("is_move:",&is_move_);
+	ImGui::Checkbox("undead:",&undead_);
 	ImGui::End();
 }
 void Kuribo::draw()const {
 	mesh_->draw();
 }
 void Kuribo::react(Actor& other) {
-
+	if (is_above_player(other)&&!undead_&&other.tag()=="PlayerTag") {
+		die();
+	}
 }
 void Kuribo::search(float delta_time) {
-	//float distance = GSvector3::distance(transform_.position(), target_point_);
-	//if (distance > 0.1f && walk_timer_ <= 200.0f) {
-
-	//	GSvector3 target_forward = target_point_ - transform_.position();
-	//	angle_set(target_point_, transform_.forward());
-
-	//	float angle = GSvector3::angle(target_forward, transform_.forward());
-
-	//	if (angle <= 0.1) {
-	//		// 前進する（ローカル座標基準）
-	//		transform_.translate(0.0f, 0.0f, walk_speed_ * delta_time);
-	//		walk_timer_ += delta_time;
-	//	}
-	//}
-	//else {
-	//	set_next_point();
-	//	walk_timer_ = 0.0f;
-	//}
 
 	//とりあえずまっすぐに移動
-	transform_.translate(0.0f, 0.0f, walk_speed_ * delta_time);
+	if (is_move_) {
+		transform_.translate(0.0f, 0.0f, walk_speed_ * delta_time);
+	}
 }
+bool Kuribo::is_above_player(Actor& other) {
+	GSvector3 position = transform_.position();
+	GSvector3 other_position = other.transform().position();
+	GSvector3 up = transform_.up();
+	GSvector3 to_target = other_position - position;
+	float dot = to_target.dot(up);
+	return dot > 0;
+}
+
+/*
 void Kuribo::angle_set(GSvector3 target, GSvector3 forward) {
 	// ターゲット方向のベクトルを求める
 	GSvector3 to_target = target - transform_.position();
@@ -112,4 +109,4 @@ void Kuribo::set_next_point() {
 	target_point_ = target_;
 
 }
-
+*/

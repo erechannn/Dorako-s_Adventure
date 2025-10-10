@@ -18,6 +18,8 @@ public:
 	void change_state(int next_state);
 public:
 	bool is_ground();
+	int now_health();
+	void take_damage();
 protected:
 	//ステートマシン
 	StateMachine state_;
