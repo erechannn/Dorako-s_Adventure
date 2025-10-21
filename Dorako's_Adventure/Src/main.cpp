@@ -2,6 +2,7 @@
 #include"GV.h"
 #include"Scene/SceneManager.h"
 #include"World/World.h"
+#include "Scene/TitleScene.h"
 #include"Scene/GamePlayScene.h"
 #include <GSeffect.h>
 
@@ -14,8 +15,9 @@ public:
     void start()override {
         gsInitEffect();
         World world;
+        scene_manager_.add("TitleScene", new TitleScene());
         scene_manager_.add("GamePlayScene", new GamePlayScene());
-        scene_manager_.change("GamePlayScene");
+        scene_manager_.change("TitleScene");
 
     }
     void update(float delta_time)override {

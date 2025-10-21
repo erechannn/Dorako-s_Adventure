@@ -8,6 +8,8 @@ enum {
 };
 enum {
 	Texture_Skybox,
+	Texture_TitleLogo,
+
 };
 enum {
 	Octree_TestStage,

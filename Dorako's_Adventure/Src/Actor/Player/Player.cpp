@@ -109,13 +109,11 @@ void Player::move(float delta_time) {
 	if (!is_move_)return;
 	// カメラの前方向ベクトルを取得
 	GSvector3 forward = world_->camera()->transform().forward();
-	forward = transform_.forward();
 	forward = transform_.inverseTransformVector(forward);//ワールドからローカルに
 	forward.y = 0.0f;//Yは無効
 	forward = forward.normalize();//正規化
 	//カメラの右向きベクトルを取得
 	GSvector3 right = world_->camera()->transform().right();
-	right = transform_.right();
 	right = transform_.inverseTransformDirection(right);//ワールドからローカル
 	right.y = 0.0f;//Yは無効
 	right = right.normalize();//正規化

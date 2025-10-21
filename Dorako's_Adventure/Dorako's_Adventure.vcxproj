@@ -206,6 +206,7 @@
     <ClInclude Include="Src\State\StateMachine.h" />
     <ClInclude Include="Src\State\StateNull.h" />
     <ClInclude Include="Src\stdafx.h" />
+    <ClInclude Include="Src\Tween\TweenUnit.h" />
     <ClInclude Include="Src\World\Field.h" />
     <ClInclude Include="Src\World\IWorld.h" />
     <ClInclude Include="Src\World\World.h" />

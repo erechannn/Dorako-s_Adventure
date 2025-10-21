@@ -1,7 +1,9 @@
 #ifndef TITLE_SCENE_H_
 #define TITLE_SCENE_H_
 
-#include"IScene.h"
+#include "IScene.h"
+#include "../World/World.h"
+#include <gslib.h>
 
 class TitleScene :public IScene {
 public:
@@ -18,10 +20,12 @@ public:
     //èIóπ
     virtual void end() override;
 private:
+    World world_;
     bool is_end_{ false };
     bool is_start_{ false };
     float start_timer_{ 0.0f };
     std::string next_scene_;
+    GSvector2 logo_position_{};
 };
 
 
