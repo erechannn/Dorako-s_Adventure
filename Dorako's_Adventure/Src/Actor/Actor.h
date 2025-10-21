@@ -6,6 +6,7 @@
 #include<string>
 #include"Collider/BoundingSphere.h"
 #include"../Mesh/AnimatedMesh.h"
+#include "../Tween/Tween.h"
 
 class IWorld;
 
@@ -34,6 +35,8 @@ public:
 	void collide(Actor& other);
 
 	void die();
+
+	TweenUnit& move_to(const GSvector3& to, float duration);
 
 	bool is_collide(const Actor& other)const;
 

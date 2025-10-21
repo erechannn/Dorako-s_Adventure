@@ -24,8 +24,12 @@ private:
     bool is_end_{ false };
     bool is_start_{ false };
     float start_timer_{ 0.0f };
+    int tween_timer_{ 0 };
     std::string next_scene_;
     GSvector2 logo_position_{};
+    GSvector2 first_pos_{};
+    GSvector2 end_pos_{};
+    GSvector2 ui_position_{};
 };
 
 

@@ -1,5 +1,6 @@
 #include "Actor.h"
 
+
 Actor::Actor(GSuint mesh)
 {
 	mesh_ = { new AnimatedMesh(mesh) };
@@ -38,6 +39,13 @@ void Actor::collide(Actor& other) {
 void Actor::die() {
 	dead_ = true;
 }
+
+TweenUnit& Actor::move_to(const GSvector3& to, float duration) {
+	// Œ»İ‚ÌêŠ‚©‚çw’è‚³‚ê‚½êŠ‚Ü‚ÅATween‚ÅˆÚ“®‚·‚é
+	return Tween::vector3(transform_.position(), to, duration,
+		[=](GSvector3 pos) {transform_.position(pos); });
+}
+
 
 bool Actor::is_collide(const Actor& other)const {
 	return collider().intersects(other.collider());

@@ -9,7 +9,7 @@ enum {
 enum {
 	Texture_Skybox,
 	Texture_TitleLogo,
-
+	Texture_TitleUi,
 };
 enum {
 	Octree_TestStage,

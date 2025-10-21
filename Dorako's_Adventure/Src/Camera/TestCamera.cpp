@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-const GSvector3 PlayerOffset{ 0.0f,-20.0f,-20.0f };
+const GSvector3 PlayerOffset{ -25.0f,-15.0f,0.0f };
 
 TestCamera::TestCamera(IWorld* world, const GSvector3& position, const GSvector3& at) {
 	world_ = world;
@@ -23,7 +23,7 @@ void TestCamera::update(float delta_time) {
 	if (gsGetKeyState(GKEY_DOWN))pitch_ -= 1.0f * delta_time;
 	
 	GSvector3 at{ 0.0f,4.0f,0.0f };
-	GSvector3 position = at + GSquaternion::euler(0.0f, yaw_, 0.0f)*PlayerOffset;
+	GSvector3 position = at + PlayerOffset;
 
 	velocity_.y = pitch_;
 

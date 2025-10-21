@@ -3,6 +3,7 @@
 #include "../Camera/TestCamera.h"
 #include "../Light/MainLight.h"
 #include "../Tween/Tween.h"
+#include "../Actor/ModelPlayer.h"
 #include "../Assets.h"
 
 #include <GSstandard_shader.h>
@@ -46,8 +47,12 @@ void TitleScene::start() {
     gsLoadOctree(Octree_TestStage, "Assets/Stage/testStage2.oct");
     gsLoadOctree(Octree_TestStageCollider, "Assets/Stage/testStage2Collider.oct");
 
-
 	gsLoadTexture(Texture_TitleLogo, "Assets/Texture/TitleLogo.png");
+	gsLoadTexture(Texture_TitleUi, "Assets/Texture/TitleUi.png");
+
+    gsLoadSkinMesh(Mesh_Player, "Assets/Mesh/Player/DragonSpark.mshb");
+
+    world_.add_actor(new ModelPlayer{ &world_,{0.0f,0.0f,0.0f} });
 
 	world_.add_camera(new TestCamera{
 			 &world_, GSvector3{ 0.0f, 2.0f, -4.0f }, GSvector3{ 0.0f, 1.0f, 0.0f } });
@@ -60,12 +65,23 @@ void TitleScene::start() {
 	is_start_ = false;
 	start_timer_ = 0.0f;
 	next_scene_ = "GamePlayScene";
-	//logo_position_={ 422.0f,-169.0f };
+    ui_position_ = { 583.0f,682.0f };
+    first_pos_ = { 422.0f,-169.0f };
+    end_pos_ = { 422.0f,-120.0f };
+    Tween::vector2(first_pos_, end_pos_, 60, [=](GSvector2 pos) {logo_position_ = pos; });
+
 }
 void TitleScene::update(float delta_time) {
 	world_.update(delta_time);
+    tween_timer_ += delta_time;
+    if (tween_timer_ % 60 == 0) {
+        GSvector2 first_pos = end_pos_;
+        GSvector2 end_pos = first_pos_;
+        Tween::vector2(first_pos, end_pos, 60, [=](GSvector2 pos) {logo_position_ = pos; });
+        first_pos_ = first_pos;
+        end_pos_ = end_pos;
 
-    Tween::value(-165.0f, -185.0f, 60.0f, [=](float val) {logo_position_ = { 422.0f,val }; });
+    }
 
 	if (gsXBoxPadButtonTrigger(0, GS_XBOX_PAD_A)) is_start_ = true;
 	if (is_start_)          start_timer_ += delta_time; //タイマー増加
@@ -73,13 +89,15 @@ void TitleScene::update(float delta_time) {
 
 	if (ImGui::Begin("logo")) {
 		ImGui::DragFloat2("LogoPosition:", logo_position_, 0.1f);
+		ImGui::DragFloat2("UIPosition:", ui_position_, 0.1f);
 		ImGui::End();
 	}
 }
 void TitleScene::draw()const {
 	world_.draw();
 	const GSvector2 Logo_position{ 0.0f,0.0f };
-	gsDrawSprite2D(Texture_TitleLogo, &logo_position_, NULL, NULL, NULL, NULL, NULL);
+	gsDrawSprite2D(Texture_TitleLogo, &logo_position_, NULL, NULL, NULL, NULL, 0.0f);
+    gsDrawSprite2D(Texture_TitleUi, &ui_position_, NULL, NULL, NULL, NULL, 0.0f);
 }
 bool TitleScene::is_end() const{
 	return is_end_;
@@ -88,5 +106,5 @@ std::string TitleScene::next()const {
 	return next_scene_;
 }
 void TitleScene::end() {
-
+    Tween::clear();
 }

@@ -15,6 +15,7 @@ public:
     void update(float delta_time);
     // 終了したかどうか
     bool is_finished() const;
+
     // コピー禁止
     TweenUnit(const TweenUnit& other) = delete;
     TweenUnit& operator = (const TweenUnit& other) = delete;
@@ -27,6 +28,7 @@ private:
     float duration_{ 0.0f };        // アニメーション時間（フレーム）
     float elapsed_{ 0.0f };         // 経過時間（フレーム）
     bool is_finished_{ false };     // 終了したか
+    bool loop_{ false };
 };
 
 #endif
