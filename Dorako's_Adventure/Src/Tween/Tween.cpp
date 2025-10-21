@@ -1,5 +1,7 @@
 #include "Tween.h"
 #include "ValueUnit.h"
+#include "Vector3Unit.h"
+#include "Vector2Unit.h"
 
 std::list<TweenUnit*> Tween::units_;
 
@@ -39,4 +41,13 @@ TweenUnit& Tween::value(float from, float to, float duration, std::function<void
     add(unit); // ƒŠƒXƒg‚É‰Á‚¦‚ÄŠÇ—‘ÎÛ‚Æ‚·‚é
     return *unit; // TweenUnit‚ÌŽQÆ‚ð•Ô‹p‚·‚é
 }
-
+TweenUnit& Tween::vector3(const GSvector3& from, const GSvector3& to, float duration, std::function<void(const GSvector3&)> update_func) {
+    TweenUnit* unit = new Vector3Unit(from, to, duration, update_func);
+    add(unit);
+    return *unit;
+}
+TweenUnit& Tween::vector2(const GSvector2& from, const GSvector2& to, float duration, std::function<void(const GSvector2&)> update_func) {
+    TweenUnit* unit = new Vector2Unit(from, to, duration, update_func);
+    add(unit);
+    return *unit;
+}

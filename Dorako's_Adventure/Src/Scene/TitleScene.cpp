@@ -2,6 +2,7 @@
 #include "../World/Field.h"
 #include "../Camera/TestCamera.h"
 #include "../Light/MainLight.h"
+#include "../Tween/Tween.h"
 #include "../Assets.h"
 
 #include <GSstandard_shader.h>
@@ -59,10 +60,12 @@ void TitleScene::start() {
 	is_start_ = false;
 	start_timer_ = 0.0f;
 	next_scene_ = "GamePlayScene";
-	logo_position_={ 422.0f,-169.0f };
+	//logo_position_={ 422.0f,-169.0f };
 }
 void TitleScene::update(float delta_time) {
 	world_.update(delta_time);
+
+    Tween::value(-165.0f, -185.0f, 60.0f, [=](float val) {logo_position_ = { 422.0f,val }; });
 
 	if (gsXBoxPadButtonTrigger(0, GS_XBOX_PAD_A)) is_start_ = true;
 	if (is_start_)          start_timer_ += delta_time; //タイマー増加

@@ -18,6 +18,9 @@ public:
     // float型の値をTweenする
     static TweenUnit& value(float from, float to, float duration, std::function<void(float)> update_func);
 
+    static TweenUnit& vector3(const GSvector3& from, const GSvector3& to, float duration, std::function<void(const GSvector3&)> update_func);
+    static TweenUnit& vector2(const GSvector2& from, const GSvector2& to, float duration, std::function<void(const GSvector2&)> update_func);
+
 private:
     // インスタンス生成禁止
     Tween() = delete;
