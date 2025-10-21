@@ -1,0 +1,42 @@
+#include "Tween.h"
+#include "ValueUnit.h"
+
+std::list<TweenUnit*> Tween::units_;
+
+void Tween::add(TweenUnit* unit) {
+    units_.push_back(unit);
+}
+
+void Tween::update(float delta_time) {
+    // 全てのTweenUnitの更新処理を呼び出す
+    for (TweenUnit* unit : units_) {
+        unit->update(delta_time);
+    }
+
+    // 終了したTweenUnitは削除する
+    for (auto itr = units_.begin(); itr != units_.end(); ) {
+        if ((*itr)->is_finished()) {
+            // 中身のTweenUnitをdeleteしてから
+            delete* itr;
+            // リストの要素を削除する
+            itr = units_.erase(itr);
+        }
+        else {
+            ++itr;
+        }
+    }
+}
+
+void Tween::clear() {
+    for (TweenUnit* tween : units_) {
+        delete tween;
+    }
+    units_.clear();
+}
+
+TweenUnit& Tween::value(float from, float to, float duration, std::function<void(float)> update_func) {
+    TweenUnit* unit = new ValueUnit(from, to, duration, update_func);
+    add(unit); // リストに加えて管理対象とする
+    return *unit; // TweenUnitの参照を返却する
+}
+
