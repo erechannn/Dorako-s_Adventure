@@ -52,7 +52,7 @@ void GamePlayScene::start() {
     gsLoadOctree(Octree_TestStage, "Assets/Stage/testStage2.oct");
     gsLoadOctree(Octree_TestStageCollider, "Assets/Stage/testStage2Collider.oct");
 
-    world_.add_actor(new Player{ &world_,{3.0f,0.0f,1.0f} });
+    world_.add_actor(new Player{ &world_,{3.0f,0.0f,3.0f} });
     world_.add_actor(new DummyPlayer{ &world_ });
     world_.add_actor(new Kuribo{ &world_,{0.0f,0.0f,0.0f} });
 

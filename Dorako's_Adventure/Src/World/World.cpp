@@ -1,6 +1,7 @@
 #include"World.h"
 #include"Field.h"
 #include"Actor/Actor.h"
+#include <GSeffect.h>
 
 World::~World() {
 	clear();
@@ -14,10 +15,12 @@ void World::update(float delta_time) {
 	actors_.remove();
 	camera_->update(delta_time);
 	light_->update(delta_time);
+	gsUpdateEffect(delta_time);
 }
 
 void World::draw()const {
 	camera_->draw();
+	gsSetEffectCamera();
 	light_->draw();
 	gsDrawShadowMap(World::shadow_map_callback, (void*)this);
 
@@ -25,6 +28,7 @@ void World::draw()const {
 	actors_.draw();
 	actors_.draw_transparent();
 	actors_.draw_gui();
+	gsDrawEffect();
 }
 void World::clear() {
 	actors_.clear();

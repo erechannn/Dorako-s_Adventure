@@ -14,6 +14,7 @@ public:
 private:
 	float lifespan_timer_{ 300.0f };
 	std::string owner_tag_{ " " };
+	GSvector3 effect_position_{ 0.0f,0.0f,0.0f };
 	GSint effect_handle_{ 0 };
 
 };

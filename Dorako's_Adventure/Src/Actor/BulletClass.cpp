@@ -3,6 +3,7 @@
 #include "../Assets.h"
 #include "../World/Field.h"
 #include "../Shape/Line.h"
+#include <GSeffect.h>
 
 BulletClass::BulletClass(IWorld* world, const GSvector3& position, const GSvector3& velocity, GSint effect_handle,
 	const std::string& tag,const std::string& name,const std::string& owner_tag) :
@@ -15,6 +16,7 @@ BulletClass::BulletClass(IWorld* world, const GSvector3& position, const GSvecto
 	transform_.position(position);
 	owner_tag_ = owner_tag;
 	lifespan_timer_ = 300.0f;
+	effect_handle_ = gsPlayEffect(effect_handle, &position);
 }
 
 void BulletClass::update(float delta_time) {
@@ -22,7 +24,10 @@ void BulletClass::update(float delta_time) {
 		die();
 		return;
 	}
+
 	GSmatrix4 world = transform_.localToWorldMatrix();
+	world.translate(0.0f, 1.0f, 0.0f);
+	gsSetEffectMatrix(effect_handle_, &world); // ワールド変換行列を設定
 	lifespan_timer_ -= delta_time;
 	// フィールドとの衝突判定
 	Line line;

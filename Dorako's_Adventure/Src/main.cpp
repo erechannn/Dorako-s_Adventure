@@ -3,6 +3,7 @@
 #include"Scene/SceneManager.h"
 #include"World/World.h"
 #include"Scene/GamePlayScene.h"
+#include <GSeffect.h>
 
 class MyGame : public::gslib::Game {
 public:
@@ -11,6 +12,7 @@ public:
         GLOBAL.screen_size_ = GSvector2{ (GSfloat)width, (GSfloat)height };
     }
     void start()override {
+        gsInitEffect();
         World world;
         scene_manager_.add("GamePlayScene", new GamePlayScene());
         scene_manager_.change("GamePlayScene");
@@ -26,6 +28,7 @@ public:
         scene_manager_.draw();
     }
     void end()override {
+        gsFinishEffect();
         scene_manager_.end();
         scene_manager_.clear();
     }

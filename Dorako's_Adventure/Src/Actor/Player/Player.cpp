@@ -11,6 +11,7 @@
 #include "PlayerState/PlayerStateJumpEnd.h"
 #include "PlayerState/PlayerStateDead.h"
 #include <imgui/imgui.h>
+#include <iostream>
 
 const float PlayerHeight{ 1.0f };
 const float PlayerRadius{ 0.5f };
@@ -40,13 +41,13 @@ void Player::update(float delta_time) {
 	state_.update(delta_time);
 	//メッシュのモーションを更新
 	mesh_->update(delta_time);
-	//ワールド変換行列を設定
-	mesh_->transform(transform_.localToWorldMatrix());
 	//フィールドとの当たり判定
 	collide_field();
 	gravity_update(delta_time);
 	//プレイヤーを地面に対して垂直に立たせる
 	collide_ground();
+	//ワールド変換行列を設定
+	mesh_->transform(transform_.localToWorldMatrix());
 
 	//プレイヤーの状態管理
 	if (state_.now_state_ == PlayerState::StateMove && gsXBoxPadButtonTrigger(0,GS_XBOX_PAD_A)) {	//Aボタンでジャンプ
@@ -73,6 +74,9 @@ void Player::update(float delta_time) {
 void Player::draw()const {
 	//メッシュの表示
 	mesh_->draw();
+	GSvector3 up = transform_.up();
+	std::cout << "2 x: " << up.x << " y: " << up.y << " z: " << up.z << std::endl;
+
 }
 //当たり判定
 void Player::react(Actor& other) {
@@ -105,11 +109,13 @@ void Player::move(float delta_time) {
 	if (!is_move_)return;
 	// カメラの前方向ベクトルを取得
 	GSvector3 forward = world_->camera()->transform().forward();
+	forward = transform_.forward();
 	forward = transform_.inverseTransformVector(forward);//ワールドからローカルに
 	forward.y = 0.0f;//Yは無効
 	forward = forward.normalize();//正規化
 	//カメラの右向きベクトルを取得
 	GSvector3 right = world_->camera()->transform().right();
+	right = transform_.right();
 	right = transform_.inverseTransformDirection(right);//ワールドからローカル
 	right.y = 0.0f;//Yは無効
 	right = right.normalize();//正規化
@@ -132,7 +138,7 @@ void Player::move(float delta_time) {
 		GSvector3 velocity_world = transform_.transformDirection(velocity);//ローカルからワールド
 		GSquaternion rotation =
 			GSquaternion::rotateTowards(
-				transform_.localRotation(),
+				transform_.rotation(),
 				GSquaternion::lookRotation(velocity_world), 15.0f * delta_time);
 		transform_.rotation(rotation);
 		//プレイヤーの移動量に合わせてモーションの変化

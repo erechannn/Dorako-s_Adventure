@@ -15,8 +15,10 @@ Kuribo::Kuribo(IWorld* world, GSvector3 position) :
 	collider_ = BoundingSphere(1.0f, GSvector3{ 0.0f,height_,0.0f });
 	transform_.position(position);
 	mesh_->transform(transform_.localToWorldMatrix());
-	walk_speed_ = 0.5f;
+	walk_speed_ = 0.015f;
 	foot_offset_ = 5.0f;
+	set_next_point();
+	first_position_ = position;
 	state_.add_state(EnemyState::Search, new EnemyStateSearch(this));
 	state_.change_state(EnemyState::Search);
 }
@@ -30,6 +32,8 @@ void Kuribo::update(float delta_time) {
 	//ワールド変換行列を設定
 	mesh_->transform(transform_.localToWorldMatrix());
 
+	bool next_point = false;
+
 	//デバック表示
 	ImGui::Begin("Kuribo");
 	ImGui::Text("x:%f y:%f z:%f", transform_.position().x, transform_.position().y, transform_.position().z);
@@ -37,7 +41,15 @@ void Kuribo::update(float delta_time) {
 	ImGui::Text("x:%f y:%f z:%f", target_point_.x, target_point_.y, target_point_.z);
 	ImGui::Checkbox("is_move:",&is_move_);
 	ImGui::Checkbox("undead:",&undead_);
+	ImGui::Checkbox("next: ", &next_point);
 	ImGui::End();
+
+	if (next_point) {
+		set_next_point();
+		next_point = false;
+
+	}
+
 }
 void Kuribo::draw()const {
 	mesh_->draw();
@@ -51,7 +63,16 @@ void Kuribo::search(float delta_time) {
 
 	//とりあえずまっすぐに移動
 	if (is_move_) {
-		transform_.translate(0.0f, 0.0f, walk_speed_ * delta_time);
+		GSvector3 to_target = target_point_ - transform_.position() ;
+		GSvector3 target_normal = to_target.normalize();
+		velocity_ += target_normal * walk_speed_ * delta_time;
+		velocity_.y = 0.0f;
+		transform_.translate(velocity_,GStransform::Space::World);
+		if (to_target.magnitude() < 0.1f) {
+			is_move_ = false;
+		}
+
+		//transform_.translate(0.0f, 0.0f, walk_speed_ * delta_time);
 	}
 }
 bool Kuribo::is_above_player(Actor& other) {
@@ -88,6 +109,8 @@ void Kuribo::angle_set(GSvector3 target, GSvector3 forward) {
 	transform_.rotate(0.0f, clamped_angle, 0.0f);
 
 }
+
+*/
 void Kuribo::set_next_point() {
 	GSvector3 center = first_position_;
 	GSvector3 target_;
@@ -101,12 +124,10 @@ void Kuribo::set_next_point() {
 
 	// ターゲット座標を設定
 	target_.x = center.x + std::cos(angle) * radius;
-	target_.y = 0.0f;
 	target_.z = center.z + std::sin(angle) * radius;
 
-	transform_.transformDirection(target_);
 
 	target_point_ = target_;
 
 }
-*/
+
