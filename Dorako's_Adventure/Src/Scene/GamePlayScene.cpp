@@ -8,6 +8,7 @@
 #include"../Assets.h"
 #include"../Actor/Player/Player.h"
 #include "../Actor/Enemy/Kuribo.h"
+#include "../Actor/WoodBox/WoodBox.h"
 #include <GSstandard_shader.h>
 
 void GamePlayScene::start() {
@@ -46,6 +47,7 @@ void GamePlayScene::start() {
 
     gsLoadSkinMesh(Mesh_Player, "Assets/Mesh/Player/DragonSpark.mshb");
     gsLoadSkinMesh(Mesh_Kuribo, "Assets/Mesh/Enemy/FirePig/FirePig.mshb");
+    gsLoadMesh(Mesh_WoodBox, "Assets/Mesh/WoodBox/WoodBox.mshb");
     gsLoadMesh(Mesh_Planet, "Assets/Mesh/Planet/planet_.mshb");
 
     gsLoadTexture(Texture_Skybox, "Assets/Skybox/TestStageSkybox.dds");
@@ -54,7 +56,9 @@ void GamePlayScene::start() {
 
     world_.add_actor(new Player{ &world_,{3.0f,0.0f,3.0f} });
     world_.add_actor(new DummyPlayer{ &world_ });
-    world_.add_actor(new Kuribo{ &world_,{0.0f,0.0f,0.0f} });
+    //world_.add_actor(new Kuribo{ &world_,{0.0f,0.0f,0.0f} });
+    world_.add_actor(new WoodBox{ &world_,{20.0f,-20.0f,5.0f} });
+    world_.add_actor(new WoodBox{ &world_,{0.0f,0.0f,0.0f} });
 
     world_.add_field(new Field{ Octree_TestStage,Octree_TestStageCollider,Texture_Skybox });
 

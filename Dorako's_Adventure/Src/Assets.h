@@ -5,6 +5,8 @@ enum {
 	Mesh_Player,
 	Mesh_Planet,
 	Mesh_Kuribo,
+	Mesh_WoodBox,
+
 };
 enum {
 	Texture_Skybox,

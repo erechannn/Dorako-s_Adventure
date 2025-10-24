@@ -23,9 +23,7 @@ void Character::collide_field() {
 void Character::collide_actor(Actor& other) {
 	// ‚™À•W‚ğœ‚­À•W‚ğ‹‚ß‚é
 	GSvector3 position = transform_.position();
-	position.y = 0.0f;
 	GSvector3 target = other.transform().position();
-	target.y = 0.0f;
 	// ‘Šè‚Æ‚Ì‹——£
 	float distance = GSvector3::distance(position, target);
 	// Õ“Ë”»’è‹…‚Ì”¼Œa“¯m‚ğ‰Á‚¦‚½’·‚³‚ğ‹‚ß‚é
