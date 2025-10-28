@@ -34,7 +34,7 @@ void WoodBox::update(float delta_time) {
 }
 void WoodBox::draw()const {
 	mesh_->draw();
-	collider_.draw();
+	collider().draw();
 }
 void WoodBox::react(Actor& other) {
 	collide_actor(other);

@@ -67,10 +67,6 @@ void Character::collide_ground() {
 		GSvector3 left = GSvector3::cross(up, transform_.forward());
 		GSvector3 forward = GSvector3::cross(left, up);
 		transform_.rotation(GSquaternion::lookRotation(forward, up));
-		//up.normalize();
-		//std::cout << "0 x: " << up.x << " y: " << up.y << " z: " << up.z << std::endl;
-		//up = transform_.up();
-		//std::cout << "1 x: " << up.x << " y: " << up.y << " z: " << up.z << std::endl;
 	}
 	else  is_ground_ = false;
 

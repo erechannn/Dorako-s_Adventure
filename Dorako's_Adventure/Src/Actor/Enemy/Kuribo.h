@@ -16,9 +16,13 @@ private:
 	bool is_above_player(Actor& other);
 	GSvector3 target_point_{ 0.0f,0.0f,0.0f };
 	GSvector3 first_position_;
+	GSvector3 first_forward_{};
+	GSvector3 first_right_{};
 	float walk_timer_{ 0.0f };
-	bool is_move_{ false };
+	bool is_move_{ true };
 	bool undead_{ true };
+	GSvector3 planet_to_target_{};
+	BoundingSphere test_{};
 };
 
 

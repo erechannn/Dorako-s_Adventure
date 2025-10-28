@@ -17,13 +17,14 @@ Kuribo::Kuribo(IWorld* world, GSvector3 position) :
 	mesh_->transform(transform_.localToWorldMatrix());
 	walk_speed_ = 0.015f;
 	foot_offset_ = 5.0f;
+	first_position_ = transform_.inverseTransformPoint(position);
+	first_forward_ = transform_.forward();
+	first_right_ = transform_.right();
 	set_next_point();
-	first_position_ = position;
 	state_.add_state(EnemyState::Search, new EnemyStateSearch(this));
 	state_.change_state(EnemyState::Search);
 }
 void Kuribo::update(float delta_time) {
-	state_.update(delta_time);
 	collide_field();
 	collide_ground();
 	gravity_update(delta_time);
@@ -31,14 +32,18 @@ void Kuribo::update(float delta_time) {
 	mesh_->update(delta_time);
 	//ワールド変換行列を設定
 	mesh_->transform(transform_.localToWorldMatrix());
+	state_.update(delta_time);
 
 	bool next_point = false;
+
+	float dis = GSvector3::distance(target_point_, transform_.position());
 
 	//デバック表示
 	ImGui::Begin("Kuribo");
 	ImGui::Text("x:%f y:%f z:%f", transform_.position().x, transform_.position().y, transform_.position().z);
 	ImGui::Text("x:%f y:%f z:%f", velocity_.x, velocity_.y, velocity_.z);
-	ImGui::Text("x:%f y:%f z:%f", target_point_.x, target_point_.y, target_point_.z);
+	ImGui::Text("x:%f y:%f z:%f", planet_to_target_.x, planet_to_target_.y, planet_to_target_.z);
+	ImGui::Text("distance%f",dis);
 	ImGui::Checkbox("is_move:",&is_move_);
 	ImGui::Checkbox("undead:",&undead_);
 	ImGui::Checkbox("next: ", &next_point);
@@ -53,6 +58,8 @@ void Kuribo::update(float delta_time) {
 }
 void Kuribo::draw()const {
 	mesh_->draw();
+	test_.draw();
+	collider().draw();
 }
 void Kuribo::react(Actor& other) {
 	if (is_above_player(other)&&!undead_&&other.tag()=="PlayerTag") {
@@ -63,13 +70,18 @@ void Kuribo::search(float delta_time) {
 
 	//とりあえずまっすぐに移動
 	if (is_move_) {
-		GSvector3 to_target = target_point_ - transform_.position() ;
+		GSvector3 planet_position = { 0.0f,-20.0f,0.0f };
+		planet_to_target_ = target_point_ - planet_position;
+		planet_to_target_ = planet_to_target_.normalize();
+		planet_to_target_ = planet_to_target_ * 20.0f;
+		planet_to_target_.y = planet_to_target_.y - 20.0f;
+		GSvector3 to_target = planet_to_target_ - transform_.position() ;
 		GSvector3 target_normal = to_target.normalize();
-		velocity_ += target_normal * walk_speed_ * delta_time;
-		velocity_.y = 0.0f;
+		velocity_ = target_normal * walk_speed_ * delta_time;
 		transform_.translate(velocity_,GStransform::Space::World);
-		if (to_target.magnitude() < 0.1f) {
-			is_move_ = false;
+		float dis = GSvector3::distance(planet_to_target_, transform_.position());
+		if (dis<=0.1f) {
+			set_next_point();
 		}
 
 		//transform_.translate(0.0f, 0.0f, walk_speed_ * delta_time);
@@ -113,8 +125,10 @@ void Kuribo::angle_set(GSvector3 target, GSvector3 forward) {
 */
 void Kuribo::set_next_point() {
 	GSvector3 center = first_position_;
-	GSvector3 target_;
-	float radius = 2.0f;
+	GSvector3 forward = transform_.forward();
+	GSvector3 right = transform_.right();
+	GSvector3 target;
+	float radius = 3.0f;
 
 	// ランダムな角度（0～2π）
 	float angle = static_cast<float>(std::rand()) / RAND_MAX * 2.0f * M_PI;
@@ -123,11 +137,34 @@ void Kuribo::set_next_point() {
 	float dist = static_cast<float>(std::rand()) / RAND_MAX * radius;
 
 	// ターゲット座標を設定
-	target_.x = center.x + std::cos(angle) * radius;
-	target_.z = center.z + std::sin(angle) * radius;
+	// ターゲット座標を設定
+	target.x = center.x + std::cos(angle) * radius;
+	target.z = center.z + std::sin(angle) * radius;
+	//GSvector3 offset = first_right_ * (std::cos(angle) * dist) + first_forward_ * (std::sin(angle) * dist);
 
-
-	target_point_ = target_;
+	//target = center + offset;
+	target = transform_.transformPoint(target);
+	test_ = BoundingSphere{ 1.0f,target };
+	target_point_ = target;
+	/*
+	 vector3 center = first_position_;
+    vector3 target;
+    float radius = 2.0f;
+    
+    // ランダムな角度（0～2π）
+    float angle = static_cast<float>(std::rand()) / RAND_MAX * 2.0f * M_PI;
+    // ランダムな距離（0.0～radius）
+    float dist = static_cast<float>(std::rand()) / RAND_MAX * radius;
+    
+    // forwardとrightベクトルを使って接平面上の座標を計算
+    // cos(angle)でright方向、sin(angle)でforward方向の成分を計算
+    vector3 offset = first_right_ * (std::cos(angle) * dist) + 
+                     first_forward_ * (std::sin(angle) * dist);
+    
+    // ターゲット座標を設定
+    target = center + offset;
+    target_point_ = target;
+	*/
 
 }
 

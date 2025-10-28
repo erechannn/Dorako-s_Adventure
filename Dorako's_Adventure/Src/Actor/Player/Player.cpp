@@ -89,7 +89,7 @@ void Player::react(Actor& other) {
 			//ノックバック
 			GSvector3 now_pos{ transform().position() };
 			GSvector3 knock_pos{ now_pos };
-			knock_pos -= transform().forward() * 0.5f;
+			knock_pos -= transform().forward() * 2.0f;
 			// 補正後の座標に変更する
 			transform_.position(knock_pos);
 			health_ -= 1;
@@ -137,7 +137,7 @@ void Player::move(float delta_time) {
 		GSquaternion rotation =
 			GSquaternion::rotateTowards(
 				transform_.rotation(),
-				GSquaternion::lookRotation(velocity_world), 15.0f * delta_time);
+				GSquaternion::lookRotation(velocity_world,transform_.up()), 15.0f * delta_time);
 		transform_.rotation(rotation);
 		//プレイヤーの移動量に合わせてモーションの変化
 		if (result_normalize <= 0.2f) {
