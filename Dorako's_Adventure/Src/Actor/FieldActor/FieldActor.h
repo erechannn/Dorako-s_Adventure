@@ -28,10 +28,29 @@ public:
         GSvector3* intersect = nullptr) const;
 
 protected:
+    void gravity_update(float delta_time);
+    void collide_ground();
+    void collide_actor(Actor& actor);
+
     // メッシュ
     GSuint          mesh_{ 0 };
     // メッシュコライダ
     GSuint          mesh_collider_{ 0 };
+
+    //重力量
+    float gravity_{ -0.003 };
+    //重力による移動量
+    GSvector3 gravity_velocity_{ 0.0f,0.0f,0.0f };
+    int max_health_{ 1 };
+    int health_{ 1 };
+    //足元のオフセット
+    float foot_offset_{ 0.1f };
+    //キャラの高さ
+    float height_{ 1.0f };
+    //重力を適応するか
+    bool is_ground_{ false };
+    bool is_zero_gravity_{ false };
+
 };
 
 #endif

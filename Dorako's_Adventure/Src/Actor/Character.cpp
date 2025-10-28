@@ -14,10 +14,31 @@ void Character::change_state(int next_state) {
 }
 void Character::collide_field() {
 	// 壁との衝突判定（球体との判定）
-	GSvector3 center; // 押し戻し後の球体の中心座標
+	GSvector3 center; // 衝突後の球体の中心座標
 	if (world_->field()->collide(collider(), &center)) {
+		// y座標は変更しない
+		center.y = transform_.position().y;
 		// 補正後の座標に変更する
 		transform_.position(center);
+	}
+	// 地面との衝突判定（線分との交差判定）
+	GSvector3 position = transform_.position();
+	Line line;
+	line.start = position + collider_.center;
+	line.end = position + GSvector3{ 0.0f, -foot_offset_, 0.0f };
+	GSvector3 intersect;            // 地面との交点
+	// 衝突したフィールド用アクター
+	Actor* field_actor{ nullptr };
+	// 親をリセットしておく
+	transform_.parent(nullptr);
+	if (world_->field()->collide(line, &intersect, nullptr, &field_actor)) {
+		// 座標を変更する
+		transform_.position(position);
+		// フィールド用のアクタークラスと衝突したか？
+		if (field_actor != nullptr) {
+			// 衝突したフィールド用のアクターを親のトランスフォームクラスとして設定
+			transform_.parent(&field_actor->transform());
+		}
 	}
 }
 void Character::collide_actor(Actor& other) {

@@ -10,6 +10,7 @@
 #include "../Actor/Enemy/Kuribo.h"
 #include "../Actor/WoodBox/WoodBox.h"
 #include <GSstandard_shader.h>
+#include <GSeffect.h>
 
 void GamePlayScene::start() {
 
@@ -50,6 +51,8 @@ void GamePlayScene::start() {
     gsLoadMesh(Mesh_WoodBox, "Assets/Mesh/WoodBox/WoodBox.mshb");
     gsLoadMesh(Mesh_Planet, "Assets/Mesh/Planet/planet_.mshb");
 
+    gsLoadEffect(Effeck_FireBoll, "Assets/Effect/FireBall_Orange.efkefc");
+
     gsLoadTexture(Texture_Skybox, "Assets/Skybox/TestStageSkybox.dds");
     gsLoadOctree(Octree_TestStage, "Assets/Stage/testStage2.oct");
     gsLoadOctree(Octree_TestStageCollider, "Assets/Stage/testStage2Collider.oct");
@@ -57,7 +60,6 @@ void GamePlayScene::start() {
     world_.add_actor(new Player{ &world_,{3.0f,0.0f,3.0f} });
     world_.add_actor(new DummyPlayer{ &world_ });
     world_.add_actor(new Kuribo{ &world_,{0.0f,0.0f,0.0f} });
-    world_.add_actor(new WoodBox{ &world_,{20.0f,-20.0f,5.0f} });
     //world_.add_actor(new WoodBox{ &world_,{0.0f,0.0f,0.0f} });
 
     world_.add_field(new Field{ Octree_TestStage,Octree_TestStageCollider,Texture_Skybox });
@@ -66,6 +68,9 @@ void GamePlayScene::start() {
                  &world_, GSvector3{ 0.0f, 2.0f, -4.0f }, GSvector3{ 0.0f, 1.0f, 0.0f } });
 
     world_.add_light(new Light{ &world_ });
+
+    world_.field()->add(new WoodBox{ &world_,{5.0f,0.0f,5.0f},Mesh_WoodBox,Mesh_WoodBox });
+
 
 	is_end_ = false;
 	is_start_ = false;

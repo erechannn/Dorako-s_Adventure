@@ -17,6 +17,9 @@ enum {
 	Octree_TestStage,
 	Octree_TestStageCollider,
 };
+enum {
+	Effeck_FireBoll,
+};
 
 
 

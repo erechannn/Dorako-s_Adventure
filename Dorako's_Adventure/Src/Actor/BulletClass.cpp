@@ -41,6 +41,13 @@ void BulletClass::update(float delta_time) {
 		die();
 		return;
 	}
+	//地面にそらして回転させる
+	GSvector3 planet_position{ 0.0f,-20.0f,0.0f };
+	GSvector3 up = transform_.position() - planet_position;
+	GSvector3 left = GSvector3::cross(up, transform_.forward());
+	GSvector3 forward = GSvector3::cross(left, up);
+	transform_.rotation(GSquaternion::lookRotation(forward, up));
+
 	// 移動する（ワールド座標系基準）
 	transform_.translate(velocity_ * delta_time, GStransform::Space::World);
 }

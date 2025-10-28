@@ -10,7 +10,7 @@ class Actor;
 class ActorManager {
 public:
 	ActorManager() = default;
-	~ActorManager();
+	virtual ~ActorManager();
 	void add(Actor* actor);
 	void update(float delta_time);
 	void late_update(float delta_time);
@@ -28,7 +28,7 @@ public:
 	ActorManager(const ActorManager& other) = delete;
 	ActorManager& operator=(const ActorManager& other) = delete;
 
-private:
+protected:
 	std::list<Actor*>actors_;
 };
 
