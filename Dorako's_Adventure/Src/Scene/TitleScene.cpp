@@ -47,8 +47,8 @@ void TitleScene::start() {
     gsLoadOctree(Octree_TestStage, "Assets/Stage/testStage2.oct");
     gsLoadOctree(Octree_TestStageCollider, "Assets/Stage/testStage2Collider.oct");
 
-	gsLoadTexture(Texture_TitleLogo, "Assets/Texture/TitleLogo.png");
-	gsLoadTexture(Texture_TitleUi, "Assets/Texture/TitleUi.png");
+	gsLoadTexture(Texture_TitleLogo, "Assets/Texture/TitleUI/TitleLogo.png");
+	gsLoadTexture(Texture_TitleUi, "Assets/Texture/TitleUI/TitleUi.png");
 
     gsLoadSkinMesh(Mesh_Player, "Assets/Mesh/Player/DragonSpark.mshb");
 

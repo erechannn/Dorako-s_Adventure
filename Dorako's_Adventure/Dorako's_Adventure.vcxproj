@@ -174,6 +174,8 @@
     <ClCompile Include="Src\Tween\ValueUnit.cpp" />
     <ClCompile Include="Src\Tween\Vector2Unit.cpp" />
     <ClCompile Include="Src\Tween\Vector3Unit.cpp" />
+    <ClCompile Include="Src\UI\UIActor\UIActor.cpp" />
+    <ClCompile Include="Src\UI\UIActor\UIActors\GamePlayUI.cpp" />
     <ClCompile Include="Src\World\Field.cpp" />
     <ClCompile Include="Src\World\World.cpp" />
   </ItemGroup>
@@ -226,6 +228,8 @@
     <ClInclude Include="Src\Tween\ValueUnit.h" />
     <ClInclude Include="Src\Tween\Vector2Unit.h" />
     <ClInclude Include="Src\Tween\Vector3Unit.h" />
+    <ClInclude Include="Src\UI\UIActor\UIActor.h" />
+    <ClInclude Include="Src\UI\UIActor\UIActors\GamePlayUI.h" />
     <ClInclude Include="Src\World\Field.h" />
     <ClInclude Include="Src\World\IWorld.h" />
     <ClInclude Include="Src\World\World.h" />

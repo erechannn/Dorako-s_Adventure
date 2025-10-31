@@ -9,6 +9,7 @@
 #include"../Actor/Player/Player.h"
 #include "../Actor/Enemy/Kuribo.h"
 #include "../Actor/WoodBox/WoodBox.h"
+#include "../UI/UIActor/UIActors/GamePlayUI.h"
 #include <GSstandard_shader.h>
 #include <GSeffect.h>
 
@@ -57,6 +58,9 @@ void GamePlayScene::start() {
     gsLoadOctree(Octree_TestStage, "Assets/Stage/testStage2.oct");
     gsLoadOctree(Octree_TestStageCollider, "Assets/Stage/testStage2Collider.oct");
 
+    gsLoadTexture(Texture_FireCount, "Assets/Texture/GamePlayUI/fire_count_icon.png");
+    gsLoadTexture(Texture_EmptyFireCount, "Assets/Texture/GamePlayUI/fire_count_empty.png");
+
     world_.add_actor(new Player{ &world_,{3.0f,0.0f,3.0f} });
     world_.add_actor(new DummyPlayer{ &world_ });
     world_.add_actor(new Kuribo{ &world_,{0.0f,0.0f,0.0f} });
@@ -70,6 +74,8 @@ void GamePlayScene::start() {
     world_.add_light(new Light{ &world_ });
 
     world_.field()->add(new WoodBox{ &world_,{5.0f,0.0f,5.0f},Mesh_WoodBox,Mesh_WoodBox });
+
+    world_.add_actor(new GamePlayUI{ &world_,true });
 
 
 	is_end_ = false;

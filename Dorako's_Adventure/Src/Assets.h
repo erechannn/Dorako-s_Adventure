@@ -12,6 +12,8 @@ enum {
 	Texture_Skybox,
 	Texture_TitleLogo,
 	Texture_TitleUi,
+	Texture_FireCount,
+	Texture_EmptyFireCount,
 };
 enum {
 	Octree_TestStage,
