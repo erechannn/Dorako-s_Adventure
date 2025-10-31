@@ -16,6 +16,7 @@ private:
 	std::string owner_tag_{ " " };
 	GSvector3 effect_position_{ 0.0f,0.0f,0.0f };
 	GSint effect_handle_{ 0 };
+	float speed_{ 0.1f };
 
 };
 

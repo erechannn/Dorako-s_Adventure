@@ -11,7 +11,7 @@ BulletClass::BulletClass(IWorld* world, const GSvector3& position, const GSvecto
 	world_ = world;
 	tag_ = tag;
 	name_ = name;
-	velocity_ = velocity;
+	transform_.forward(velocity);
 	collider_ = BoundingSphere{ 0.5,{0.0f,1.0f,0.0f} };
 	transform_.position(position);
 	owner_tag_ = owner_tag;
@@ -21,12 +21,14 @@ BulletClass::BulletClass(IWorld* world, const GSvector3& position, const GSvecto
 
 void BulletClass::update(float delta_time) {
 	if (lifespan_timer_ <= 0.0f) {
+		gsStopEffect(effect_handle_);
 		die();
 		return;
 	}
 
-	GSmatrix4 world = transform_.localToWorldMatrix();
+	GSmatrix4 world = transform_.worldToLocalMatrix();
 	world.translate(0.0f, 1.0f, 0.0f);
+	world = transform_.localToWorldMatrix();
 	gsSetEffectMatrix(effect_handle_, &world); // ワールド変換行列を設定
 	lifespan_timer_ -= delta_time;
 	// フィールドとの衝突判定
@@ -38,6 +40,7 @@ void BulletClass::update(float delta_time) {
 		// 交点の座標に補正
 		transform_.position(intersect);
 		// フィールドに衝突したら死亡
+		gsStopEffect(effect_handle_);
 		die();
 		return;
 	}
@@ -49,12 +52,13 @@ void BulletClass::update(float delta_time) {
 	transform_.rotation(GSquaternion::lookRotation(forward, up));
 
 	// 移動する（ワールド座標系基準）
-	transform_.translate(velocity_ * delta_time, GStransform::Space::World);
+	transform_.translate(transform_.forward()*speed_*delta_time, GStransform::Space::World);
 }
 void BulletClass::draw()const {
-	collider_.draw();
+	collider().draw();
 }
 void BulletClass::react(Actor& other) {
 	if (other.tag() == tag() || other.tag() == owner_tag_) return;
+	gsStopEffect(effect_handle_);
 	die();
 }

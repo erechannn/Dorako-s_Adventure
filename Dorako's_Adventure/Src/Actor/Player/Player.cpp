@@ -62,13 +62,8 @@ void Player::update(float delta_time) {
 	}
 	else is_move_ = false;
 	if(gsXBoxPadButtonTrigger(0,GS_XBOX_PAD_B)&&is_move_){
-		const float GenerateDistance{ 1.4f };
-		const float GanerateHight{ 1.0f };
-		const float Speed{ 0.1f };
-		GSvector3 position = transform_.position() + transform_.forward() * GenerateDistance;
-		position.y = GanerateHight;
-		GSvector3 velocity = transform_.forward() * Speed;
-		world_->add_actor(new BulletClass{ world_,position,velocity,Effeck_FireBoll,"PlayerAttackTag","PlayerFireAttack",tag_});
+		GSvector3 position = transform_.position() + transform_.forward();
+		world_->add_actor(new BulletClass{ world_,position,transform_.forward(),Effeck_FireBoll,"PlayerAttackTag","PlayerFireAttack",tag_});
 	}
 
 
