@@ -77,6 +77,13 @@ void Character::collide_ground() {
 	GSplane ground_plane;         // 衝突した地面の平面
 	if (gsOctreeCollisionLine(gsGetOctree(Octree_TestStageCollider),
 		&line_start, &line_end, &collision_point, &ground_plane)) {
+		GSvector3 hit_position = collision_point;
+		if (hit_position.distance(hit_position_)>=2.0f) {
+			std::cout << "異常発生" << std::endl;
+			std::cout << "x: " << hit_position.x << " y: " << hit_position.y << " z: " << hit_position.z << std::endl;
+
+		}
+		hit_position_ = hit_position;
 		// 衝突した位置に座標を補正する
 		transform_.position(collision_point);
 		//重力を無効

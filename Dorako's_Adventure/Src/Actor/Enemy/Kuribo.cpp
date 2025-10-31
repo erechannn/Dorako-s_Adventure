@@ -20,6 +20,7 @@ Kuribo::Kuribo(IWorld* world, GSvector3 position) :
 	first_position_ = transform_.inverseTransformPoint(position);
 	first_forward_ = transform_.forward();
 	first_right_ = transform_.right();
+	first_transform_ = transform_;
 	set_next_point();
 	state_.add_state(EnemyState::Search, new EnemyStateSearch(this));
 	state_.change_state(EnemyState::Search);
@@ -124,7 +125,7 @@ void Kuribo::angle_set(GSvector3 target, GSvector3 forward) {
 
 */
 void Kuribo::set_next_point() {
-	GSvector3 center = first_position_;
+	GSvector3 center = first_transform_.inverseTransformPoint(first_transform_.position());
 	GSvector3 forward = transform_.forward();
 	GSvector3 right = transform_.right();
 	GSvector3 target;
@@ -143,7 +144,7 @@ void Kuribo::set_next_point() {
 	//GSvector3 offset = first_right_ * (std::cos(angle) * dist) + first_forward_ * (std::sin(angle) * dist);
 
 	//target = center + offset;
-	target = transform_.transformPoint(target);
+	target = first_transform_.transformPoint(target);
 	test_ = BoundingSphere{ 1.0f,target };
 	target_point_ = target;
 	/*

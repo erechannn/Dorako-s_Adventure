@@ -5,6 +5,7 @@
 #include"../PlayerMotion.h"
 #include"../Player.h"
 
+
 class PlayerState :public IState {
 public:
 	PlayerState(Player* owner) :owner_{ owner } {};

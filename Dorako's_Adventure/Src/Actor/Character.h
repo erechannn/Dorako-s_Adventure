@@ -44,6 +44,8 @@ protected:
 	//d—Í‚ğ“K‰‚·‚é‚©
 	bool is_ground_{ false };
 	bool is_zero_gravity_{ false };
+
+	GSvector3 hit_position_{};
 };
 
 

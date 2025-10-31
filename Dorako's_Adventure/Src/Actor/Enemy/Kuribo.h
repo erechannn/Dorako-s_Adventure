@@ -23,6 +23,7 @@ private:
 	bool undead_{ true };
 	GSvector3 planet_to_target_{};
 	BoundingSphere test_{};
+	GStransform first_transform_{};
 };
 
 

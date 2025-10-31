@@ -65,11 +65,11 @@ void CameraRotateAround::update(float delta_time) {
 	//GSquaternion target_rotation = GSquaternion::lookRotation(at, up);
 	//transform_.rotation(target_rotation);
 	transform_.lookAt(at,up);
-	at = at - transform_.position();
-	at = at.normalize();
-	std::cout << " ax: " << at.x << " ay: " << at.y << " az: " << at.z << std::endl;;
-	up = up.normalize();
-	std::cout << " ux: " << up.x << " uy: " << up.y << " uz: " << up.z << std::endl;;
+	//at = at - transform_.position();
+	//at = at.normalize();
+	//std::cout << " ax: " << at.x << " ay: " << at.y << " az: " << at.z << std::endl;;
+	//up = up.normalize();
+	//std::cout << " ux: " << up.x << " uy: " << up.y << " uz: " << up.z << std::endl;;
 }
 void CameraRotateAround::draw()const {
 	GSvector3 eye = transform_.position();

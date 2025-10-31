@@ -148,6 +148,7 @@
     <ClCompile Include="Src\Actor\FieldActor\FieldActorManager.cpp" />
     <ClCompile Include="Src\Actor\ModelPlayer.cpp" />
     <ClCompile Include="Src\Actor\Player\Player.cpp" />
+    <ClCompile Include="Src\Actor\Player\PlayerState\PlayerStateAttack.cpp" />
     <ClCompile Include="Src\Actor\Player\PlayerState\PlayerStateDamage.cpp" />
     <ClCompile Include="Src\Actor\Player\PlayerState\PlayerStateDead.cpp" />
     <ClCompile Include="Src\Actor\Player\PlayerState\PlayerStateFlying.cpp" />
@@ -192,6 +193,7 @@
     <ClInclude Include="Src\Actor\Player\Player.h" />
     <ClInclude Include="Src\Actor\Player\PlayerMotion.h" />
     <ClInclude Include="Src\Actor\Player\PlayerState\PlayerState.h" />
+    <ClInclude Include="Src\Actor\Player\PlayerState\PlayerStateAttack.h" />
     <ClInclude Include="Src\Actor\Player\PlayerState\PlayerStateDamage.h" />
     <ClInclude Include="Src\Actor\Player\PlayerState\PlayerStateDead.h" />
     <ClInclude Include="Src\Actor\Player\PlayerState\PlayerStateFlying.h" />

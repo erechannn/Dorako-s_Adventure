@@ -11,6 +11,7 @@
 #include "PlayerState/PlayerStateFlying.h"
 #include "PlayerState/PlayerStateJumpEnd.h"
 #include "PlayerState/PlayerStateDead.h"
+#include "PlayerState/PlayerStateAttack.h"
 #include <imgui/imgui.h>
 #include <iostream>
 
@@ -35,6 +36,7 @@ Player::Player(IWorld* world, GSvector3 position) :
 	state_.add_state(PlayerState::StateFlying, new PlayerStateFlying(this));
 	state_.add_state(PlayerState::StateJumpEnd, new PlayerStateJumpEnd(this));
 	state_.add_state(PlayerState::StateDead, new PlayerStateDead(this));
+	state_.add_state(PlayerState::StateAttack, new PlayerStateAttack(this, world_));
 	state_.change_state(PlayerState::StateMove);
 
 }
@@ -62,8 +64,7 @@ void Player::update(float delta_time) {
 	}
 	else is_move_ = false;
 	if(gsXBoxPadButtonTrigger(0,GS_XBOX_PAD_B)&&is_move_){
-		GSvector3 position = transform_.position() + transform_.forward();
-		world_->add_actor(new BulletClass{ world_,position,transform_.forward(),Effeck_FireBoll,"PlayerAttackTag","PlayerFireAttack",tag_});
+		state_.change_state(PlayerState::StateAttack);
 	}
 
 
@@ -80,7 +81,7 @@ void Player::draw()const {
 	//ƒƒbƒVƒ…‚Ì•\Ž¦
 	mesh_->draw();
 	GSvector3 up = transform_.up();
-	std::cout << "2 x: " << up.x << " y: " << up.y << " z: " << up.z << std::endl;
+	//std::cout << "2 x: " << up.x << " y: " << up.y << " z: " << up.z << std::endl;
 
 }
 //“–‚½‚è”»’è
