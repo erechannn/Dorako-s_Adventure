@@ -20,9 +20,14 @@ public:
 	bool is_motion_end();
 	//Œ»İ‚Ì‘Ì—Í
 	int now_health_(){}
+
+	void consume_fire_count();
+
+	int fire_count();
 private:
 	bool is_above_enemy(Actor& other);
 	bool is_move_{ false };
+	int fire_count_{ 3 };
 };
 
 

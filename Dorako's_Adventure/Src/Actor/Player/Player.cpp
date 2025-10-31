@@ -67,15 +67,18 @@ void Player::update(float delta_time) {
 		state_.change_state(PlayerState::StateAttack);
 	}
 
-
 	//デバック表示
 	ImGui::Begin("Player");
 	ImGui::Text("x:%f y:%f z:%f", transform_.position().x, transform_.position().y, transform_.position().z);
 	ImGui::Text("x:%f y:%f z:%f", velocity_.x, velocity_.y, velocity_.z);
 	ImGui::Text("gravity:%f", gravity_);
 	ImGui::Checkbox("地上にいるか", &is_ground_);
+	if (ImGui::Button("add_fire_count")) {
+		fire_count_ += 1;
+	}
 
 	ImGui::End();
+
 }
 void Player::draw()const {
 	//メッシュの表示
@@ -200,4 +203,10 @@ bool Player::is_above_enemy(Actor&other) {
 	GSvector3 to_other = position - other_position;
 	float dot = to_other.dot(other_up);
 	return dot > 0;
+}
+void Player::consume_fire_count() {
+	fire_count_ -= 1;
+}
+int Player::fire_count() {
+	return fire_count_;
 }

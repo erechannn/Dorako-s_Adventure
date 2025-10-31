@@ -15,9 +15,11 @@ void PlayerStateAttack::update(float delta_time) {
 	}
 }
 void PlayerStateAttack::start() {
-	GSvector3 position = owner_->transform().position() + owner_->transform().forward();
-	world_->add_actor(new BulletClass{ world_,position,owner_->transform().forward(),Effeck_FireBoll,"PlayerAttackTag","PlayerFireAttack",owner_->tag()});
-
+	if (owner_->fire_count() != 0) {
+		GSvector3 position = owner_->transform().position() + owner_->transform().forward();
+		world_->add_actor(new BulletClass{ world_,position,owner_->transform().forward(),Effeck_FireBoll,"PlayerAttackTag","PlayerFireAttack",owner_->tag() });
+		owner_->consume_fire_count();
+	}
 }
 void PlayerStateAttack::end() {
 
