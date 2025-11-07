@@ -78,6 +78,7 @@ void Character::collide_ground() {
 	if (gsOctreeCollisionLine(gsGetOctree(Octree_TestStageCollider),
 		&line_start, &line_end, &collision_point, &ground_plane)) {
 		GSvector3 hit_position = collision_point;
+		collider_point_ = collision_point;
 		if (hit_position.distance(hit_position_)>=2.0f) {
 			std::cout << "ˆÙí”­¶" << std::endl;
 			std::cout << "x: " << hit_position.x << " y: " << hit_position.y << " z: " << hit_position.z << std::endl;

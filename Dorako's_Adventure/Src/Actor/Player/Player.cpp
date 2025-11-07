@@ -27,7 +27,7 @@ Player::Player(IWorld* world, GSvector3 position) :
 	collider_ = BoundingSphere{ PlayerRadius,GSvector3{0,PlayerHeight,0} };
 	transform_.position(position);
 	mesh_->transform(transform_.localToWorldMatrix());
-	max_health_ = 300000;
+	max_health_ = 3;
 	health_ = max_health_;
 	//èÛë‘ÇÃí«â¡
 	state_.add_state(PlayerState::StateDamage, new PlayerStateDamage(this));
@@ -71,6 +71,7 @@ void Player::update(float delta_time) {
 	ImGui::Begin("Player");
 	ImGui::Text("x:%f y:%f z:%f", transform_.position().x, transform_.position().y, transform_.position().z);
 	ImGui::Text("x:%f y:%f z:%f", velocity_.x, velocity_.y, velocity_.z);
+	ImGui::Text("x:%f y:%f z:%f", transform_.up().x, transform_.up().y, transform_.up().z);
 	ImGui::Text("gravity:%f", gravity_);
 	ImGui::Checkbox("ínè„Ç…Ç¢ÇÈÇ©", &is_ground_);
 	if (ImGui::Button("add_fire_count")) {

@@ -14,6 +14,8 @@ enum {
 	Texture_TitleUi,
 	Texture_FireCount,
 	Texture_EmptyFireCount,
+	Texture_HealthIcon,
+	Texture_EmptyHealth,
 };
 enum {
 	Octree_TestStage,

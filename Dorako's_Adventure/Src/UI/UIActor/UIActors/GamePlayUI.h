@@ -3,6 +3,7 @@
 
 #include "../UIActor.h"
 #include "../../../Actor/Player/Player.h"
+#include <vector>
 
 
 class GamePlayUI:public UIActor {
@@ -26,6 +27,8 @@ private:
 
     int fire_count_{};
 
+    int player_health_{};
+
     GSvector2 position_{};
 
     GSvector2 size_{};
@@ -35,7 +38,16 @@ private:
     GSrect rect_{};
 
     GScolor color_{};
+
+    GSvector2 fire_count_position_{};
+
+    GSvector2 heart_position_{};
+
+    GSvector2 fire_count_positions_[3];
+
+    GSvector2 heart_positions_[3];
 };
+
 
 
 

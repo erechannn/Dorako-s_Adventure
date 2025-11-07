@@ -4,6 +4,7 @@
 #include "EnemyState/EnemyStateSearch.h"
 #include <imgui/imgui.h>
 #include <algorithm>
+#include <iostream>
 
 const float M_PI{ 3.14159265358979323846 };
 
@@ -16,7 +17,7 @@ Kuribo::Kuribo(IWorld* world, GSvector3 position) :
 	transform_.position(position);
 	mesh_->transform(transform_.localToWorldMatrix());
 	walk_speed_ = 0.015f;
-	foot_offset_ = 5.0f;
+	foot_offset_ = 2.0f;
 	first_position_ = transform_.inverseTransformPoint(position);
 	first_forward_ = transform_.forward();
 	first_right_ = transform_.right();
@@ -26,27 +27,34 @@ Kuribo::Kuribo(IWorld* world, GSvector3 position) :
 	state_.change_state(EnemyState::Search);
 }
 void Kuribo::update(float delta_time) {
+	state_.update(delta_time);
+	std::cout << "x: " << transform_.position().x << " y: " << transform_.position().y << " z: " << transform_.position().z << std::endl;
 	collide_field();
-	collide_ground();
 	gravity_update(delta_time);
+	collide_ground();
 	//メッシュのモーションを更新
 	mesh_->update(delta_time);
 	//ワールド変換行列を設定
 	mesh_->transform(transform_.localToWorldMatrix());
-	state_.update(delta_time);
+
+	test2_ = BoundingSphere(1.0f, transform_.position());
 
 	bool next_point = false;
 
 	float dis = GSvector3::distance(target_point_, transform_.position());
+	if (!is_ground_) {
+		std::cout << "異常発生" << std::endl;
+	}
 
 	//デバック表示
 	ImGui::Begin("Kuribo");
 	ImGui::Text("x:%f y:%f z:%f", transform_.position().x, transform_.position().y, transform_.position().z);
 	ImGui::Text("x:%f y:%f z:%f", velocity_.x, velocity_.y, velocity_.z);
-	ImGui::Text("x:%f y:%f z:%f", planet_to_target_.x, planet_to_target_.y, planet_to_target_.z);
+	ImGui::Text("x:%f y:%f z:%f", target_point_.x, target_point_.y, target_point_.z);
 	ImGui::Text("distance%f",dis);
 	ImGui::Checkbox("is_move:",&is_move_);
 	ImGui::Checkbox("undead:",&undead_);
+	ImGui::Checkbox("is_ground", &is_ground_);
 	ImGui::Checkbox("next: ", &next_point);
 	ImGui::End();
 
@@ -60,7 +68,11 @@ void Kuribo::update(float delta_time) {
 void Kuribo::draw()const {
 	mesh_->draw();
 	test_.draw();
-	collider().draw();
+	test2_.draw();
+	GSvector3 up = transform_.up();
+	//std::cout << "2 x: " << collider_point_.x << " y: " << collider_point_.y << " z: " << collider_point_.z << std::endl;
+
+
 }
 void Kuribo::react(Actor& other) {
 	if (is_above_player(other)&&!undead_&&other.tag()=="PlayerTag") {
@@ -71,17 +83,43 @@ void Kuribo::search(float delta_time) {
 
 	//とりあえずまっすぐに移動
 	if (is_move_) {
-		GSvector3 planet_position = { 0.0f,-20.0f,0.0f };
-		planet_to_target_ = target_point_ - planet_position;
-		planet_to_target_ = planet_to_target_.normalize();
-		planet_to_target_ = planet_to_target_ * 20.0f;
-		planet_to_target_.y = planet_to_target_.y - 20.0f;
-		GSvector3 to_target = planet_to_target_ - transform_.position() ;
+		GSvector3 to_target = target_point_ - transform_.position();
+		GSvector3 velocity = { 0.0f,0.0f,0.0f };
+
+		float angle = GSvector3::angle(to_target, transform_.forward());
+		if (angle <= 0.1f) {
+
+		}
 		GSvector3 target_normal = to_target.normalize();
-		velocity_ = target_normal * walk_speed_ * delta_time;
-		transform_.translate(velocity_,GStransform::Space::World);
-		float dis = GSvector3::distance(planet_to_target_, transform_.position());
-		if (dis<=0.1f) {
+		velocity = target_normal * walk_speed_ * delta_time;
+
+		GSvector3 position = transform_.position();
+
+		transform_.translate(velocity,GStransform::Space::World);
+
+		GSvector3 planet_position = { 0.0f,-20.0f,0.0f };
+		GSvector3 to_planet = transform_.position() - planet_position;
+		to_planet.normalize();
+		GSvector3 up = to_planet;
+		//transform_.up(to_planet);
+		to_planet = to_planet * 20.0f;
+		to_planet = to_planet + planet_position;
+		transform_.position(to_planet);
+		position = transform_.position()-position;
+		position.normalize();
+		transform_.rotation(GSquaternion::lookRotation(position, up));
+
+		if (velocity.length() != 0.0f) {
+			//GSquaternion rotation =
+			//	GSquaternion::rotateTowards(
+			//		transform_.rotation(),
+			//		GSquaternion::lookRotation(velocity, transform_.up()), 100.0f * delta_time);
+			//transform_.rotation(rotation);
+		}
+
+
+		float dis = GSvector3::distance(target_point_, transform_.position());
+		if (dis<=0.3f) {
 			set_next_point();
 		}
 
@@ -142,9 +180,15 @@ void Kuribo::set_next_point() {
 	target.x = center.x + std::cos(angle) * radius;
 	target.z = center.z + std::sin(angle) * radius;
 	//GSvector3 offset = first_right_ * (std::cos(angle) * dist) + first_forward_ * (std::sin(angle) * dist);
-
 	//target = center + offset;
 	target = first_transform_.transformPoint(target);
+
+	GSvector3 planet_position = { 0.0f,-20.0f,0.0f };
+	target = target - planet_position;
+	target = target.normalize();
+	target = target * 20.0f;
+	target = target + planet_position;
+
 	test_ = BoundingSphere{ 1.0f,target };
 	target_point_ = target;
 	/*

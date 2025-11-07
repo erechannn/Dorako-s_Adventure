@@ -46,6 +46,7 @@ protected:
 	bool is_zero_gravity_{ false };
 
 	GSvector3 hit_position_{};
+	GSvector3 collider_point_{};
 };
 
 

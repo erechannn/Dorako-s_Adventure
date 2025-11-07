@@ -60,6 +60,8 @@ void GamePlayScene::start() {
 
     gsLoadTexture(Texture_FireCount, "Assets/Texture/GamePlayUI/fire_count_icon.png");
     gsLoadTexture(Texture_EmptyFireCount, "Assets/Texture/GamePlayUI/fire_count_empty.png");
+    gsLoadTexture(Texture_HealthIcon, "Assets/Texture/GamePlayUI/health_icon.png");
+    gsLoadTexture(Texture_EmptyHealth, "Assets/Texture/GamePlayUI/health_icon_empty.png");
 
     world_.add_actor(new Player{ &world_,{3.0f,0.0f,3.0f} });
     world_.add_actor(new DummyPlayer{ &world_ });
@@ -69,7 +71,7 @@ void GamePlayScene::start() {
     world_.add_field(new Field{ Octree_TestStage,Octree_TestStageCollider,Texture_Skybox });
 
     world_.add_camera(new CameraRotateAround{
-                 &world_, GSvector3{ 0.0f, 2.0f, -4.0f }, GSvector3{ 0.0f, 1.0f, 0.0f } });
+                 &world_, GSvector3{ -180.0f, 1.0f, 5.0f }, GSvector3{ 0.0f, 1.0f, 0.0f } });
 
     world_.add_light(new Light{ &world_ });
 
