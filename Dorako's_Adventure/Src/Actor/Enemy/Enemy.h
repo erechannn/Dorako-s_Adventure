@@ -19,7 +19,7 @@ public:
 protected:
 	int max_health_{ 1 };
 	int health_{ 1 };
-	float walk_speed_{ 0.15f };
+	float walk_speed_{ 0.05f };
 
 
 };

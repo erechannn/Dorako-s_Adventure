@@ -16,7 +16,6 @@ Kuribo::Kuribo(IWorld* world, GSvector3 position) :
 	collider_ = BoundingSphere(1.0f, GSvector3{ 0.0f,height_,0.0f });
 	transform_.position(position);
 	mesh_->transform(transform_.localToWorldMatrix());
-	walk_speed_ = 0.015f;
 	foot_offset_ = 2.0f;
 	first_position_ = transform_.inverseTransformPoint(position);
 	first_forward_ = transform_.forward();
