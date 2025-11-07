@@ -83,7 +83,12 @@ void Kuribo::search(float delta_time) {
 
 	//‚Æ‚è‚ ‚¦‚¸‚Ü‚Á‚·‚®‚ÉˆÚ“®
 	if (is_move_) {
+		float dis = GSvector3::distance(target_point_, transform_.position());
+		if (dis <= 0.3f) {
+			set_next_point();
+		}
 		GSvector3 to_target = target_point_ - transform_.position();
+
 		GSvector3 velocity = { 0.0f,0.0f,0.0f };
 
 		float angle = GSvector3::angle(to_target, transform_.forward());
@@ -95,7 +100,8 @@ void Kuribo::search(float delta_time) {
 
 		GSvector3 position = transform_.position();
 
-		transform_.translate(velocity,GStransform::Space::World);
+		velocity_ = velocity;
+		transform_.translate(velocity, GStransform::Space::World);
 
 		GSvector3 planet_position = { 0.0f,-20.0f,0.0f };
 		GSvector3 to_planet = transform_.position() - planet_position;
@@ -104,26 +110,13 @@ void Kuribo::search(float delta_time) {
 		//transform_.up(to_planet);
 		to_planet = to_planet * 20.0f;
 		to_planet = to_planet + planet_position;
+		GSvector3 to_position = to_planet-position;
+		to_position.normalize();
+		GSvector3 left = GSvector3::cross(up, to_position);
+		GSvector3 forward = GSvector3::cross(left, up);
+
 		transform_.position(to_planet);
-		position = transform_.position()-position;
-		position.normalize();
-		transform_.rotation(GSquaternion::lookRotation(position, up));
-
-		if (velocity.length() != 0.0f) {
-			//GSquaternion rotation =
-			//	GSquaternion::rotateTowards(
-			//		transform_.rotation(),
-			//		GSquaternion::lookRotation(velocity, transform_.up()), 100.0f * delta_time);
-			//transform_.rotation(rotation);
-		}
-
-
-		float dis = GSvector3::distance(target_point_, transform_.position());
-		if (dis<=0.3f) {
-			set_next_point();
-		}
-
-		//transform_.translate(0.0f, 0.0f, walk_speed_ * delta_time);
+		transform_.rotation(GSquaternion::lookRotation(forward, up));
 	}
 }
 bool Kuribo::is_above_player(Actor& other) {

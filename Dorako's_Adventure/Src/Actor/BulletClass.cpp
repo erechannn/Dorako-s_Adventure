@@ -27,7 +27,7 @@ void BulletClass::update(float delta_time) {
 	}
 
 	GSmatrix4 world = transform_.localToWorldMatrix();
-	world.translate(transform_.position()+transform_.up());
+	world.translate(0.0f, 1.0f, 0.0f);
 	gsSetEffectMatrix(effect_handle_, &world); // ワールド変換行列を設定
 	lifespan_timer_ -= delta_time;
 	// フィールドとの衝突判定
