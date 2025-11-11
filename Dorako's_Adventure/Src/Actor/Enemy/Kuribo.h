@@ -11,6 +11,7 @@ public:
 	virtual void draw()const override;
 	virtual void react(Actor& other)override;
 	virtual void search(float delta_time)override;
+	virtual void chase(float delta_time)override;
 private:
 	void set_next_point();
 	bool is_player_in_sight();
@@ -29,6 +30,7 @@ private:
 	BoundingSphere test2_{};
 	GStransform first_transform_{};
 	Actor* player_{ nullptr };
+	bool is_chase_{ false };
 };
 
 

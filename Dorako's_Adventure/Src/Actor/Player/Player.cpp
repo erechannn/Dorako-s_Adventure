@@ -69,7 +69,7 @@ void Player::update(float delta_time) {
 	if (invincible_) {
 		invincible_timer_ += delta_time;
 	}
-	if (invincible_timer_ >= 180.0f) {
+	if (invincible_timer_ >= 120.0f) {
 		invincible_ = false;
 		invincible_timer_ = 0.0f;
 	}
