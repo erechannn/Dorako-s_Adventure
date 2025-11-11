@@ -5,6 +5,7 @@
 #include "Scene/TitleScene.h"
 #include"Scene/GamePlayScene.h"
 #include "Tween/Tween.h"
+#include "Delay/DelayManager.h"
 #include <GSeffect.h>
 
 class MyGame : public::gslib::Game {
@@ -24,6 +25,7 @@ public:
     void update(float delta_time)override {
         scene_manager_.update(delta_time);
         Tween::update(delta_time);
+        DelayManager::get_instance().update();
     }
     void debug(float delta_time) {
         scene_manager_.debug(delta_time);

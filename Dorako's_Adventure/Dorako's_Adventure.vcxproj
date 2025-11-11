@@ -163,6 +163,7 @@
     <ClCompile Include="Src\Camera\MainCamera.cpp" />
     <ClCompile Include="Src\Camera\TestCamera.cpp" />
     <ClCompile Include="Src\Collider\BoundingSphere.cpp" />
+    <ClCompile Include="Src\Delay\DelayManager.cpp" />
     <ClCompile Include="Src\Light\MainLight.cpp" />
     <ClCompile Include="Src\main.cpp" />
     <ClCompile Include="Src\Mesh\AnimatedMesh.cpp" />
@@ -213,6 +214,7 @@
     <ClInclude Include="Src\Camera\MainCamera.h" />
     <ClInclude Include="Src\Camera\TestCamera.h" />
     <ClInclude Include="Src\Collider\BoundingSphere.h" />
+    <ClInclude Include="Src\Delay\DelayManager.h" />
     <ClInclude Include="Src\GV.h" />
     <ClInclude Include="Src\Light\MainLight.h" />
     <ClInclude Include="Src\Mesh\AnimatedMesh.h" />
