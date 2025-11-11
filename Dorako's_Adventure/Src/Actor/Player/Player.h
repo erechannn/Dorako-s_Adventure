@@ -24,10 +24,13 @@ public:
 	void consume_fire_count();
 
 	int fire_count();
+
 private:
 	bool is_above_enemy(Actor& other);
 	bool is_move_{ false };
 	int fire_count_{ 3 };
+	bool invincible_{ false };
+	float invincible_timer_{ 0.0f };
 };
 
 

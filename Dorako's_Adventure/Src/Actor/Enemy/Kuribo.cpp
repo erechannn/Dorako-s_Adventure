@@ -1,4 +1,5 @@
 #include "Kuribo.h"
+#include "../../World/IWorld.h"
 #include "../../Assets.h"
 #include "../../Collider/BoundingSphere.h"
 #include "EnemyState/EnemyStateSearch.h"
@@ -9,7 +10,8 @@
 const float M_PI{ 3.14159265358979323846 };
 
 Kuribo::Kuribo(IWorld* world, GSvector3 position) :
-	Enemy{ Mesh_Kuribo } {
+	Enemy{ Mesh_Kuribo },
+	enemy_eye_{world_,transform_.position(),transform_.forward(),160.0f,5.0f} {
 	world_ = world;
 	name_ = "Kuribo";
 	tag_ = "EnemyTag";
@@ -36,14 +38,12 @@ void Kuribo::update(float delta_time) {
 	//ワールド変換行列を設定
 	mesh_->transform(transform_.localToWorldMatrix());
 
-	test2_ = BoundingSphere(1.0f, transform_.position());
+	enemy_eye_.setOrigin(transform_.position());
+	enemy_eye_.setForward(transform_.forward());
 
 	bool next_point = false;
 
 	float dis = GSvector3::distance(target_point_, transform_.position());
-	if (!is_ground_) {
-		std::cout << "異常発生" << std::endl;
-	}
 
 	//デバック表示
 	ImGui::Begin("Kuribo");
@@ -68,10 +68,6 @@ void Kuribo::draw()const {
 	mesh_->draw();
 	test_.draw();
 	test2_.draw();
-	GSvector3 up = transform_.up();
-	//std::cout << "2 x: " << collider_point_.x << " y: " << collider_point_.y << " z: " << collider_point_.z << std::endl;
-
-
 }
 void Kuribo::react(Actor& other) {
 	if (is_above_player(other)&&!undead_&&other.tag()=="PlayerTag") {
@@ -124,36 +120,10 @@ bool Kuribo::is_above_player(Actor& other) {
 	GSvector3 up = transform_.up();
 	GSvector3 to_target = other_position - position;
 	float dot = to_target.dot(up);
-	return dot > 0;
+	float threshold = 0.7f;
+	return dot > threshold;
 }
 
-/*
-void Kuribo::angle_set(GSvector3 target, GSvector3 forward) {
-	// ターゲット方向のベクトルを求める
-	GSvector3 to_target = target - transform_.position();
-
-	// ベクトルのy成分を無効にする
-	forward.y = 0.0f;
-	to_target.y = 0.0f;
-
-	// 方向を正規化
-	forward = GSvector3::normalize(forward);
-	to_target = GSvector3::normalize(to_target);
-
-	// 前向き方向のベクトルとターゲット方向のベクトルの角度差を求める（符号付き）
-	float target_angle = GSvector3::signedAngle(forward, to_target);
-
-	const float max_rotation_speed = 1.5f; // 毎フレームの最大回転量
-
-	// 回転角度を制限する
-	float clamped_angle = std::clamp(target_angle, -max_rotation_speed, max_rotation_speed);
-
-	// 回転を加える
-	transform_.rotate(0.0f, clamped_angle, 0.0f);
-
-}
-
-*/
 void Kuribo::set_next_point() {
 	GSvector3 center = first_transform_.inverseTransformPoint(first_transform_.position());
 	GSvector3 forward = transform_.forward();
@@ -168,11 +138,8 @@ void Kuribo::set_next_point() {
 	float dist = static_cast<float>(std::rand()) / RAND_MAX * radius;
 
 	// ターゲット座標を設定
-	// ターゲット座標を設定
 	target.x = center.x + std::cos(angle) * radius;
 	target.z = center.z + std::sin(angle) * radius;
-	//GSvector3 offset = first_right_ * (std::cos(angle) * dist) + first_forward_ * (std::sin(angle) * dist);
-	//target = center + offset;
 	target = first_transform_.transformPoint(target);
 
 	GSvector3 planet_position = { 0.0f,-20.0f,0.0f };
@@ -183,25 +150,13 @@ void Kuribo::set_next_point() {
 
 	test_ = BoundingSphere{ 1.0f,target };
 	target_point_ = target;
-	/*
-	 vector3 center = first_position_;
-    vector3 target;
-    float radius = 2.0f;
-    
-    // ランダムな角度（0～2π）
-    float angle = static_cast<float>(std::rand()) / RAND_MAX * 2.0f * M_PI;
-    // ランダムな距離（0.0～radius）
-    float dist = static_cast<float>(std::rand()) / RAND_MAX * radius;
-    
-    // forwardとrightベクトルを使って接平面上の座標を計算
-    // cos(angle)でright方向、sin(angle)でforward方向の成分を計算
-    vector3 offset = first_right_ * (std::cos(angle) * dist) + 
-                     first_forward_ * (std::sin(angle) * dist);
-    
-    // ターゲット座標を設定
-    target = center + offset;
-    target_point_ = target;
-	*/
-
+}
+bool Kuribo::is_player_in_sight() {
+	player_ = world_->find_actor("Player");
+	if (player_ == nullptr)return false;
+	if (enemy_eye_.isTargetWithin(player_->transform().position())) {
+		return true;
+	}
+	else return false;
 }
 

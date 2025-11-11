@@ -66,6 +66,13 @@ void Player::update(float delta_time) {
 	if(gsXBoxPadButtonTrigger(0,GS_XBOX_PAD_B)&&is_move_){
 		state_.change_state(PlayerState::StateAttack);
 	}
+	if (invincible_) {
+		invincible_timer_ += delta_time;
+	}
+	if (invincible_timer_ >= 180.0f) {
+		invincible_ = false;
+		invincible_timer_ = 0.0f;
+	}
 
 	//デバック表示
 	ImGui::Begin("Player");
@@ -77,25 +84,29 @@ void Player::update(float delta_time) {
 	if (ImGui::Button("add_fire_count")) {
 		fire_count_ += 1;
 	}
+	if (ImGui::Button("add_health")) {
+		health_ += 1;
+	}
 
 	ImGui::End();
 
 }
 void Player::draw()const {
+	if (std::fmod(invincible_timer_, 10.0f) <= 3.0f) {
+		mesh_->draw();
+	}
 	//メッシュの表示
-	mesh_->draw();
 	GSvector3 up = transform_.up();
 	//std::cout << "2 x: " << up.x << " y: " << up.y << " z: " << up.z << std::endl;
 
 }
 //当たり判定
 void Player::react(Actor& other) {
-	//特になし
 	if (other.tag() == "EnemyTag") {
 		if (is_above_enemy(other)) {
 			state_.change_state(PlayerState::StateJumpStart);
 		}
-		else {
+		else if(!invincible_) {
 			//ノックバック
 			GSvector3 now_pos{ transform().position() };
 			GSvector3 knock_pos{ now_pos };
@@ -103,8 +114,11 @@ void Player::react(Actor& other) {
 			// 補正後の座標に変更する
 			transform_.position(knock_pos);
 			health_ -= 1;
+			invincible_ = true;
 			state_.change_state(PlayerState::StateDamage);
-
+		}
+		else {
+			collide_actor(other);
 		}
 	}
 }
@@ -203,7 +217,8 @@ bool Player::is_above_enemy(Actor&other) {
 	GSvector3 other_up = other.transform().up();
 	GSvector3 to_other = position - other_position;
 	float dot = to_other.dot(other_up);
-	return dot > 0;
+	float threshold = 0.7f;
+	return dot > threshold;
 }
 void Player::consume_fire_count() {
 	fire_count_ -= 1;

@@ -23,7 +23,7 @@ public:
 private:
     void draw_player_ui()const;
 
-    Player* player_;
+    Player* player_{ nullptr };
 
     int fire_count_{};
 
