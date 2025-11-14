@@ -4,10 +4,23 @@
 #include "../../Shape/Line.h"
 #include "../../Assets.h"
 
+const float M_PI{ 3.14159265358979323846 };
+
 Enemy::Enemy(GSuint mesh) :
 	Character{ mesh } {
 
 }
+bool Enemy::is_above_player(Actor& player) {
+	GSvector3 position = transform_.position();
+	GSvector3 other_position = player.transform().position();
+	GSvector3 up = transform_.up();
+	GSvector3 to_target = other_position - position;
+	float dot = to_target.dot(up);
+	float threshold = 0.7f;
+	return dot > threshold;
+
+}
+
 void Enemy::to_target(float delta_time,GSvector3 target) {
 	//目的地までのベクトル
 	GSvector3 to_target = target - transform_.position();
@@ -36,5 +49,31 @@ void Enemy::to_target(float delta_time,GSvector3 target) {
 	transform_.position(to_planet);
 	//向きを移動方向に回転
 	transform_.rotation(GSquaternion::lookRotation(forward, up));
+}
+void Enemy::set_next_point() {
+	GSvector3 center = first_transform_.inverseTransformPoint(first_transform_.position());
+	GSvector3 forward = transform_.forward();
+	GSvector3 right = transform_.right();
+	GSvector3 target;
+	float radius = 3.0f;
+
+	// ランダムな角度（0～2π）
+	float angle = static_cast<float>(std::rand()) / RAND_MAX * 2.0f * M_PI;
+
+	// ランダムな距離（0.0～radius）
+	float dist = static_cast<float>(std::rand()) / RAND_MAX * radius;
+
+	// ターゲット座標を設定
+	target.x = center.x + std::cos(angle) * radius;
+	target.z = center.z + std::sin(angle) * radius;
+	target = first_transform_.transformPoint(target);
+
+	GSvector3 planet_position = { 0.0f,-20.0f,0.0f };
+	target = target - planet_position;
+	target = target.normalize();
+	target = target * 20.0f;
+	target = target + planet_position;
+
+	target_point_ = target;
 
 }

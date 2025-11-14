@@ -14,12 +14,9 @@ public:
 	virtual void search(float delta_time)override;
 	virtual void chase(float delta_time)override;
 private:
-	void set_next_point();
 	bool is_player_in_sight();
 private:
-	bool is_above_player(Actor& other);
 	EnemyEye enemy_eye_;
-	GSvector3 target_point_{ 0.0f,0.0f,0.0f };
 	GSvector3 first_position_{};
 	float walk_timer_{ 0.0f };
 	bool is_move_{ true };
@@ -27,7 +24,6 @@ private:
 	GSvector3 planet_to_target_{};
 	BoundingSphere test_{};
 	BoundingSphere test2_{};
-	GStransform first_transform_{};
 	Actor* player_{ nullptr };
 	bool is_chase_{ false };
 };

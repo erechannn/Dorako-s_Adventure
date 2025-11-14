@@ -169,6 +169,7 @@
     <ClCompile Include="Src\Light\MainLight.cpp" />
     <ClCompile Include="Src\main.cpp" />
     <ClCompile Include="Src\Mesh\AnimatedMesh.cpp" />
+    <ClCompile Include="Src\Scene\GameOverScene.cpp" />
     <ClCompile Include="Src\Scene\GamePlayScene.cpp" />
     <ClCompile Include="Src\Scene\SceneManager.cpp" />
     <ClCompile Include="Src\Scene\TitleScene.cpp" />
@@ -222,6 +223,7 @@
     <ClInclude Include="Src\GV.h" />
     <ClInclude Include="Src\Light\MainLight.h" />
     <ClInclude Include="Src\Mesh\AnimatedMesh.h" />
+    <ClInclude Include="Src\Scene\GameOverScene.h" />
     <ClInclude Include="Src\Scene\GamePlayScene.h" />
     <ClInclude Include="Src\Scene\IScene.h" />
     <ClInclude Include="Src\Scene\SceneManager.h" />

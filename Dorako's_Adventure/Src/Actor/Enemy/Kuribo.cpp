@@ -100,65 +100,26 @@ void Kuribo::idle(float delta_time) {
 }
 
 void Kuribo::search(float delta_time) {
-
-	//とりあえずまっすぐに移動
 	if (is_move_) {
 		//目的地に近づいたら次の目的地に設定
 		float dis = GSvector3::distance(target_point_, transform_.position());
 		if (dis <= 0.3f) {
 			set_next_point();
 		}
+		//目的地に移動
 		to_target(delta_time, target_point_);
 	}
 }
 void Kuribo::chase(float delta_time) {
 	target_point_ = player_->transform().position();
-
+	//プレイヤーの位置へ移動
 	to_target(delta_time, target_point_);
+	//プレイヤーが視界から消えたらサーチ状態に戻る
 	if (!is_player_in_sight()) {
-		change_state(EnemyState::Search);
-		set_next_point();
+		change_state(EnemyState::Idle);
 	}
 }
-
-
-bool Kuribo::is_above_player(Actor& other) {
-	GSvector3 position = transform_.position();
-	GSvector3 other_position = other.transform().position();
-	GSvector3 up = transform_.up();
-	GSvector3 to_target = other_position - position;
-	float dot = to_target.dot(up);
-	float threshold = 0.7f;
-	return dot > threshold;
-}
-
-void Kuribo::set_next_point() {
-	GSvector3 center = first_transform_.inverseTransformPoint(first_transform_.position());
-	GSvector3 forward = transform_.forward();
-	GSvector3 right = transform_.right();
-	GSvector3 target;
-	float radius = 3.0f;
-
-	// ランダムな角度（0～2π）
-	float angle = static_cast<float>(std::rand()) / RAND_MAX * 2.0f * M_PI;
-
-	// ランダムな距離（0.0～radius）
-	float dist = static_cast<float>(std::rand()) / RAND_MAX * radius;
-
-	// ターゲット座標を設定
-	target.x = center.x + std::cos(angle) * radius;
-	target.z = center.z + std::sin(angle) * radius;
-	target = first_transform_.transformPoint(target);
-
-	GSvector3 planet_position = { 0.0f,-20.0f,0.0f };
-	target = target - planet_position;
-	target = target.normalize();
-	target = target * 20.0f;
-	target = target + planet_position;
-
-	test_ = BoundingSphere{ 1.0f,target };
-	target_point_ = target;
-}
+//敵の視界にプレイヤーが入ったか
 bool Kuribo::is_player_in_sight() {
 	if (player_ == nullptr)return false;
 	if (enemy_eye_.isTargetWithin(player_->transform().position())) {

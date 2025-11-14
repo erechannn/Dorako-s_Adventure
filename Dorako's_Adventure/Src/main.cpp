@@ -4,6 +4,7 @@
 #include"World/World.h"
 #include "Scene/TitleScene.h"
 #include"Scene/GamePlayScene.h"
+#include "Scene/GameOverScene.h"
 #include "Tween/Tween.h"
 #include "Delay/DelayManager.h"
 #include <GSeffect.h>
@@ -19,6 +20,7 @@ public:
         World world;
         scene_manager_.add("TitleScene", new TitleScene());
         scene_manager_.add("GamePlayScene", new GamePlayScene());
+        scene_manager_.add("GameOverScene", new GameOverScene());
         scene_manager_.change("GamePlayScene");
 
     }
