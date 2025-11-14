@@ -141,9 +141,11 @@
     <ClCompile Include="Src\Actor\ActorManager.cpp" />
     <ClCompile Include="Src\Actor\BulletClass.cpp" />
     <ClCompile Include="Src\Actor\Character.cpp" />
+    <ClCompile Include="Src\Actor\Enemy\BossEnemy\MiniDragon.cpp" />
     <ClCompile Include="Src\Actor\Enemy\Enemy.cpp" />
     <ClCompile Include="Src\Actor\Enemy\EnemyEye.cpp" />
     <ClCompile Include="Src\Actor\Enemy\EnemyState\EnemyStateChase.cpp" />
+    <ClCompile Include="Src\Actor\Enemy\EnemyState\EnemyStateIdle.cpp" />
     <ClCompile Include="Src\Actor\Enemy\EnemyState\EnemyStateSearch.cpp" />
     <ClCompile Include="Src\Actor\Enemy\Kuribo.cpp" />
     <ClCompile Include="Src\Actor\FieldActor\FieldActor.cpp" />
@@ -187,11 +189,13 @@
     <ClInclude Include="Src\Actor\ActorManager.h" />
     <ClInclude Include="Src\Actor\BulletClass.h" />
     <ClInclude Include="Src\Actor\Character.h" />
+    <ClInclude Include="Src\Actor\Enemy\BossEnemy\MiniDragon.h" />
     <ClInclude Include="Src\Actor\Enemy\EnemiesMotion.h" />
     <ClInclude Include="Src\Actor\Enemy\Enemy.h" />
     <ClInclude Include="Src\Actor\Enemy\EnemyEye.h" />
     <ClInclude Include="Src\Actor\Enemy\EnemyState\EnemyState.h" />
     <ClInclude Include="Src\Actor\Enemy\EnemyState\EnemyStateChase.h" />
+    <ClInclude Include="Src\Actor\Enemy\EnemyState\EnemyStateIdle.h" />
     <ClInclude Include="Src\Actor\Enemy\EnemyState\EnemyStateSearch.h" />
     <ClInclude Include="Src\Actor\Enemy\Kuribo.h" />
     <ClInclude Include="Src\Actor\FieldActor\FieldActor.h" />

@@ -17,6 +17,9 @@ public:
 	virtual void damage(float delta_time) {}
 	virtual void dead(float delta_time) {}
 protected:
+	void to_target(float delta_time,GSvector3 target);
+
+protected:
 	int max_health_{ 1 };
 	int health_{ 1 };
 	float walk_speed_{ 0.05f };

@@ -10,6 +10,7 @@ public:
 	virtual void update(float delta_time)override;
 	virtual void draw()const override;
 	virtual void react(Actor& other)override;
+	virtual void idle(float delta_time)override;
 	virtual void search(float delta_time)override;
 	virtual void chase(float delta_time)override;
 private:
@@ -19,9 +20,7 @@ private:
 	bool is_above_player(Actor& other);
 	EnemyEye enemy_eye_;
 	GSvector3 target_point_{ 0.0f,0.0f,0.0f };
-	GSvector3 first_position_;
-	GSvector3 first_forward_{};
-	GSvector3 first_right_{};
+	GSvector3 first_position_{};
 	float walk_timer_{ 0.0f };
 	bool is_move_{ true };
 	bool undead_{ true };

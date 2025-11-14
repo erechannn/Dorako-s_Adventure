@@ -31,6 +31,7 @@ private:
 	int fire_count_{ 3 };
 	bool invincible_{ false };
 	float invincible_timer_{ 0.0f };
+	bool debug_invincible_{ true };
 };
 
 

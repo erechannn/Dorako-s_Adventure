@@ -4,6 +4,8 @@
 #include "../../Collider/BoundingSphere.h"
 #include "EnemyState/EnemyStateSearch.h"
 #include "EnemyState/EnemyStateChase.h"
+#include "EnemyState/EnemyStateIdle.h"
+#include "../../Delay/DelayManager.h"
 #include <imgui/imgui.h>
 #include <algorithm>
 #include <iostream>
@@ -20,18 +22,15 @@ Kuribo::Kuribo(IWorld* world, GSvector3 position) :
 	transform_.position(position);
 	mesh_->transform(transform_.localToWorldMatrix());
 	foot_offset_ = 2.0f;
-	first_position_ = transform_.inverseTransformPoint(position);
-	first_forward_ = transform_.forward();
-	first_right_ = transform_.right();
 	first_transform_ = transform_;
 	set_next_point();
+	state_.add_state(EnemyState::Idle, new EnemyStateIdle(this));
 	state_.add_state(EnemyState::Search, new EnemyStateSearch(this));
 	state_.add_state(EnemyState::Chase, new EnemyStateChase(this));
 	state_.change_state(EnemyState::Search);
 }
 void Kuribo::update(float delta_time) {
 	state_.update(delta_time);
-	std::cout << "x: " << transform_.position().x << " y: " << transform_.position().y << " z: " << transform_.position().z << std::endl;
 	collide_field();
 	gravity_update(delta_time);
 	collide_ground();
@@ -83,72 +82,39 @@ void Kuribo::react(Actor& other) {
 	if (is_above_player(other)&&!undead_&&other.tag()=="PlayerTag") {
 		die();
 	}
+	if (other.tag() == "PlayerTag") {
+		first_position_ = transform_.position();
+		change_state(EnemyState::Idle);
+	}
 }
+void Kuribo::idle(float delta_time) {
+	transform_.position(first_position_);
+	Delay::after(1.5f, [this]() {
+		if (this->is_player_in_sight()) {
+			this->change_state(EnemyState::Chase);
+		}
+		else {
+			this->change_state(EnemyState::Search);
+		}
+		});
+}
+
 void Kuribo::search(float delta_time) {
 
 	//とりあえずまっすぐに移動
 	if (is_move_) {
+		//目的地に近づいたら次の目的地に設定
 		float dis = GSvector3::distance(target_point_, transform_.position());
 		if (dis <= 0.3f) {
 			set_next_point();
 		}
-		GSvector3 to_target = target_point_ - transform_.position();
-
-		GSvector3 velocity = { 0.0f,0.0f,0.0f };
-
-		GSvector3 target_normal = to_target.normalize();
-		velocity = target_normal * walk_speed_ * delta_time;
-
-		GSvector3 position = transform_.position();
-
-		velocity_ = velocity;
-		transform_.translate(velocity, GStransform::Space::World);
-
-		GSvector3 planet_position = { 0.0f,-20.0f,0.0f };
-		GSvector3 to_planet = transform_.position() - planet_position;
-		to_planet.normalize();
-		GSvector3 up = to_planet;
-		//transform_.up(to_planet);
-		to_planet = to_planet * 20.0f;
-		to_planet = to_planet + planet_position;
-		GSvector3 to_position = to_planet-position;
-		to_position.normalize();
-		GSvector3 left = GSvector3::cross(up, to_position);
-		GSvector3 forward = GSvector3::cross(left, up);
-
-		transform_.position(to_planet);
-		transform_.rotation(GSquaternion::lookRotation(forward, up));
+		to_target(delta_time, target_point_);
 	}
 }
 void Kuribo::chase(float delta_time) {
 	target_point_ = player_->transform().position();
-	GSvector3 to_target = target_point_ - transform_.position();
 
-	GSvector3 velocity = { 0.0f,0.0f,0.0f };
-
-	GSvector3 target_normal = to_target.normalize();
-	velocity = target_normal * walk_speed_ * delta_time;
-
-	GSvector3 position = transform_.position();
-
-	velocity_ = velocity;
-	transform_.translate(velocity, GStransform::Space::World);
-
-	GSvector3 planet_position = { 0.0f,-20.0f,0.0f };
-	GSvector3 to_planet = transform_.position() - planet_position;
-	to_planet.normalize();
-	GSvector3 up = to_planet;
-	//transform_.up(to_planet);
-	to_planet = to_planet * 20.0f;
-	to_planet = to_planet + planet_position;
-	GSvector3 to_position = to_planet - position;
-	to_position.normalize();
-	GSvector3 left = GSvector3::cross(up, to_position);
-	GSvector3 forward = GSvector3::cross(left, up);
-
-	transform_.position(to_planet);
-	transform_.rotation(GSquaternion::lookRotation(forward, up));
-
+	to_target(delta_time, target_point_);
 	if (!is_player_in_sight()) {
 		change_state(EnemyState::Search);
 		set_next_point();

@@ -81,6 +81,7 @@ void Player::update(float delta_time) {
 	ImGui::Text("x:%f y:%f z:%f", transform_.up().x, transform_.up().y, transform_.up().z);
 	ImGui::Text("gravity:%f", gravity_);
 	ImGui::Checkbox("ínè„Ç…Ç¢ÇÈÇ©", &is_ground_);
+	ImGui::Checkbox("debug_invincible", &debug_invincible_);
 	if (ImGui::Button("add_fire_count")) {
 		fire_count_ += 1;
 	}
@@ -113,7 +114,10 @@ void Player::react(Actor& other) {
 			knock_pos -= transform().forward() * 2.0f;
 			// ï‚ê≥å„ÇÃç¿ïWÇ…ïœçXÇ∑ÇÈ
 			transform_.position(knock_pos);
-			health_ -= 1;
+			if (!debug_invincible_) {
+				health_ -= 1;
+			}
+			//health_ -= 1;
 			invincible_ = true;
 			state_.change_state(PlayerState::StateDamage);
 		}

@@ -66,7 +66,6 @@ void GamePlayScene::start() {
     world_.add_actor(new Player{ &world_,{3.0f,0.0f,3.0f} });
     world_.add_actor(new DummyPlayer{ &world_ });
     world_.add_actor(new Kuribo{ &world_,{0.0f,0.0f,0.0f} });
-    //world_.add_actor(new WoodBox{ &world_,{0.0f,0.0f,0.0f} });
 
     world_.add_field(new Field{ Octree_TestStage,Octree_TestStageCollider,Texture_Skybox });
 
@@ -75,7 +74,6 @@ void GamePlayScene::start() {
 
     world_.add_light(new Light{ &world_ });
 
-    world_.field()->add(new WoodBox{ &world_,{5.0f,0.0f,5.0f},Mesh_WoodBox,Mesh_WoodBox });
 
     world_.add_actor(new GamePlayUI{ &world_,true });
 
