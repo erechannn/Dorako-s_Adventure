@@ -64,7 +64,7 @@ void TitleScene::start() {
 	is_end_ = false;
 	is_start_ = false;
 	start_timer_ = 0.0f;
-	next_scene_ = "GamePlayScene";
+	next_scene_ = "StageSelectScene";
     ui_position_ = { 583.0f,682.0f };
     first_pos_ = { 422.0f,-169.0f };
     end_pos_ = { 422.0f,-120.0f };

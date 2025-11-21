@@ -10,6 +10,7 @@
 #include "../Actor/Enemy/Kuribo.h"
 #include "../Actor/WoodBox/WoodBox.h"
 #include "../UI/UIActor/UIActors/GamePlayUI.h"
+#include "../Stage/StageManager.h"
 #include <GSstandard_shader.h>
 #include <GSeffect.h>
 
@@ -68,7 +69,10 @@ void GamePlayScene::start() {
     world_.add_actor(new DummyPlayer{ &world_ });
     world_.add_actor(new Kuribo{ &world_,{0.0f,0.0f,0.0f} });
 
-    world_.add_field(new Field{ Octree_TestStage,Octree_TestStageCollider,Texture_Skybox });
+    UINT stage_octree = StageManager::get_instance().get_current_stage_octree();
+    UINT stage_collider = StageManager::get_instance().get_current_stage_collider();
+
+    world_.add_field(new Field{ stage_octree,stage_collider,Texture_Skybox });
 
     world_.add_camera(new CameraRotateAround{
                  &world_, GSvector3{ -180.0f, 1.0f, 5.0f }, GSvector3{ 0.0f, 1.0f, 0.0f } });
@@ -83,7 +87,7 @@ void GamePlayScene::start() {
 	is_end_ = false;
 	is_start_ = false;
 	start_timer_ = 0.0f;
-	next_scene_ = "StageSelectScene";
+	next_scene_ = "GameOverScene";
     // 視錐台カリングを有効にする
     gsEnable(GS_FRUSTUM_CULLING);
 
@@ -95,12 +99,17 @@ void GamePlayScene::update(float delta_time) {
     case State::Pose:pose_update(delta_time); break;
     }
     if (is_start_)          start_timer_ += delta_time; //タイマー増加
-    if (start_timer_ >= 60.0f)          is_end_ = true; //シーンを終了
+    if (start_timer_ >= 180.0f)          is_end_ = true; //シーンを終了
 
 }
 void GamePlayScene::game_play_update(float delta_time) {
     // ワールドクラスの更新
     world_.update(delta_time);
+    Actor* player_actor = world_.find_actor("Player");
+    Player* player = (Player*)player_actor;
+    if (player->now_health() <= 0.0f) {
+        is_start_ = true;
+    }
 }
 void GamePlayScene::game_over_update(float delta_time) {
     game_over_scene_.update(delta_time);
@@ -112,7 +121,7 @@ bool GamePlayScene::is_end()const {
     return is_end_;
 }
 std::string GamePlayScene::next()const {
-    return "";
+    return next_scene_;
 }
 void GamePlayScene::draw()const {
     // ワールドの描画

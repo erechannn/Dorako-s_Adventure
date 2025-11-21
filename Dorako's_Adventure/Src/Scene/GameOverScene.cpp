@@ -8,6 +8,7 @@ void GameOverScene::start() {
 }
 
 void GameOverScene::update(float delta_time) {
+	if (gsXBoxPadButtonTrigger(0, GS_XBOX_PAD_A)) is_start_ = true;
 	if (is_start_)          start_timer_ += delta_time; //タイマー増加
 	if (start_timer_ >= 60.0f)          is_end_ = true; //シーンを終了
 

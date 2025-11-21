@@ -24,8 +24,8 @@ private:
     bool is_start_{ false };
     float start_timer_{ 0.0f };
     std::string next_scene_;
-
-
+    int max_stage_count_{};
+    int stage_count_{};
 };
 
 
