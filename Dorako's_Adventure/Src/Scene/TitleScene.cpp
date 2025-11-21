@@ -106,5 +106,14 @@ std::string TitleScene::next()const {
 	return next_scene_;
 }
 void TitleScene::end() {
+    Actor*model_player=world_.find_actor("ModelPlayer");
+    model_player->die();
     Tween::clear();
+    gsDeleteMesh(Mesh_Player);
+    gsDeleteTexture(Texture_Skybox);
+    gsDeleteTexture(Texture_TitleLogo);
+    gsDeleteTexture(Texture_TitleUi);
+    gsDeleteOctree(Octree_TestStage);
+    gsDeleteOctree(Octree_TestStageCollider);
+
 }

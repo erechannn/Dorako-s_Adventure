@@ -107,6 +107,7 @@ void GamePlayScene::game_play_update(float delta_time) {
     world_.update(delta_time);
     Actor* player_actor = world_.find_actor("Player");
     Player* player = (Player*)player_actor;
+    if (player == nullptr) return;
     if (player->now_health() <= 0.0f) {
         is_start_ = true;
     }

@@ -3,6 +3,7 @@
 
 #include "Actor.h"
 #include "../State/StateMachine.h"
+#include "../Stage/StageManager.h"
 
 class Character :public Actor {
 public:
