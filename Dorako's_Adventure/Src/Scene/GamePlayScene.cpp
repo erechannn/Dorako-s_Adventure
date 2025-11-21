@@ -55,6 +55,7 @@ void GamePlayScene::start() {
     gsLoadEffect(Effeck_FireBoll, "Assets/Effect/FireBall_Orange.efkefc");
 
     gsLoadTexture(Texture_Skybox, "Assets/Skybox/TestStageSkybox.dds");
+
     gsLoadOctree(Octree_TestStage, "Assets/Stage/testStage2.oct");
     gsLoadOctree(Octree_TestStageCollider, "Assets/Stage/testStage2Collider.oct");
 
@@ -77,6 +78,7 @@ void GamePlayScene::start() {
 
     world_.add_actor(new GamePlayUI{ &world_,true });
 
+    game_over_scene_.start();
 
 	is_end_ = false;
 	is_start_ = false;
@@ -87,10 +89,23 @@ void GamePlayScene::start() {
 
 }
 void GamePlayScene::update(float delta_time) {
-    // ワールドクラスの更新
-    world_.update(delta_time);
+    switch (state_) {
+    case State::Playing:game_play_update(delta_time); break;
+    case State::GameOver:game_over_update(delta_time); break;
+    case State::Pose:pose_update(delta_time); break;
+    }
     if (is_start_)          start_timer_ += delta_time; //タイマー増加
     if (start_timer_ >= 60.0f)          is_end_ = true; //シーンを終了
+
+}
+void GamePlayScene::game_play_update(float delta_time) {
+    // ワールドクラスの更新
+    world_.update(delta_time);
+}
+void GamePlayScene::game_over_update(float delta_time) {
+    game_over_scene_.update(delta_time);
+}
+void GamePlayScene::pose_update(float delta_time) {
 
 }
 bool GamePlayScene::is_end()const {

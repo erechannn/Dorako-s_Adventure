@@ -178,6 +178,7 @@ void Player::move(float delta_time) {
 	//移動量をローカルからワールドに
 	velocity = transform_.transformDirection(velocity);
 	if (!is_ground_) {
+		//飛んでいる最中にもプレイヤーを星の面に添わせる
 		motion = PlayerMotion::Flying;
 		GSvector3 planet_position{ 0.0f,-20.0f,0.0f };
 		GSvector3 up = transform_.position() - planet_position;

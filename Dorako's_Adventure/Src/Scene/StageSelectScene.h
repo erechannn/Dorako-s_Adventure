@@ -1,10 +1,10 @@
-#ifndef GAME_OVER_SCENE_H_
-#define GAME_OVER_SCENE_H_
+#ifndef STAGE_SELECT_SCENE_H_
+#define STAGE_SELECT_SCENE_H_
 
 #include "IScene.h"
 #include "../World/World.h"
 
-class GameOverScene :public IScene {
+class StageSelectScene :public IScene {
 public:
     //äJén
     virtual void start() override;
@@ -19,8 +19,6 @@ public:
     //èIóπ
     virtual void end() override;
 private:
-
-private:
     World world_;
     bool is_end_{ false };
     bool is_start_{ false };
@@ -33,4 +31,5 @@ private:
 
 
 
-#endif // !GAME_OVER_SCENE_H_
+
+#endif // !STAGE_SELECT_SCENE_H

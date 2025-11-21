@@ -5,6 +5,7 @@
 #include "EnemyState/EnemyStateSearch.h"
 #include "EnemyState/EnemyStateChase.h"
 #include "EnemyState/EnemyStateIdle.h"
+#include "EnemyState/EnemyStateDead.h"
 #include "../../Delay/DelayManager.h"
 #include <imgui/imgui.h>
 #include <algorithm>
@@ -27,9 +28,11 @@ Kuribo::Kuribo(IWorld* world, GSvector3 position) :
 	state_.add_state(EnemyState::Idle, new EnemyStateIdle(this));
 	state_.add_state(EnemyState::Search, new EnemyStateSearch(this));
 	state_.add_state(EnemyState::Chase, new EnemyStateChase(this));
-	state_.change_state(EnemyState::Search);
+	state_.add_state(EnemyState::Dead, new EnemyStateDead(this));
+	state_.change_state(EnemyState::Idle);
 }
 void Kuribo::update(float delta_time) {
+	//キャラクターの基礎アップデート
 	state_.update(delta_time);
 	collide_field();
 	gravity_update(delta_time);
@@ -38,20 +41,19 @@ void Kuribo::update(float delta_time) {
 	mesh_->update(delta_time);
 	//ワールド変換行列を設定
 	mesh_->transform(transform_.localToWorldMatrix());
-
+	//アクターのプレイヤーを代入
 	player_ = world_->find_actor("Player");
-
+	//視界の更新
 	enemy_eye_.setOrigin(transform_.position());
 	enemy_eye_.setForward(transform_.forward());
-
-	if (is_player_in_sight()&&is_chase_) {
-		change_state(EnemyState::Chase);
-	}
-
+	//デバック用の処理
 	bool next_point = false;
-
 	float dis = GSvector3::distance(target_point_, transform_.position());
+	if (next_point) {
+		set_next_point();
+		next_point = false;
 
+	}
 	//デバック表示
 	ImGui::Begin("Kuribo");
 	ImGui::Text("x:%f y:%f z:%f", transform_.position().x, transform_.position().y, transform_.position().z);
@@ -65,24 +67,17 @@ void Kuribo::update(float delta_time) {
 	ImGui::Checkbox("is_chase:", &is_chase_);
 	ImGui::End();
 
-	if (next_point) {
-		set_next_point();
-		next_point = false;
-
-	}
-
 }
 void Kuribo::draw()const {
 	mesh_->draw();
 	enemy_eye_.draw();
-	test_.draw();
-	test2_.draw();
 }
 void Kuribo::react(Actor& other) {
+	//プレイヤーが上から当たったら死ぬ
 	if (is_above_player(other)&&!undead_&&other.tag()=="PlayerTag") {
-		die();
+		change_state(EnemyState::Dead);
 	}
-	if (other.tag() == "PlayerTag") {
+	else if (other.tag() == "PlayerTag") {
 		first_position_ = transform_.position();
 		change_state(EnemyState::Idle);
 	}
@@ -108,6 +103,11 @@ void Kuribo::search(float delta_time) {
 		}
 		//目的地に移動
 		to_target(delta_time, target_point_);
+		//視界内にプレイヤーがいたら追いかける状態に遷移
+		if (is_player_in_sight() && is_chase_) {
+			change_state(EnemyState::Chase);
+		}
+
 	}
 }
 void Kuribo::chase(float delta_time) {

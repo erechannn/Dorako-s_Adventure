@@ -145,6 +145,7 @@
     <ClCompile Include="Src\Actor\Enemy\Enemy.cpp" />
     <ClCompile Include="Src\Actor\Enemy\EnemyEye.cpp" />
     <ClCompile Include="Src\Actor\Enemy\EnemyState\EnemyStateChase.cpp" />
+    <ClCompile Include="Src\Actor\Enemy\EnemyState\EnemyStateDead.cpp" />
     <ClCompile Include="Src\Actor\Enemy\EnemyState\EnemyStateIdle.cpp" />
     <ClCompile Include="Src\Actor\Enemy\EnemyState\EnemyStateSearch.cpp" />
     <ClCompile Include="Src\Actor\Enemy\Kuribo.cpp" />
@@ -172,7 +173,9 @@
     <ClCompile Include="Src\Scene\GameOverScene.cpp" />
     <ClCompile Include="Src\Scene\GamePlayScene.cpp" />
     <ClCompile Include="Src\Scene\SceneManager.cpp" />
+    <ClCompile Include="Src\Scene\StageSelectScene.cpp" />
     <ClCompile Include="Src\Scene\TitleScene.cpp" />
+    <ClCompile Include="Src\Stage\StageManager.cpp" />
     <ClCompile Include="Src\State\StateMachine.cpp" />
     <ClCompile Include="Src\stdafx.cpp" />
     <ClCompile Include="Src\Tween\Tween.cpp" />
@@ -196,6 +199,7 @@
     <ClInclude Include="Src\Actor\Enemy\EnemyEye.h" />
     <ClInclude Include="Src\Actor\Enemy\EnemyState\EnemyState.h" />
     <ClInclude Include="Src\Actor\Enemy\EnemyState\EnemyStateChase.h" />
+    <ClInclude Include="Src\Actor\Enemy\EnemyState\EnemyStateDead.h" />
     <ClInclude Include="Src\Actor\Enemy\EnemyState\EnemyStateIdle.h" />
     <ClInclude Include="Src\Actor\Enemy\EnemyState\EnemyStateSearch.h" />
     <ClInclude Include="Src\Actor\Enemy\Kuribo.h" />
@@ -228,9 +232,11 @@
     <ClInclude Include="Src\Scene\IScene.h" />
     <ClInclude Include="Src\Scene\SceneManager.h" />
     <ClInclude Include="Src\Scene\SceneNull.h" />
+    <ClInclude Include="Src\Scene\StageSelectScene.h" />
     <ClInclude Include="Src\Scene\TitleScene.h" />
     <ClInclude Include="Src\Shape\Line.h" />
     <ClInclude Include="Src\Shape\Ray.h" />
+    <ClInclude Include="Src\Stage\StageManager.h" />
     <ClInclude Include="Src\State\IState.h" />
     <ClInclude Include="Src\State\StateMachine.h" />
     <ClInclude Include="Src\State\StateNull.h" />

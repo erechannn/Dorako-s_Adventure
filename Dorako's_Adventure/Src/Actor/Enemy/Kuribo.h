@@ -22,8 +22,6 @@ private:
 	bool is_move_{ true };
 	bool undead_{ true };
 	GSvector3 planet_to_target_{};
-	BoundingSphere test_{};
-	BoundingSphere test2_{};
 	Actor* player_{ nullptr };
 	bool is_chase_{ false };
 };

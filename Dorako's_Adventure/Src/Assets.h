@@ -20,6 +20,10 @@ enum {
 enum {
 	Octree_TestStage,
 	Octree_TestStageCollider,
+	Octree_Stage1,
+	Octree_Stage1Collider,
+	Octree_BossStage,
+	Octree_BossStageCollider,
 };
 enum {
 	Effeck_FireBoll,
