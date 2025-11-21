@@ -6,7 +6,7 @@ PlayerStateJump::PlayerStateJump(Player*owner):
 }
 void PlayerStateJump::update(float delta_time) {
 	owner_->mesh_->change_motion(PlayerMotion::JumpStart, false);
-	GSvector3 planet_position{ 0.0f,-20.0f,0.0f };//星の中心
+	GSvector3 planet_position = StageManager::get_instance().get_current_stage_planet_position();
 	GSvector3 position = owner_->transform().position();//自分の位置
 	GSvector3 jump = position - planet_position;//方向ベクトルを求める
 	jump = jump.normalize();//単一ベクトル

@@ -180,7 +180,7 @@ void Player::move(float delta_time) {
 	if (!is_ground_) {
 		//”ò‚ñ‚Å‚¢‚éÅ’†‚É‚àƒvƒŒƒCƒ„[‚ğ¯‚Ì–Ê‚É“Y‚í‚¹‚é
 		motion = PlayerMotion::Flying;
-		GSvector3 planet_position{ 0.0f,-20.0f,0.0f };
+		GSvector3 planet_position = StageManager::get_instance().get_current_stage_planet_position();
 		GSvector3 up = transform_.position() - planet_position;
 		GSvector3 left = GSvector3::cross(up, transform_.forward());
 		GSvector3 forward = GSvector3::cross(left, up);
