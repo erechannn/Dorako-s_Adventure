@@ -61,7 +61,7 @@ void Character::gravity_update(float delta_time) {
 	//地上についていたら無視
 	if (is_ground_)return;
 	if (is_zero_gravity_)return;
-	GSvector3 planet_position{ 0.0f,-20.0f,0.0f };//星の中心
+	GSvector3 planet_position = StageManager::get_instance().get_current_stage_planet_position();
 	GSvector3 position = transform_.position();//自分の位置
 	GSvector3 gravity = position - planet_position;//方向ベクトルを求める
 	gravity = gravity.normalize();//単一ベクトル
@@ -91,7 +91,8 @@ void Character::collide_ground() {
 		is_ground_ = true;
 		gravity_velocity_ = GSvector3::zero();
 		// 斜面に合わせてキャラクタを傾かせる
-		GSvector3 planet_position{ 0.0f,-20.0f,0.0f };
+
+		GSvector3 planet_position = StageManager::get_instance().get_current_stage_planet_position();
 		GSvector3 up = transform_.position() - planet_position;
 		GSvector3 left = GSvector3::cross(up, transform_.forward());
 		GSvector3 forward = GSvector3::cross(left, up);
