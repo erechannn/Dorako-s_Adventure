@@ -6,6 +6,7 @@ enum {
 	Mesh_Planet,
 	Mesh_Kuribo,
 	Mesh_WoodBox,
+	Mesh_MiniDragon,
 
 };
 enum {

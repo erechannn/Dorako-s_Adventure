@@ -231,3 +231,6 @@ void Player::consume_fire_count() {
 int Player::fire_count() {
 	return fire_count_;
 }
+UINT Player::get_player_now_state() {
+	return state_.now_state_;
+}

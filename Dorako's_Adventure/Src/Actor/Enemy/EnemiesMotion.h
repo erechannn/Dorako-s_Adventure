@@ -7,7 +7,8 @@ public:
 		Idle=0,
 		Move,
 		Attack,
-		Dead
+		Dead,
+		Damage,
 	};
 };
 

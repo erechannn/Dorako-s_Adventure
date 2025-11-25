@@ -14,7 +14,7 @@ public:
 	void flying(float delta_time);
 	void landing(float delta_time);
 	void attack();
-//ステートマシンに送る数値
+//送る数値
 public:
 	//モーションの終わり
 	bool is_motion_end();
@@ -24,6 +24,8 @@ public:
 	void consume_fire_count();
 
 	int fire_count();
+
+	UINT get_player_now_state();
 
 private:
 	bool is_above_enemy(Actor& other);

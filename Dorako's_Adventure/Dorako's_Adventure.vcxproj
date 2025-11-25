@@ -144,7 +144,9 @@
     <ClCompile Include="Src\Actor\Enemy\BossEnemy\MiniDragon.cpp" />
     <ClCompile Include="Src\Actor\Enemy\Enemy.cpp" />
     <ClCompile Include="Src\Actor\Enemy\EnemyEye.cpp" />
+    <ClCompile Include="Src\Actor\Enemy\EnemyState\EnemyStateAttack.cpp" />
     <ClCompile Include="Src\Actor\Enemy\EnemyState\EnemyStateChase.cpp" />
+    <ClCompile Include="Src\Actor\Enemy\EnemyState\EnemyStateDamage.cpp" />
     <ClCompile Include="Src\Actor\Enemy\EnemyState\EnemyStateDead.cpp" />
     <ClCompile Include="Src\Actor\Enemy\EnemyState\EnemyStateIdle.cpp" />
     <ClCompile Include="Src\Actor\Enemy\EnemyState\EnemyStateSearch.cpp" />
@@ -199,7 +201,9 @@
     <ClInclude Include="Src\Actor\Enemy\Enemy.h" />
     <ClInclude Include="Src\Actor\Enemy\EnemyEye.h" />
     <ClInclude Include="Src\Actor\Enemy\EnemyState\EnemyState.h" />
+    <ClInclude Include="Src\Actor\Enemy\EnemyState\EnemyStateAttack.h" />
     <ClInclude Include="Src\Actor\Enemy\EnemyState\EnemyStateChase.h" />
+    <ClInclude Include="Src\Actor\Enemy\EnemyState\EnemyStateDamage.h" />
     <ClInclude Include="Src\Actor\Enemy\EnemyState\EnemyStateDead.h" />
     <ClInclude Include="Src\Actor\Enemy\EnemyState\EnemyStateIdle.h" />
     <ClInclude Include="Src\Actor\Enemy\EnemyState\EnemyStateSearch.h" />
