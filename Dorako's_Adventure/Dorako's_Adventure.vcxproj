@@ -161,6 +161,7 @@
     <ClCompile Include="Src\Actor\Player\PlayerState\PlayerStateJumpEnd.cpp" />
     <ClCompile Include="Src\Actor\Player\PlayerState\PlayerStateMove.cpp" />
     <ClCompile Include="Src\Actor\WoodBox\WoodBox.cpp" />
+    <ClCompile Include="Src\BehaviorTree\BehaviorTree.cpp" />
     <ClCompile Include="Src\Camera\CameraRotateAround.cpp" />
     <ClCompile Include="Src\Camera\DummyPlayer.cpp" />
     <ClCompile Include="Src\Camera\MainCamera.cpp" />
@@ -218,6 +219,7 @@
     <ClInclude Include="Src\Actor\Player\PlayerState\PlayerStateMove.h" />
     <ClInclude Include="Src\Actor\WoodBox\WoodBox.h" />
     <ClInclude Include="Src\Assets.h" />
+    <ClInclude Include="Src\BehaviorTree\BehaviorTree.h" />
     <ClInclude Include="Src\Camera\CameraRotateAround.h" />
     <ClInclude Include="Src\Camera\DummyPlayer.h" />
     <ClInclude Include="Src\Camera\MainCamera.h" />
