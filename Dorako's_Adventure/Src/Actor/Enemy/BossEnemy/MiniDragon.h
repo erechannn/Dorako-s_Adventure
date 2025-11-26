@@ -3,6 +3,7 @@
 
 #include "../Enemy.h"
 #include "../../../BehaviorTree/BehaviorTree.h"
+#include "../../Player/Player.h"
 
 class MiniDragon :public Enemy {
 public:
@@ -23,6 +24,8 @@ private:
 
 	void perform_escape_action();
 
+	void perform_melee_attack();
+
 	void build_attack_behavior_tree();
 //プライベートな変数
 private:
@@ -31,7 +34,8 @@ private:
 	Actor* player_{ nullptr };
 	float max_speed_{};
 	float idle_timer_{ 0.0f };
-
+	float player_distance_{};
+	UINT now_player_state_{ 0 };
 };
 
 
