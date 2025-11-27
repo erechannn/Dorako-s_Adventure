@@ -97,49 +97,44 @@ void MiniDragon::perform_melee_attack() {
 	std::cout << "近接攻撃" << std::endl;
 }
 void MiniDragon::build_attack_behavior_tree() {
-	auto root = std::make_unique<SelectorNode>("攻撃行動ルート");
-	auto initial_breath_sequence = std::make_unique<SequenceNode>("初回ブレス");
+	auto root = std::make_unique<SelectorNode>();
+	auto initial_breath_sequence = std::make_unique<SequenceNode>();
 	initial_breath_sequence->add_child(std::make_unique<ConditionNode>([this]() {
 		return !has_fired_fire_attack_;
-		},
-		"初回ブレス未実装？"));
-	auto action_loop_selector = std::make_unique<SelectorNode>("行動ループ（距離判定）");
-	auto close_range_sequence = std::make_unique<SequenceNode>("近距離行動");
+		}));
+	auto action_loop_selector = std::make_unique<SelectorNode>();
+	auto close_range_sequence = std::make_unique<SequenceNode>();
 	close_range_sequence->add_child(std::make_unique<ConditionNode>(
 		[this]() {
 			return player_distance_ < CloseDistance;
-		},
-		("プレイヤーが近い？(距離<3.0f)")
+		}
 	));
-	auto player_state_selector = std::make_unique<SelectorNode>("プレイヤーの状態による分岐");
-	auto airborne_sequence = std::make_unique<SequenceNode>("空中時の対応");
+	auto player_state_selector = std::make_unique<SelectorNode>();
+	auto airborne_sequence = std::make_unique<SequenceNode>();
 	airborne_sequence->add_child(std::make_unique<ConditionNode>(
 		[this]() {
 		return now_player_state_ == PlayerState::StateFlying;
-		}, "プレイヤーは空中状態？"
+		}
 	));
-	auto airborne_action_selector = std::make_unique<SelectorNode>("空中時の行動選択");
-	auto safe_distance_breath_seq = std::make_unique<SequenceNode>("安全距離到達時のブレス");
+	auto airborne_action_selector = std::make_unique<SelectorNode>();
+	auto safe_distance_breath_seq = std::make_unique<SequenceNode>();
 	safe_distance_breath_seq->add_child(std::make_unique<ConditionNode>(
 		[this]() {
 			return player_distance_ >= SafeDistance;
-		},
-		"安全地帯に到着？"
+		}
 	));
 	safe_distance_breath_seq->add_child(std::make_unique<ActionNode>(
 		[this]() {
 			perform_fire_attack();
 			return Status::Success;
-		},
-		"ブレス攻撃（安全地帯到着後）"
+		}
 	));
 	auto keep_distance_action = std::make_unique<ActionNode>(
 		[this]() {
 			perform_escape_action();
 			return Status::Success;
 		
-		},
-		"距離を置く"
+		}
 	);
 	airborne_action_selector->add_child(std::move(safe_distance_breath_seq));
 	airborne_action_selector->add_child(std::move(keep_distance_action));
@@ -149,8 +144,7 @@ void MiniDragon::build_attack_behavior_tree() {
 		[this]() {
 			perform_melee_attack();
 			return Status::Success;
-		},
-		"近接攻撃実行"
+		}
 	);
 	player_state_selector->add_child(std::move(airborne_sequence));
 	player_state_selector->add_child(std::move(grounded_action));
@@ -158,38 +152,34 @@ void MiniDragon::build_attack_behavior_tree() {
 	close_range_sequence->add_child(std::move(player_state_selector));
 
 
-	auto mid_range_sequence = std::make_unique<SequenceNode>("中距離攻撃");
+	auto mid_range_sequence = std::make_unique<SequenceNode>();
 
 	mid_range_sequence->add_child(std::make_unique<ConditionNode>(
 		[this]() {
 			return player_distance_ >= CloseDistance &&
 				player_distance_ < FarDistance;
-		},
-		"中距離？"
+		}
 	));
 
 	mid_range_sequence->add_child(std::make_unique<ActionNode>(
 		[this]() {
 			perform_fire_attack();
 			return Status::Success;
-		},
-		"ブレス攻撃"
+		}
 	));
 	
-	auto far_range_sequence = std::make_unique<SequenceNode>("遠距離行動");
+	auto far_range_sequence = std::make_unique<SequenceNode>();
 	far_range_sequence->add_child(std::make_unique<ConditionNode>(
 		[this]() {
 			return player_distance_ >= FarDistance;
-		},
-		"プレイヤーが遠い？"
+		}
 	));
 
 	far_range_sequence->add_child(std::make_unique<ActionNode>(
 		[this]() {
 			perform_charge_attack();
 			return Status::Success;
-		},
-		"高速追跡"
+		}
 	));
 
 	action_loop_selector->add_child(std::move(close_range_sequence));

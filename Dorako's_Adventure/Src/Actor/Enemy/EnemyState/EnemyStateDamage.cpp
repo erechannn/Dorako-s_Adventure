@@ -12,3 +12,9 @@ void EnemyStateDamage::update(float delta_time) {
 		owner_->change_state(EnemyState::Idle);
 	}
 }
+void EnemyStateDamage::start() {
+
+}
+void EnemyStateDamage::end() {
+
+}
