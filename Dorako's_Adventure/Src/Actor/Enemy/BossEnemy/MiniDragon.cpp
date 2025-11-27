@@ -10,6 +10,8 @@
 #include "../../Player/PlayerState/PlayerState.h"
 #include "../../../Assets.h"
 
+#include <iostream>
+
 const float IdleTime = 60.0f;
 // 距離の閾値
 const float CloseDistance = 3.0f;   // 近い判定
@@ -67,10 +69,14 @@ void MiniDragon::idle(float delta_time) {
 	}
 }
 void MiniDragon::chase(float delta_time) {
-
+	target_point_ = player_->transform().position();
+	to_target(delta_time, target_point_);
+	if (player_distance_ <= CloseDistance) {
+		change_state(EnemyState::Attack);
+	}
 }
 void MiniDragon::attack(float delta_time) {
-
+	build_attack_behavior_tree();
 }
 void MiniDragon::damage(float delta_time) {
 
@@ -79,16 +85,16 @@ void MiniDragon::dead(float delta_time) {
 
 }
 void MiniDragon::perform_fire_attack() {
-
+	std::cout << "ひのこ攻撃" << std::endl;
 }
 void MiniDragon::perform_charge_attack() {
-
+	std::cout << "突進攻撃" << std::endl;
 }
 void MiniDragon::perform_escape_action() {
-
+	std::cout << "逃げる" << std::endl;
 }
 void MiniDragon::perform_melee_attack() {
-
+	std::cout << "近接攻撃" << std::endl;
 }
 void MiniDragon::build_attack_behavior_tree() {
 	auto root = std::make_unique<SelectorNode>("攻撃行動ルート");
@@ -103,11 +109,12 @@ void MiniDragon::build_attack_behavior_tree() {
 		[this]() {
 			return player_distance_ < CloseDistance;
 		},
-		("プレイヤーが近い？(距離<3.0f")
+		("プレイヤーが近い？(距離<3.0f)")
 	));
 	auto player_state_selector = std::make_unique<SelectorNode>("プレイヤーの状態による分岐");
 	auto airborne_sequence = std::make_unique<SequenceNode>("空中時の対応");
-	airborne_sequence->add_child(std::make_unique<ConditionNode>([this]() {
+	airborne_sequence->add_child(std::make_unique<ConditionNode>(
+		[this]() {
 		return now_player_state_ == PlayerState::StateFlying;
 		}, "プレイヤーは空中状態？"
 	));
@@ -152,6 +159,14 @@ void MiniDragon::build_attack_behavior_tree() {
 
 
 	auto mid_range_sequence = std::make_unique<SequenceNode>("中距離攻撃");
+
+	mid_range_sequence->add_child(std::make_unique<ConditionNode>(
+		[this]() {
+			return player_distance_ >= CloseDistance &&
+				player_distance_ < FarDistance;
+		},
+		"中距離？"
+	));
 
 	mid_range_sequence->add_child(std::make_unique<ActionNode>(
 		[this]() {
