@@ -10,6 +10,7 @@
 #include "../Actor/Enemy/Kuribo.h"
 #include "../Actor/Enemy/BossEnemy/MiniDragon.h"
 #include "../Actor/WoodBox/WoodBox.h"
+#include "../Actor/Coin/Coin.h"
 #include "../UI/UIActor/UIActors/GamePlayUI.h"
 #include "../Stage/StageManager.h"
 #include <GSstandard_shader.h>
@@ -52,6 +53,7 @@ void GamePlayScene::start() {
     gsLoadSkinMesh(Mesh_Player, "Assets/Mesh/Player/DragonSpark.mshb");
     gsLoadSkinMesh(Mesh_Kuribo, "Assets/Mesh/Enemy/FirePig/FirePig.mshb");
     gsLoadMesh(Mesh_WoodBox, "Assets/Mesh/WoodBox/WoodBox.mshb");
+    gsLoadMesh(Mesh_Coin, "Assets/Mesh/Coin/Coin.mshb");
     gsLoadSkinMesh(Mesh_MiniDragon, "Assets/Mesh/Enemy/MiniDragon/MiniDragon.mshb");
 
     gsLoadEffect(Effeck_FireBoll, "Assets/Effect/FireBall_Orange.efkefc");
@@ -69,7 +71,8 @@ void GamePlayScene::start() {
     world_.add_actor(new Player{ &world_,{3.0f,0.0f,3.0f} });
     world_.add_actor(new DummyPlayer{ &world_ });
     //world_.add_actor(new Kuribo{ &world_,{0.0f,0.0f,0.0f} });
-    world_.add_actor(new MiniDragon{ &world_,{0.0f,0.0f,0.0f} });
+    world_.add_actor(new Coin{ &world_,{0.0f,0.0f,0.0f} });
+    //world_.add_actor(new MiniDragon{ &world_,{0.0f,0.0f,0.0f} });
 
     UINT stage_octree = StageManager::get_instance().get_current_stage_octree();
     UINT stage_collider = StageManager::get_instance().get_current_stage_collider();
