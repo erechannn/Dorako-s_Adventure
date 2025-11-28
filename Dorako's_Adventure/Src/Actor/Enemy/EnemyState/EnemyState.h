@@ -16,6 +16,7 @@ public:
 		Search,
 		Chase,
 		Attack,
+		FirstFireAttack,
 		Damage,
 		Dead,
 	};

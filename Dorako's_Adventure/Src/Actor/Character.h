@@ -33,7 +33,7 @@ protected:
 	//’n–Ê‚Æ‚Ì“–‚½‚è”»’èˆ—
 	void collide_ground();
 	//d—Í—Ê
-	float gravity_{ -0.003 };
+	float gravity_{ -0.001 };
 	//d—Í‚É‚æ‚éˆÚ“®—Ê
 	GSvector3 gravity_velocity_{ 0.0f,0.0f,0.0f };
 	int max_health_{ 1 };

@@ -16,6 +16,8 @@ public:
 	void attack(float delta_time)override;
 	void damage(float delta_time)override;
 	void dead(float delta_time)override;
+
+	void first_fire_attack(float delta_time)override;
 //プライベートな関数
 private:
 	void perform_fire_attack();
@@ -27,6 +29,8 @@ private:
 	void perform_melee_attack();
 
 	void build_attack_behavior_tree();
+
+	void look_to_player( GSvector3 target);
 //プライベートな変数
 private:
 	std::unique_ptr<BehaviorNode>attack_behavior_tree_;
@@ -36,6 +40,9 @@ private:
 	float idle_timer_{ 0.0f };
 	float player_distance_{};
 	UINT now_player_state_{ 0 };
+	GSvector3 saved_position_{ 0.0f,0.0f,0.0f };
+	bool is_fire_attack_finished_{ false };
+	int fire_attack_count_{ 0 };
 };
 
 

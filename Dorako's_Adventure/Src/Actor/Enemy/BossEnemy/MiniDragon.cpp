@@ -6,6 +6,9 @@
 #include "../EnemyState/EnemyStateAttack.h"
 #include "../EnemyState/EnemyStateDamage.h"
 #include "../EnemyState/EnemyStateDead.h"
+#include "BossAttackState.h"
+#include "AttackStateFirstFireAttack.h"
+#include "../EnemiesMotion.h"
 #include "../../../Delay/DelayManager.h"
 #include "../../Player/PlayerState/PlayerState.h"
 #include "../../../Assets.h"
@@ -14,8 +17,8 @@
 
 const float IdleTime = 60.0f;
 // 距離の閾値
-const float CloseDistance = 3.0f;   // 近い判定
-const float FarDistance = 30.0f;     // 遠い判定
+const float CloseDistance = 5.0f;   // 近い判定
+const float FarDistance = 15.0f;     // 遠い判定
 const float SafeDistance = 20.0f;    // 安全距離（空中時の逃げる目標）
 //最大の移動スピード
 const float MaxSpeed = 0.5f;
@@ -30,13 +33,16 @@ MiniDragon::MiniDragon(IWorld* world, GSvector3 position) :
 	transform_.position(position);
 	mesh_->transform(transform_.localToWorldMatrix());
 	foot_offset_ = 2.0f;
+	walk_speed_ = 0.15f;
 	health_ = 3;
 	state_.add_state(EnemyState::Idle, new EnemyStateIdle(this));
 	state_.add_state(EnemyState::Chase, new EnemyStateChase(this));
 	state_.add_state(EnemyState::Attack, new EnemyStateAttack(this));
 	state_.add_state(EnemyState::Damage, new EnemyStateDamage(this));
 	state_.add_state(EnemyState::Dead, new EnemyStateDead(this));
+	state_.add_state(EnemyState::FirstFireAttack, new AttackStateFirstFireAttack(this));
 	state_.change_state(EnemyState::Idle);
+	build_attack_behavior_tree();
 }
 void MiniDragon::update(float delta_time) {
 	//キャラクターの基礎アップデート
@@ -73,10 +79,11 @@ void MiniDragon::chase(float delta_time) {
 	to_target(delta_time, target_point_);
 	if (player_distance_ <= CloseDistance) {
 		change_state(EnemyState::Attack);
+		saved_position_ = transform_.position();
 	}
 }
 void MiniDragon::attack(float delta_time) {
-	build_attack_behavior_tree();
+	attack_behavior_tree_->tick();
 }
 void MiniDragon::damage(float delta_time) {
 
@@ -84,17 +91,42 @@ void MiniDragon::damage(float delta_time) {
 void MiniDragon::dead(float delta_time) {
 
 }
+void MiniDragon::first_fire_attack(float delta_time) {
+	look_to_player(player_->transform().position());
+	mesh_->change_motion(EnemiesMotion::Attack, false);
+	if (mesh_->is_end_motion()) {
+		fire_attack_count_++;
+		if (fire_attack_count_ >= 3) {
+			change_state(EnemyState::Attack);
+			is_fire_attack_finished_ = true;
+			fire_attack_count_ = 0;
+		}
+	}
+}
 void MiniDragon::perform_fire_attack() {
-	std::cout << "ひのこ攻撃" << std::endl;
+	transform_.position(saved_position_);
+
+	GSvector3 to_player = player_->transform().position() - transform_.position();
+	float dot = GSvector3::dot(to_player, transform_.forward());
+	if (dot > 1.0) {
+		look_to_player(player_->transform().position());
+	}
 }
 void MiniDragon::perform_charge_attack() {
-	std::cout << "突進攻撃" << std::endl;
+	Delay::after(5.0f, [this]() {
+		std::cout << "突進攻撃" << std::endl;
+		});
 }
 void MiniDragon::perform_escape_action() {
-	std::cout << "逃げる" << std::endl;
+	Delay::after(5.0f, [this]() {
+		std::cout << "逃げる" << std::endl;
+		});
+
 }
 void MiniDragon::perform_melee_attack() {
-	std::cout << "近接攻撃" << std::endl;
+	Delay::after(5.0f, [this]() {
+		std::cout << "近接攻撃" << std::endl;
+		});
 }
 void MiniDragon::build_attack_behavior_tree() {
 	auto root = std::make_unique<SelectorNode>();
@@ -102,6 +134,18 @@ void MiniDragon::build_attack_behavior_tree() {
 	initial_breath_sequence->add_child(std::make_unique<ConditionNode>([this]() {
 		return !has_fired_fire_attack_;
 		}));
+	initial_breath_sequence->add_child(std::make_unique<ActionNode>(
+		[this]() {
+			change_state(EnemyState::FirstFireAttack);
+			has_fired_fire_attack_ = true;
+			if (is_fire_attack_finished_) {
+				is_fire_attack_finished_ = false;
+				return Status::Success;
+			}
+			return Status::Running;
+		}));
+
+
 	auto action_loop_selector = std::make_unique<SelectorNode>();
 	auto close_range_sequence = std::make_unique<SequenceNode>();
 	close_range_sequence->add_child(std::make_unique<ConditionNode>(
@@ -109,6 +153,7 @@ void MiniDragon::build_attack_behavior_tree() {
 			return player_distance_ < CloseDistance;
 		}
 	));
+
 	auto player_state_selector = std::make_unique<SelectorNode>();
 	auto airborne_sequence = std::make_unique<SequenceNode>();
 	airborne_sequence->add_child(std::make_unique<ConditionNode>(
@@ -191,4 +236,15 @@ void MiniDragon::build_attack_behavior_tree() {
 
 	attack_behavior_tree_ = std::move(root);
 
+}
+
+void MiniDragon::look_to_player(GSvector3 target) {
+	//惑星の位置
+	GSvector3 planet_position = StageManager::get_instance().get_current_stage_planet_position();
+	//惑星から自分までのベクトル
+	GSvector3 to_planet = transform_.position() - planet_position;
+	to_planet.normalize();
+	//仮の上方向ベクトル
+	GSvector3 up = to_planet;
+	transform_.lookAt(target, up);
 }

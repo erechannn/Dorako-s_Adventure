@@ -28,6 +28,7 @@ Player::Player(IWorld* world, GSvector3 position) :
 	transform_.position(position);
 	mesh_->transform(transform_.localToWorldMatrix());
 	max_health_ = 3;
+	foot_offset_ = 0.05f;
 	health_ = max_health_;
 	//èÛë‘ÇÃí«â¡
 	state_.add_state(PlayerState::StateDamage, new PlayerStateDamage(this));
@@ -80,6 +81,7 @@ void Player::update(float delta_time) {
 	ImGui::Text("x:%f y:%f z:%f", velocity_.x, velocity_.y, velocity_.z);
 	ImGui::Text("x:%f y:%f z:%f", transform_.up().x, transform_.up().y, transform_.up().z);
 	ImGui::Text("gravity:%f", gravity_);
+	ImGui::Text("gravity:%f", foot_offset_);
 	ImGui::Checkbox("ínè„Ç…Ç¢ÇÈÇ©", &is_ground_);
 	ImGui::Checkbox("debug_invincible", &debug_invincible_);
 	if (ImGui::Button("add_fire_count")) {

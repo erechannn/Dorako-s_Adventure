@@ -141,6 +141,7 @@
     <ClCompile Include="Src\Actor\ActorManager.cpp" />
     <ClCompile Include="Src\Actor\BulletClass.cpp" />
     <ClCompile Include="Src\Actor\Character.cpp" />
+    <ClCompile Include="Src\Actor\Enemy\BossEnemy\AttackStateFirstFireAttack.cpp" />
     <ClCompile Include="Src\Actor\Enemy\BossEnemy\MiniDragon.cpp" />
     <ClCompile Include="Src\Actor\Enemy\Enemy.cpp" />
     <ClCompile Include="Src\Actor\Enemy\EnemyEye.cpp" />
@@ -196,6 +197,8 @@
     <ClInclude Include="Src\Actor\ActorManager.h" />
     <ClInclude Include="Src\Actor\BulletClass.h" />
     <ClInclude Include="Src\Actor\Character.h" />
+    <ClInclude Include="Src\Actor\Enemy\BossEnemy\AttackStateFirstFireAttack.h" />
+    <ClInclude Include="Src\Actor\Enemy\BossEnemy\BossAttackState.h" />
     <ClInclude Include="Src\Actor\Enemy\BossEnemy\MiniDragon.h" />
     <ClInclude Include="Src\Actor\Enemy\EnemiesMotion.h" />
     <ClInclude Include="Src\Actor\Enemy\Enemy.h" />
