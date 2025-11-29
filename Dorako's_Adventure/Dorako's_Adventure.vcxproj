@@ -137,6 +137,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Scene\GameClearScene.cpp" />
+    <ClCompile Include="Src\Score\Score.cpp" />
     <ClCompile Include="Src\Actor\Actor.cpp" />
     <ClCompile Include="Src\Actor\ActorManager.cpp" />
     <ClCompile Include="Src\Actor\BulletClass.cpp" />
@@ -194,6 +196,8 @@
     <ClCompile Include="Src\World\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Scene\GameClearScene.h" />
+    <ClInclude Include="Src\Score\Score.h" />
     <ClInclude Include="Src\Actor\Actor.h" />
     <ClInclude Include="Src\Actor\ActorManager.h" />
     <ClInclude Include="Src\Actor\BulletClass.h" />

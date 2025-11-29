@@ -110,10 +110,17 @@ void GamePlayScene::update(float delta_time) {
 void GamePlayScene::game_play_update(float delta_time) {
     // ワールドクラスの更新
     world_.update(delta_time);
+    if (world_.get_score() >= StageManager::get_instance().get_clear_score() &&
+        StageManager::get_instance().get_current_stage_type() == StageManager::StageType::NORMAL) {
+
+        next_scene_ = "GameClearScene";
+        is_start_ = true;
+    }
     Actor* player_actor = world_.find_actor("Player");
     Player* player = (Player*)player_actor;
     if (player == nullptr) return;
     if (player->now_health() <= 0.0f) {
+        next_scene_ = "GameOverScene";
         is_start_ = true;
     }
 }

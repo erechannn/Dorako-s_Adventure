@@ -26,6 +26,7 @@ void Coin::draw()const {
 }
 void Coin::react(Actor& other) {
 	if (other.name() == "Player") {
+		world_->add_score(1);
 		die();
 	}
 }

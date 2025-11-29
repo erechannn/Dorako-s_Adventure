@@ -6,6 +6,7 @@
 #include "Scene/StageSelectScene.h"
 #include"Scene/GamePlayScene.h"
 #include "Scene/GameOverScene.h"
+#include "Scene/GameClearScene.h"
 #include "Tween/Tween.h"
 #include "Delay/DelayManager.h"
 #include <GSeffect.h>
@@ -22,6 +23,7 @@ public:
         scene_manager_.add("TitleScene", new TitleScene());
         scene_manager_.add("StageSelectScene", new StageSelectScene());
         scene_manager_.add("GamePlayScene", new GamePlayScene());
+        scene_manager_.add("GameClearScene", new GameClearScene());
         scene_manager_.add("GameOverScene", new GameOverScene());
         scene_manager_.change("TitleScene");
 

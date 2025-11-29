@@ -11,9 +11,9 @@ StageManager::StageManager() :
 //ステージの初期化
 void StageManager::initialize_stages() {
 	stages_ = {
-		{1,"草原ステージ",Octree_Stage1,Octree_Stage1Collider,{0.0f,-30.0f,0.0f},30.0f,StageType::NORMAL},
-		{2,"草原ボスステージ",Octree_BossStage,Octree_BossStageCollider,{0.0f,-20.0f,0.0f},20.0f,StageType::BOSS},
-		{3,"テストステージ",Octree_TestStage,Octree_TestStageCollider,{0.0f,-20.0f,0.0f},20.0f,StageType::NORMAL}
+		{1,"草原ステージ",Octree_Stage1,Octree_Stage1Collider,{0.0f,-30.0f,0.0f},30.0f,10,StageType::NORMAL},
+		{2,"草原ボスステージ",Octree_BossStage,Octree_BossStageCollider,{0.0f,-20.0f,0.0f},20.0f,1,StageType::BOSS},
+		{3,"テストステージ",Octree_TestStage,Octree_TestStageCollider,{0.0f,-20.0f,0.0f},20.0f,1,StageType::NORMAL}
 	};
 }
 
@@ -52,6 +52,9 @@ GSvector3 StageManager::get_current_stage_planet_position()const {
 //ステージの星の半径の取得
 float StageManager::get_current_stage_planet_radius()const {
 	return stages_[selected_stage_id_ - 1].planet_radius;
+}
+int StageManager::get_clear_score()const {
+	return stages_[selected_stage_id_ - 1].clear_score;
 }
 //ステージタイプの取得
 StageManager::StageType StageManager::get_current_stage_type()const {

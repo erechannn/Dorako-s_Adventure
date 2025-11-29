@@ -4,6 +4,7 @@
 #include "IWorld.h"
 #include<gslib.h>
 #include"Actor/ActorManager.h"
+#include "../Score/Score.h"
 
 class World :public IWorld {
 public:
@@ -24,10 +25,12 @@ public:
 
 	virtual void add_actor(Actor* actor)override;
 	virtual Actor* find_actor(const std::string& name)const override;
+	virtual void add_score(int score)override;
 	virtual std::vector<Actor*>find_actor_with_tag(const std::string& tag)const override;
 	virtual int count_actor()const override;
 	virtual int count_actor_with_tag(const std::string& tag)const override;
 	virtual void send_message(const std::string& message, void* param = nullptr)override;
+	virtual int get_score()const override;
 
 	virtual Actor* camera()override;
 	virtual Actor* light()override;
@@ -45,6 +48,7 @@ private:
 	Actor* light_{ nullptr };
 	Actor* camera_{ nullptr };
 	Field* field_{ nullptr };
+	Score score_;
 };
 
 

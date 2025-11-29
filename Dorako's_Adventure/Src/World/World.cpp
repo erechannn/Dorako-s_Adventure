@@ -28,10 +28,12 @@ void World::draw()const {
 	actors_.draw();
 	actors_.draw_transparent();
 	actors_.draw_gui();
+	score_.draw();
 	gsDrawEffect();
 }
 void World::clear() {
 	actors_.clear();
+	score_.clear();
 	delete camera_;
 	camera_ = nullptr;
 	delete light_;
@@ -52,6 +54,9 @@ void World::add_field(Field* field) {
 	delete field_;
 	field_ = field;
 }
+void World::add_score(int score) {
+	score_.add(score);
+}
 
 void World::add_actor(Actor* actor) {
 	actors_.add(actor);
@@ -70,6 +75,9 @@ int World::count_actor_with_tag(const std::string& tag)const {
 }
 void World::send_message(const std::string& message, void* param) {
 	actors_.send_message(message, param);
+}
+int World::get_score()const {
+	return score_.get();
 }
 
 Actor* World::camera() {
