@@ -18,6 +18,7 @@ void GamePlayUI::update(float delta_time) {
     player_ = (Player*)player;
     fire_count_ = player_->fire_count();
     player_health_ = player_->now_health();
+    player_fly_timer_ = player_->get_fly_timer();
 
     if (ImGui::Begin("UI_position")) {
         ImGui::DragFloat2("Position : ", position_, 0.1f);
@@ -50,9 +51,8 @@ void GamePlayUI::on_disable() {
 }
 
 void GamePlayUI::draw_player_ui()const {
-    static GSvector2 health_icon_position_1{ 10.0f,30.0f };
-    static GSvector2 health_icon_position_2{ 160.0f,30.0f };
-    static GSvector2 health_icon_position_3{ 310.0f,30.0f };
+    const float max_fly_timer{ 180.0f };
+    const GSvector2 fly_gauge_position{ 1580.0f,140.0f };
     gsDrawSprite2D(Texture_EmptyFireCount, &fire_count_positions_[0], NULL, NULL, NULL, NULL, 0.0f);
     gsDrawSprite2D(Texture_EmptyFireCount, &fire_count_positions_[1], NULL, NULL, NULL, NULL, 0.0f);
     gsDrawSprite2D(Texture_EmptyFireCount, &fire_count_positions_[2], NULL, NULL, NULL, NULL, 0.0f);
@@ -65,6 +65,8 @@ void GamePlayUI::draw_player_ui()const {
     for (int i = 0; i < player_health_; i++) {
         gsDrawSprite2D(Texture_HealthIcon, &heart_positions_[i], NULL, NULL, NULL, NULL, 0.0f);
     }
-
-
+    gsDrawSprite2D(Texture_FlyGaugeEmpty, &fly_gauge_position, NULL, NULL, NULL, NULL, 0.0f);
+    float fly_gauge_rect_up = (600 / max_fly_timer) * player_fly_timer_;
+    GSrect fly_gauge_rect{ 0.0f,0.0f,400.0f,fly_gauge_rect_up };
+    gsDrawSprite2D(Texture_FlyGauge, &fly_gauge_position, &fly_gauge_rect, NULL, NULL, NULL, 0.0f);
 }

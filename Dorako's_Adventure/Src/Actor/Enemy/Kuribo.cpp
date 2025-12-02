@@ -32,8 +32,11 @@ Kuribo::Kuribo(IWorld* world, GSvector3 position) :
 	state_.change_state(EnemyState::Idle);
 }
 void Kuribo::update(float delta_time) {
+	//アクターのプレイヤーを代入
+	player_ = world_->find_actor("Player");
 	//キャラクターの基礎アップデート
 	state_.update(delta_time);
+	std::cout << transform_.position().x << " " << transform_.position().y << " " << transform_.position().z << std::endl;
 	collide_field();
 	gravity_update(delta_time);
 	collide_ground();
@@ -41,8 +44,6 @@ void Kuribo::update(float delta_time) {
 	mesh_->update(delta_time);
 	//ワールド変換行列を設定
 	mesh_->transform(transform_.localToWorldMatrix());
-	//アクターのプレイヤーを代入
-	player_ = world_->find_actor("Player");
 	//視界の更新
 	enemy_eye_.setOrigin(transform_.position());
 	enemy_eye_.setForward(transform_.forward());
@@ -66,15 +67,14 @@ void Kuribo::update(float delta_time) {
 	ImGui::Checkbox("next: ", &next_point);
 	ImGui::Checkbox("is_chase:", &is_chase_);
 	ImGui::End();
-
 }
 void Kuribo::draw()const {
 	mesh_->draw();
-	enemy_eye_.draw();
+	//enemy_eye_.draw();
 }
 void Kuribo::react(Actor& other) {
 	//プレイヤーが上から当たったら死ぬ
-	if (is_above_player(other)&&!undead_&&other.tag()=="PlayerTag") {
+	if (other.tag()=="PlayerAttackTag" || is_above_player(other) && !undead_ && other.tag() == "PlayerTag") {
 		change_state(EnemyState::Dead);
 	}
 	else if (other.tag() == "PlayerTag") {
@@ -83,7 +83,7 @@ void Kuribo::react(Actor& other) {
 	}
 }
 void Kuribo::idle(float delta_time) {
-	transform_.position(first_position_);
+	if (player_ == nullptr)return;
 	Delay::after(1.5f, [this]() {
 		if (this->is_player_in_sight()) {
 			this->change_state(EnemyState::Chase);
@@ -111,6 +111,7 @@ void Kuribo::search(float delta_time) {
 	}
 }
 void Kuribo::chase(float delta_time) {
+	if (player_ == nullptr)return;
 	target_point_ = player_->transform().position();
 	//プレイヤーの位置へ移動
 	to_target(delta_time, target_point_);
@@ -122,9 +123,12 @@ void Kuribo::chase(float delta_time) {
 //敵の視界にプレイヤーが入ったか
 bool Kuribo::is_player_in_sight() {
 	if (player_ == nullptr)return false;
-	if (enemy_eye_.isTargetWithin(player_->transform().position())) {
+	if (enemy_eye_.isTargetWithin(player_position())) {
 		return true;
 	}
 	else return false;
 }
-
+GSvector3 Kuribo::player_position() {
+	if (player_ == nullptr)return { 0.0f,0.0f,0.0f };
+	return player_->transform().position();
+}

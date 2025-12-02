@@ -4,6 +4,7 @@
 #include "../Light/MainLight.h"
 #include "../Tween/Tween.h"
 #include "../Actor/ModelPlayer.h"
+#include "../Stage/StageManager.h"
 #include "../Assets.h"
 
 #include <GSstandard_shader.h>
@@ -50,6 +51,7 @@ void TitleScene::start() {
 	gsLoadTexture(Texture_TitleLogo, "Assets/Texture/TitleUI/TitleLogo.png");
 	gsLoadTexture(Texture_TitleUi, "Assets/Texture/TitleUI/TitleUi.png");
 
+
     gsLoadSkinMesh(Mesh_Player, "Assets/Mesh/Player/DragonSpark.mshb");
 
     world_.add_actor(new ModelPlayer{ &world_,{0.0f,0.0f,0.0f} });
@@ -69,6 +71,7 @@ void TitleScene::start() {
     first_pos_ = { 422.0f,-169.0f };
     end_pos_ = { 422.0f,-120.0f };
     Tween::vector2(first_pos_, end_pos_, 60, [=](GSvector2 pos) {logo_position_ = pos; });
+    StageManager::get_instance().select_stage(4);
 
 }
 void TitleScene::update(float delta_time) {
@@ -98,6 +101,7 @@ void TitleScene::draw()const {
 	const GSvector2 Logo_position{ 0.0f,0.0f };
 	gsDrawSprite2D(Texture_TitleLogo, &logo_position_, NULL, NULL, NULL, NULL, 0.0f);
     gsDrawSprite2D(Texture_TitleUi, &ui_position_, NULL, NULL, NULL, NULL, 0.0f);
+
 }
 bool TitleScene::is_end() const{
 	return is_end_;

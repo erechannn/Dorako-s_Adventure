@@ -62,17 +62,40 @@ void GamePlayScene::start() {
 
     gsLoadOctree(Octree_TestStage, "Assets/Stage/testStage2.oct");
     gsLoadOctree(Octree_TestStageCollider, "Assets/Stage/testStage2Collider.oct");
+    gsLoadOctree(Octree_Stage1, "Assets/Stage/Stage1/Stage1Octree.oct");
+    gsLoadOctree(Octree_Stage1Collider, "Assets/Stage/Stage1/Stage1OctreeCollider.oct");
 
     gsLoadTexture(Texture_FireCount, "Assets/Texture/GamePlayUI/fire_count_icon.png");
     gsLoadTexture(Texture_EmptyFireCount, "Assets/Texture/GamePlayUI/fire_count_empty.png");
     gsLoadTexture(Texture_HealthIcon, "Assets/Texture/GamePlayUI/health_icon.png");
     gsLoadTexture(Texture_EmptyHealth, "Assets/Texture/GamePlayUI/health_icon_empty.png");
+    gsLoadTexture(Texture_FlyGaugeEmpty, "Assets/Texture/GamePlayUI/FlyGaugeEmpty.png");
+    gsLoadTexture(Texture_FlyGauge, "Assets/Texture/GamePlayUI/FlyGauge.png");
 
-    world_.add_actor(new Player{ &world_,{3.0f,0.0f,3.0f} });
+    world_.add_actor(new Player{ &world_,{0.0f,0.0f,0.0f} });
     world_.add_actor(new DummyPlayer{ &world_ });
     //world_.add_actor(new Kuribo{ &world_,{0.0f,0.0f,0.0f} });
-    world_.add_actor(new Coin{ &world_,{0.0f,0.0f,0.0f} });
+    //world_.add_actor(new Coin{ &world_,{0.0f,0.0f,0.0f} });
     //world_.add_actor(new MiniDragon{ &world_,{0.0f,0.0f,0.0f} });
+    if (StageManager::get_instance().get_current_stage_id() == 1) {
+        world_.add_actor(new Coin{ &world_,{-0.806f,9.643f,5.894f} });
+        world_.add_actor(new Coin{ &world_,{31.752f,-25.0f,24.306f} });
+        world_.add_actor(new Coin{ &world_,{-2.457f,-11.665f,24.306f} });
+        world_.add_actor(new Coin{ &world_,{0.0f,-61.809f,-1.043f} });
+        world_.add_actor(new Coin{ &world_,{-6.12f,-11.245f,-23.516f} });
+    }
+    if (StageManager::get_instance().get_current_stage_id() == 3) {
+        world_.add_actor(new Coin{ &world_,{1.3f,-1.59f,7.37f} });
+        world_.add_actor(new Coin{ &world_,{20.0f,-20.0f,0.0f} });
+        world_.add_actor(new Coin{ &world_,{-20.0f,-20.0f,0.0f} });
+        world_.add_actor(new Coin{ &world_,{0.0f,-20.0f,20.0f} });
+        world_.add_actor(new Coin{ &world_,{0.0f,-20.0f,-20.0f} });
+        world_.add_actor(new Kuribo{ &world_,{1.3f,-1.59f,7.37f} });
+        world_.add_actor(new Kuribo{ &world_,{20.0f,-20.0f,0.0f} });
+        world_.add_actor(new Kuribo{ &world_,{-20.0f,-20.0f,0.0f} });
+        world_.add_actor(new Kuribo{ &world_,{0.0f,-20.0f,19.0f} });
+        world_.add_actor(new Kuribo{ &world_,{0.0f,-20.0f,-20.0f} });
+    }
 
     UINT stage_octree = StageManager::get_instance().get_current_stage_octree();
     UINT stage_collider = StageManager::get_instance().get_current_stage_collider();
@@ -104,7 +127,7 @@ void GamePlayScene::update(float delta_time) {
     case State::Pose:pose_update(delta_time); break;
     }
     if (is_start_)          start_timer_ += delta_time; //タイマー増加
-    if (start_timer_ >= 180.0f)          is_end_ = true; //シーンを終了
+    if (start_timer_ >= 120.0f)          is_end_ = true; //シーンを終了
 
 }
 void GamePlayScene::game_play_update(float delta_time) {
@@ -141,6 +164,9 @@ void GamePlayScene::draw()const {
     world_.draw();
 }
 void GamePlayScene::end() {
-    gsDeleteSkinMesh(Mesh_Player);
     world_.clear();
+    gsDeleteSkinMesh(Mesh_Player);
+    gsDeleteSkinMesh(Mesh_Kuribo);
+    gsDeleteMesh(Mesh_Coin);
+
 }

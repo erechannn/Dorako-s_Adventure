@@ -15,15 +15,16 @@ public:
 	virtual void chase(float delta_time)override;
 private:
 	bool is_player_in_sight();
+	GSvector3 player_position();
 private:
 	EnemyEye enemy_eye_;
 	GSvector3 first_position_{};
 	float walk_timer_{ 0.0f };
 	bool is_move_{ true };
-	bool undead_{ true };
+	bool undead_{ false };
 	GSvector3 planet_to_target_{};
 	Actor* player_{ nullptr };
-	bool is_chase_{ false };
+	bool is_chase_{ true };
 };
 
 

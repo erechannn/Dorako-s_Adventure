@@ -27,13 +27,16 @@ public:
 
 	UINT get_player_now_state();
 
+	float get_fly_timer();
+
 private:
 	bool is_above_enemy(Actor& other);
 	bool is_move_{ false };
 	int fire_count_{ 3 };
 	bool invincible_{ false };
 	float invincible_timer_{ 0.0f };
-	bool debug_invincible_{ true };
+	bool debug_invincible_{ false };
+	float fly_timer_{ 180.0f };
 };
 
 

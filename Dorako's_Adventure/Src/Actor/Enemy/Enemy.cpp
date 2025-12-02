@@ -11,6 +11,8 @@ Enemy::Enemy(GSuint mesh) :
 
 }
 bool Enemy::is_above_player(Actor& player) {
+	if (is_dead())return false;
+	if (player.is_dead())return false;
 	GSvector3 position = transform_.position();
 	GSvector3 other_position = player.transform().position();
 	GSvector3 up = transform_.up();

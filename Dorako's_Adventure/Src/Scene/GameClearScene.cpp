@@ -3,12 +3,12 @@
 #include <iostream>
 
 void GameClearScene::start() {
+	gsLoadTexture(Texture_StageClear, "Assets/Texture/GameClearUI/StageClear.png");
+
 	is_end_ = false;
 	is_start_ = false;
 	start_timer_ = 0.0f;
 	next_scene_ = "TitleScene";
-
-	std::cout << "ƒQ[ƒ€ƒNƒŠƒA" << std::endl;
 }
 
 void GameClearScene::update(float delta_time) {
@@ -18,7 +18,8 @@ void GameClearScene::update(float delta_time) {
 }
 
 void GameClearScene::draw()const {
-
+	GSvector2 ui_position{ 500.0f,0.0f };
+	gsDrawSprite2D(Texture_StageClear, &ui_position, NULL, NULL, NULL, NULL, 0.0f);
 }
 bool GameClearScene::is_end() const{
 	return is_end_;

@@ -20,4 +20,5 @@ int Score::get() const{
 	return score_;
 }
 void Score::clear() {
+	score_ = 0;
 }

@@ -29,6 +29,8 @@ private:
 
     int player_health_{};
 
+    float player_fly_timer_{};
+
     GSvector2 position_{};
 
     GSvector2 size_{};

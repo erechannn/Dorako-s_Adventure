@@ -1,7 +1,10 @@
 #include"GameOverScene.h"
+#include "../Assets.h"
 #include <iostream>
 
 void GameOverScene::start() {
+	gsLoadTexture(Texture_GameOver, "Assets/Texture/GameOverUI/GameOver.png");
+
 	is_end_ = false;
 	is_start_ = false;
 	start_timer_ = 0.0f;
@@ -17,7 +20,8 @@ void GameOverScene::update(float delta_time) {
 
 }
 void GameOverScene::draw()const {
-
+	const GSvector2 ui_position{ 450.0f,0.0f };
+	gsDrawSprite2D(Texture_GameOver, &ui_position, NULL, NULL, NULL, NULL, 0.0f);
 }
 bool GameOverScene::is_end()const {
 	return is_end_;

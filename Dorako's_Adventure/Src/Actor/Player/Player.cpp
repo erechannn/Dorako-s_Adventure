@@ -18,6 +18,7 @@
 const float PlayerHeight{ 1.0f };
 const float PlayerRadius{ 0.5f };
 const float WalkSpeed{ 0.15f };
+const float MaxFlyTimer{ 180.0f };
 
 Player::Player(IWorld* world, GSvector3 position) :
 	Character{ Mesh_Player } {
@@ -98,10 +99,6 @@ void Player::draw()const {
 	if (std::fmod(invincible_timer_, 10.0f) <= 3.0f) {
 		mesh_->draw();
 	}
-	//メッシュの表示
-	GSvector3 up = transform_.up();
-	//std::cout << "2 x: " << up.x << " y: " << up.y << " z: " << up.z << std::endl;
-
 }
 //当たり判定
 void Player::react(Actor& other) {
@@ -187,15 +184,18 @@ void Player::move(float delta_time) {
 		GSvector3 left = GSvector3::cross(up, transform_.forward());
 		GSvector3 forward = GSvector3::cross(left, up);
 		transform_.rotation(GSquaternion::lookRotation(forward, up));
-
+	}
+	else {
+		fly_timer_ += delta_time;
+		if (fly_timer_ >= MaxFlyTimer) {
+			fly_timer_ = MaxFlyTimer;
+		}
 	}
 	// 移動量のxz成分だけ更新
 	velocity_ = velocity;
 	if (state_.now_state_ != PlayerState::StateJumpStart) {
 		//モーションの変更
 		mesh_->change_motion(motion, true);
-
-
 	}
 	//平行移動する（ワールド基準）
 	transform_.translate(velocity, GStransform::Space::World);
@@ -203,10 +203,14 @@ void Player::move(float delta_time) {
 	
 }
 void Player::flying(float delta_time) {
-	if (gsXBoxPadButtonState(0, GS_XBOX_PAD_A)) {
+
+	if (gsXBoxPadButtonState(0, GS_XBOX_PAD_A)&&fly_timer_>=0.0f) {
 		is_zero_gravity_ = true;
+		fly_timer_ -= delta_time;
 	}
-	else is_zero_gravity_ = false;
+	else { 
+		is_zero_gravity_ = false;
+	}
 	move(delta_time);
 }
 void Player::landing(float delta_time) {
@@ -219,6 +223,8 @@ bool Player::is_motion_end() {
 	return mesh_->is_end_motion();
 }
 bool Player::is_above_enemy(Actor&other) {
+	if (health_ <= 0)return false;
+	if (other.is_dead())return false;
 	GSvector3 position = transform_.position();
 	GSvector3 other_position = other.transform().position();
 	GSvector3 other_up = other.transform().up();
@@ -235,4 +241,7 @@ int Player::fire_count() {
 }
 UINT Player::get_player_now_state() {
 	return state_.now_state_;
+}
+float Player::get_fly_timer() {
+	return fly_timer_;
 }

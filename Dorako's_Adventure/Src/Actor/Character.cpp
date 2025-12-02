@@ -2,6 +2,7 @@
 #include "../World/IWorld.h"
 #include "../World/Field.h"
 #include "../Shape/Line.h"
+#include "../Stage/StageManager.h"
 #include "../Assets.h"
 #include <iostream>
 
@@ -75,18 +76,17 @@ void Character::collide_ground() {
 	GSvector3 line_end = transform_.position() + (down_direction * foot_offset_);
 	GSvector3 collision_point;    // 衝突した地面との交点
 	GSplane ground_plane;         // 衝突した地面の平面
-	if (gsOctreeCollisionLine(gsGetOctree(Octree_TestStageCollider),
+	UINT octree_collider = StageManager::get_instance().get_current_stage_collider();
+	if (gsOctreeCollisionLine(gsGetOctree(octree_collider),
 		&line_start, &line_end, &collision_point, &ground_plane)) {
 		GSvector3 hit_position = collision_point;
 		collider_point_ = collision_point;
-		if (hit_position.distance(hit_position_)>=2.0f) {
+		if (GSvector3::distance(hit_position,transform_.position()) >= 2.0f) {
 			std::cout << "異常発生" << std::endl;
 			std::cout << "x: " << hit_position.x << " y: " << hit_position.y << " z: " << hit_position.z << std::endl;
 
 		}
 		hit_position_ = hit_position;
-		// 衝突した位置に座標を補正する
-		transform_.position(collision_point);
 		//重力を無効
 		is_ground_ = true;
 		gravity_velocity_ = GSvector3::zero();
@@ -97,6 +97,8 @@ void Character::collide_ground() {
 		GSvector3 left = GSvector3::cross(up, transform_.forward());
 		GSvector3 forward = GSvector3::cross(left, up);
 		transform_.rotation(GSquaternion::lookRotation(forward, up));
+		// 衝突した位置に座標を補正する
+		transform_.position(collision_point);
 	}
 	else  is_ground_ = false;
 

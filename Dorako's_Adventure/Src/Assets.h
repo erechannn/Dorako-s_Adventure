@@ -18,6 +18,15 @@ enum {
 	Texture_EmptyFireCount,
 	Texture_HealthIcon,
 	Texture_EmptyHealth,
+	Texture_StageClear,
+	Texture_StageSelect,
+	Texture_GameOver,
+	Texture_FlyGaugeEmpty,
+	Texture_FlyGauge,
+	Texture_StageSelectStage1,
+	Texture_StageSelectBoss,
+	Texture_ArrowIcon,
+	Texture_StageSelectSceneBackground,
 };
 enum {
 	Octree_TestStage,

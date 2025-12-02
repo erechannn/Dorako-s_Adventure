@@ -22,7 +22,6 @@ protected:
 	bool is_above_player(Actor& player);
 	void to_target(float delta_time,GSvector3 target);
 	void set_next_point();
-
 protected:
 	int max_health_{ 1 };
 	int health_{ 1 };

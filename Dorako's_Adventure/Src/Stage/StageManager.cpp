@@ -11,9 +11,10 @@ StageManager::StageManager() :
 //ステージの初期化
 void StageManager::initialize_stages() {
 	stages_ = {
-		{1,"草原ステージ",Octree_Stage1,Octree_Stage1Collider,{0.0f,-30.0f,0.0f},30.0f,10,StageType::NORMAL},
+		{1,"草原ステージ",Octree_Stage1,Octree_Stage1Collider,{0.0f,-30.0f,0.0f},30.0f,5,StageType::NORMAL},
 		{2,"草原ボスステージ",Octree_BossStage,Octree_BossStageCollider,{0.0f,-20.0f,0.0f},20.0f,1,StageType::BOSS},
-		{3,"テストステージ",Octree_TestStage,Octree_TestStageCollider,{0.0f,-20.0f,0.0f},20.0f,1,StageType::NORMAL}
+		{3,"テストステージ",Octree_TestStage,Octree_TestStageCollider,{0.0f,-20.0f,0.0f},20.0f,5,StageType::NORMAL},
+		{4,"タイトルステージ",Octree_TestStage,Octree_TestStageCollider,{0.0f,-20.0f,0.0f},20.0f,5,StageType::NORMAL}
 	};
 }
 

@@ -1,6 +1,7 @@
 #include"World.h"
 #include"Field.h"
 #include"Actor/Actor.h"
+#include "../Delay/DelayManager.h"
 #include <GSeffect.h>
 
 World::~World() {
@@ -15,6 +16,7 @@ void World::update(float delta_time) {
 	actors_.remove();
 	camera_->update(delta_time);
 	light_->update(delta_time);
+	DelayManager::get_instance().update();
 	gsUpdateEffect(delta_time);
 }
 
@@ -40,6 +42,7 @@ void World::clear() {
 	light_ = nullptr;
 	delete field_;
 	field_ = nullptr;
+	DelayManager::get_instance().clear();
 }
 
 void World::add_camera(Actor* camera) {
