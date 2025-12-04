@@ -21,6 +21,7 @@ public:
         float planet_radius;
         int clear_score;
         StageType stage_type;
+        bool is_stage_unlocked;
     };
 //プライベートな関数
 private:
@@ -46,6 +47,7 @@ public:
     GSvector3 get_current_stage_planet_position()const;
     float get_current_stage_planet_radius()const;
     int get_clear_score()const;
+    bool is_stage_unlocked(int stage_id)const;
 
     //ステージタイプのゲッター
     StageType get_current_stage_type()const;

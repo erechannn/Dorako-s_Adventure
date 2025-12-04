@@ -26,6 +26,7 @@ private:
     std::string next_scene_;
     int max_stage_count_{};
     int stage_count_{};
+    GSvector2 arrow_icon_position_{};
     GSvector2 position_{};
     GSvector2 center_{};
 };

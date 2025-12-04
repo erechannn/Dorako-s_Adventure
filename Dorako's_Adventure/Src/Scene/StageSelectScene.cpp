@@ -7,6 +7,9 @@
 void StageSelectScene::start() {
 	gsLoadTexture(Texture_StageSelect, "Assets/Texture/StageSelectUI/StageSelect.png");
 	gsLoadTexture(Texture_StageSelectSceneBackground, "Assets/Texture/StageSelectUI/Background.png");
+	gsLoadTexture(Texture_StageSelectStage1, "Assets/Texture/StageSelectUI/StageSelectStage1.png");
+	gsLoadTexture(Texture_StageSelectBoss, "Assets/Texture/StageSelectUI/StageSelectBoss.png");
+	gsLoadTexture(Texture_ArrowIcon, "Assets/Texture/ArrowIcon.png" );
 
 
 	max_stage_count_ = StageManager::get_instance().get_total_stage_count();
@@ -16,14 +19,24 @@ void StageSelectScene::start() {
 	is_start_ = false;
 	start_timer_ = 0.0f;
 	next_scene_ = "GamePlayScene";
-	
+	stage_count_ = 1;
+	arrow_icon_position_ = { 560.0f,382.0f };
 }
 
 void StageSelectScene::update(float delta_time) {
-	if (gsXBoxPadButtonTrigger(1, GS_XBOX_PAD_RIGHT)) {
-
+	if (gsXBoxPadButtonTrigger(0, GS_XBOX_PAD_RIGHT)) {
+		arrow_icon_position_ = { 1090.0f,382.0f };
+		stage_count_ = 2;
 	}
-
+	if (gsXBoxPadButtonTrigger(0, GS_XBOX_PAD_LEFT)) {
+		arrow_icon_position_ = { 560.0f,382.0f };
+		stage_count_ = 1;
+	}
+	if (gsXBoxPadButtonTrigger(0, GS_XBOX_PAD_A)) {
+		if (StageManager::get_instance().is_stage_unlocked(stage_count_)) {
+			is_start_ = true;
+		}
+	}
 
 	if (gsGetKeyTrigger(GKEY_1)) {
 		stage_count_ = 1;
@@ -52,9 +65,14 @@ void StageSelectScene::update(float delta_time) {
 
 void StageSelectScene::draw()const {
 	GSvector2 Background_position{ 0.0f,0.0f };
+	const GSvector2 ui_position{ 480.0f,-100.0f };
+	const GSvector2 stage_select_stage1_position{ 600.0f,425.0f };
+	const GSvector2 stage_select_boss_position{ 1133.0f,425.0f };
 	gsDrawSprite2D(Texture_StageSelectSceneBackground, &Background_position, NULL, NULL, NULL, NULL, 0.0f);
-	const GSvector2 ui_position{ 480.0f,0.0f };
 	gsDrawSprite2D(Texture_StageSelect, &ui_position, NULL, NULL, NULL, NULL, 0.0f);
+	gsDrawSprite2D(Texture_StageSelectStage1, &stage_select_stage1_position, NULL, NULL, NULL, NULL, 0.0f);
+	gsDrawSprite2D(Texture_StageSelectBoss, &stage_select_boss_position, NULL, NULL, NULL, NULL, 0.0f);
+	gsDrawSprite2D(Texture_ArrowIcon, &arrow_icon_position_, NULL, NULL, NULL, NULL, 0.0f);
 
 
 }
