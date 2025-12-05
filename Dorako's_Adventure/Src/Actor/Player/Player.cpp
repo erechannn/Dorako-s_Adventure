@@ -75,6 +75,9 @@ void Player::update(float delta_time) {
 		invincible_ = false;
 		invincible_timer_ = 0.0f;
 	}
+	GSvector3 planet_position = StageManager::get_instance().get_current_stage_planet_position();
+	float dis = GSvector3::distance(planet_position, transform_.position());
+
 
 	//デバック表示
 	ImGui::Begin("Player");
@@ -83,6 +86,7 @@ void Player::update(float delta_time) {
 	ImGui::Text("x:%f y:%f z:%f", transform_.up().x, transform_.up().y, transform_.up().z);
 	ImGui::Text("gravity:%f", gravity_);
 	ImGui::Text("gravity:%f", foot_offset_);
+	ImGui::Text("planet_dis:%f", dis);
 	ImGui::Checkbox("地上にいるか", &is_ground_);
 	ImGui::Checkbox("debug_invincible", &debug_invincible_);
 	if (ImGui::Button("add_fire_count")) {
