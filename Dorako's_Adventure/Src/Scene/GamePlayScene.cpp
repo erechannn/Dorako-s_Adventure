@@ -200,5 +200,4 @@ void GamePlayScene::end() {
     gsDeleteTexture(Texture_FlyGaugeEmpty);
     gsDeleteTexture(Texture_HealthIcon);
 
-    gsDeleteEffect(Effeck_FireBoll);
 }
