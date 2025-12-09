@@ -45,8 +45,8 @@ void TitleScene::start() {
     gsInitDefaultShader();
 
     gsLoadTexture(Texture_Skybox, "Assets/Skybox/TestStageSkybox.dds");
-    gsLoadOctree(Octree_TestStage, "Assets/Stage/testStage2.oct");
-    gsLoadOctree(Octree_TestStageCollider, "Assets/Stage/testStage2Collider.oct");
+    gsLoadOctree(Octree_TestStage, "Assets/Stage/TestStage/TestStageOctree.oct");
+    gsLoadOctree(Octree_TestStageCollider, "Assets/Stage/TestStage/TestStageOctreeCollider.oct");
 
 	gsLoadTexture(Texture_TitleLogo, "Assets/Texture/TitleUI/TitleLogo.png");
 	gsLoadTexture(Texture_TitleUi, "Assets/Texture/TitleUI/TitleUi.png");
@@ -90,11 +90,11 @@ void TitleScene::update(float delta_time) {
 	if (is_start_)          start_timer_ += delta_time; //タイマー増加
 	if (start_timer_ >= 60.0f)          is_end_ = true; //シーンを終了
 
-	if (ImGui::Begin("logo")) {
-		ImGui::DragFloat2("LogoPosition:", logo_position_, 0.1f);
-		ImGui::DragFloat2("UIPosition:", ui_position_, 0.1f);
-		ImGui::End();
-	}
+	//if (ImGui::Begin("logo")) {
+	//	ImGui::DragFloat2("LogoPosition:", logo_position_, 0.1f);
+	//	ImGui::DragFloat2("UIPosition:", ui_position_, 0.1f);
+	//	ImGui::End();
+	//}
 }
 void TitleScene::draw()const {
 	world_.draw();

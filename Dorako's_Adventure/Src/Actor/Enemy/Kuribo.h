@@ -25,6 +25,7 @@ private:
 	GSvector3 planet_to_target_{};
 	Actor* player_{ nullptr };
 	bool is_chase_{ true };
+	GSvector3 kuribo_position_{};
 };
 
 

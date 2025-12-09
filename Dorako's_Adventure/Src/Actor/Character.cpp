@@ -17,8 +17,11 @@ void Character::collide_field() {
 	// 壁との衝突判定（球体との判定）
 	GSvector3 center; // 衝突後の球体の中心座標
 	if (world_->field()->collide(collider(), &center)) {
+		GSvector3 position = transform_.inverseTransformPoint(transform_.position());
+		//center = transform_.inverseTransformPoint(center);
 		// y座標は変更しない
 		center.y = transform_.position().y;
+		//center = transform_.transformPoint(center);
 		// 補正後の座標に変更する
 		transform_.position(center);
 	}
@@ -70,6 +73,25 @@ void Character::gravity_update(float delta_time) {
 	transform_.translate(gravity_velocity_, GStransform::Space::World);//移動
 }
 void Character::collide_ground() {
+	// 壁との衝突判定（球体との判定）
+	GSvector3 center; // 衝突後の球体の中心座標
+	if (world_->field()->collide(collider(), &center)) {
+		GSvector3 position = transform_.inverseTransformPoint(transform_.position());
+		//center = transform_.inverseTransformPoint(center);
+		// y座標は変更しない
+		center.y = transform_.position().y;
+		//center = transform_.transformPoint(center);
+		// 補正後の座標に変更する
+		transform_.position(center);
+	}
+	GSvector3 planet_position = StageManager::get_instance().get_current_stage_planet_position();
+	GSvector3 up = (transform_.position() - planet_position);
+	up.normalize();
+	GSvector3 left = GSvector3::cross(up, transform_.forward());
+	GSvector3 forward = GSvector3::cross(left, up);
+	transform_.rotation(GSquaternion::lookRotation(forward, up));
+
+
 	// 地面との衝突判定（線分との交差判定）
 	GSvector3 line_start = transform_.position() + transform_.up() * height_;
 	GSvector3 down_direction = -transform_.up();
@@ -79,6 +101,8 @@ void Character::collide_ground() {
 	UINT octree_collider = StageManager::get_instance().get_current_stage_collider();
 	if (gsOctreeCollisionLine(gsGetOctree(octree_collider),
 		&line_start, &line_end, &collision_point, &ground_plane)) {
+		// 衝突した位置に座標を補正する
+		transform_.position(collision_point);
 		GSvector3 hit_position = collision_point;
 		collider_point_ = collision_point;
 		if (GSvector3::distance(hit_position,transform_.position()) >= 2.0f) {
@@ -93,12 +117,11 @@ void Character::collide_ground() {
 		// 斜面に合わせてキャラクタを傾かせる
 
 		GSvector3 planet_position = StageManager::get_instance().get_current_stage_planet_position();
-		GSvector3 up = transform_.position() - planet_position;
+		GSvector3 up = (transform_.position() - planet_position);
+		up.normalize();
 		GSvector3 left = GSvector3::cross(up, transform_.forward());
 		GSvector3 forward = GSvector3::cross(left, up);
 		transform_.rotation(GSquaternion::lookRotation(forward, up));
-		// 衝突した位置に座標を補正する
-		transform_.position(collision_point);
 	}
 	else  is_ground_ = false;
 

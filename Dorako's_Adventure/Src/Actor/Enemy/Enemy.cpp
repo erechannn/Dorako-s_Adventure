@@ -4,6 +4,8 @@
 #include "../../Shape/Line.h"
 #include "../../Assets.h"
 
+#include <iostream>
+
 const float M_PI{ 3.14159265358979323846 };
 
 Enemy::Enemy(GSuint mesh) :
@@ -79,5 +81,20 @@ void Enemy::set_next_point() {
 	target = target + planet_position;
 
 	target_point_ = target;
+
+}
+void Enemy::up_vector_update() {
+	//惑星の位置
+	GSvector3 planet_position = StageManager::get_instance().get_current_stage_planet_position();
+	//惑星から自分までのベクトル
+	GSvector3 to_planet = transform_.position() - planet_position;
+	to_planet.normalize();
+	//仮の上方向ベクトル
+	GSvector3 up = to_planet;
+	GSvector3 left = GSvector3::cross(up, transform_.forward());
+	GSvector3 forward = GSvector3::cross(left, up);
+
+	//向きを移動方向に回転
+	transform_.rotation(GSquaternion::lookRotation(forward, up));
 
 }

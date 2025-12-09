@@ -54,7 +54,7 @@ void BulletClass::update(float delta_time) {
 	transform_.translate(transform_.forward()*speed_*delta_time, GStransform::Space::World);
 }
 void BulletClass::draw()const {
-	collider().draw();
+	//collider().draw();
 }
 void BulletClass::react(Actor& other) {
 	if (other.tag() == tag() || other.tag() == owner_tag_) return;

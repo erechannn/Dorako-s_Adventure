@@ -55,11 +55,11 @@ void StageSelectScene::update(float delta_time) {
 	if (is_start_)          start_timer_ += delta_time; //タイマー増加
 	if (start_timer_ >= 60.0f)          is_end_ = true; //シーンを終了
 
-	if (ImGui::Begin("UI_position")) {
-		ImGui::DragFloat2("Position : ", position_, 0.1f);
-		ImGui::DragFloat2("Center : ", center_, 0.1f);
-		ImGui::End();
-	}
+	//if (ImGui::Begin("UI_position")) {
+	//	ImGui::DragFloat2("Position : ", position_, 0.1f);
+	//	ImGui::DragFloat2("Center : ", center_, 0.1f);
+	//	ImGui::End();
+	//}
 
 }
 

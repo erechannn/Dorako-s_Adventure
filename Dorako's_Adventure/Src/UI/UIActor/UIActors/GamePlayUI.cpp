@@ -20,11 +20,12 @@ void GamePlayUI::update(float delta_time) {
     player_health_ = player_->now_health();
     player_fly_timer_ = player_->get_fly_timer();
 
-    if (ImGui::Begin("UI_position")) {
-        ImGui::DragFloat2("Position : ", position_, 0.1f);
-        ImGui::DragFloat2("Center : ", center_, 0.1f);
-        ImGui::End();
-    }
+    //if (ImGui::Begin("UI_position")) {
+    //    ImGui::DragFloat2("Position : ", position_, 0.1f);
+    //    ImGui::DragFloat2("Center : ", center_, 0.1f);
+    //}
+    //ImGui::End();
+
     for (int i = 0; i < fire_count_; i++) {
         fire_count_positions_[i] = fire_count_position_;
         fire_count_position_.x += 150.0f;

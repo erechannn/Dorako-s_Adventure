@@ -47,13 +47,11 @@ void Player::update(float delta_time) {
 	//メッシュのモーションを更新
 	mesh_->update(delta_time);
 	//フィールドとの当たり判定
-	collide_field();
 	gravity_update(delta_time);
 	//プレイヤーを地面に対して垂直に立たせる
 	collide_ground();
 	//ワールド変換行列を設定
 	mesh_->transform(transform_.localToWorldMatrix());
-
 	//プレイヤーの状態管理
 	if (state_.now_state_ == PlayerState::StateMove && gsXBoxPadButtonTrigger(0,GS_XBOX_PAD_A)) {	//Aボタンでジャンプ
 
@@ -80,23 +78,23 @@ void Player::update(float delta_time) {
 
 
 	//デバック表示
-	ImGui::Begin("Player");
-	ImGui::Text("x:%f y:%f z:%f", transform_.position().x, transform_.position().y, transform_.position().z);
-	ImGui::Text("x:%f y:%f z:%f", velocity_.x, velocity_.y, velocity_.z);
-	ImGui::Text("x:%f y:%f z:%f", transform_.up().x, transform_.up().y, transform_.up().z);
-	ImGui::Text("gravity:%f", gravity_);
-	ImGui::Text("gravity:%f", foot_offset_);
-	ImGui::Text("planet_dis:%f", dis);
-	ImGui::Checkbox("地上にいるか", &is_ground_);
-	ImGui::Checkbox("debug_invincible", &debug_invincible_);
-	if (ImGui::Button("add_fire_count")) {
-		fire_count_ += 1;
-	}
-	if (ImGui::Button("add_health")) {
-		health_ += 1;
-	}
+	//ImGui::Begin("Player");
+	//ImGui::Text("x:%f y:%f z:%f", transform_.position().x, transform_.position().y, transform_.position().z);
+	//ImGui::Text("x:%f y:%f z:%f", velocity_.x, velocity_.y, velocity_.z);
+	//ImGui::Text("x:%f y:%f z:%f", transform_.up().x, transform_.up().y, transform_.up().z);
+	//ImGui::Text("gravity:%f", gravity_);
+	//ImGui::Text("gravity:%f", foot_offset_);
+	//ImGui::Text("planet_dis:%f", dis);
+	//ImGui::Checkbox("地上にいるか", &is_ground_);
+	//ImGui::Checkbox("debug_invincible", &debug_invincible_);
+	//if (ImGui::Button("add_fire_count")) {
+	//	fire_count_ += 1;
+	//}
+	//if (ImGui::Button("add_health")) {
+	//	health_ += 1;
+	//}
 
-	ImGui::End();
+	//ImGui::End();
 
 }
 void Player::draw()const {

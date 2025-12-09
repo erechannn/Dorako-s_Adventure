@@ -23,7 +23,6 @@ void Coin::update(float delta_time) {
 }
 void Coin::draw()const {
 	mesh_->draw();
-	collider().draw();
 }
 void Coin::react(Actor& other) {
 	if (other.name() == "Player") {

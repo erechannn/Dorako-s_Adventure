@@ -60,8 +60,8 @@ void GamePlayScene::start() {
 
     gsLoadTexture(Texture_Skybox, "Assets/Skybox/TestStageSkybox.dds");
 
-    gsLoadOctree(Octree_TestStage, "Assets/Stage/testStage2.oct");
-    gsLoadOctree(Octree_TestStageCollider, "Assets/Stage/testStage2Collider.oct");
+    gsLoadOctree(Octree_TestStage, "Assets/Stage/TestStage/TestStageOctree.oct");
+    gsLoadOctree(Octree_TestStageCollider, "Assets/Stage/TestStage/TestStageOctreeCollider.oct");
     gsLoadOctree(Octree_Stage1, "Assets/Stage/Stage1/Stage1Octree.oct");
     gsLoadOctree(Octree_Stage1Collider, "Assets/Stage/Stage1/Stage1OctreeCollider.oct");
 

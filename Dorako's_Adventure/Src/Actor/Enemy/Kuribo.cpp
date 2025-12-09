@@ -24,6 +24,7 @@ Kuribo::Kuribo(IWorld* world, GSvector3 position) :
 	mesh_->transform(transform_.localToWorldMatrix());
 	foot_offset_ = 2.0f;
 	first_transform_ = transform_;
+	kuribo_position_ = position;
 	set_next_point();
 	state_.add_state(EnemyState::Idle, new EnemyStateIdle(this));
 	state_.add_state(EnemyState::Search, new EnemyStateSearch(this));
@@ -34,9 +35,10 @@ Kuribo::Kuribo(IWorld* world, GSvector3 position) :
 void Kuribo::update(float delta_time) {
 	//アクターのプレイヤーを代入
 	player_ = world_->find_actor("Player");
+
+	up_vector_update();
 	//キャラクターの基礎アップデート
 	state_.update(delta_time);
-	std::cout << transform_.position().x << " " << transform_.position().y << " " << transform_.position().z << std::endl;
 	collide_field();
 	gravity_update(delta_time);
 	collide_ground();
@@ -56,17 +58,19 @@ void Kuribo::update(float delta_time) {
 
 	}
 	//デバック表示
-	ImGui::Begin("Kuribo");
-	ImGui::Text("x:%f y:%f z:%f", transform_.position().x, transform_.position().y, transform_.position().z);
-	ImGui::Text("x:%f y:%f z:%f", velocity_.x, velocity_.y, velocity_.z);
-	ImGui::Text("x:%f y:%f z:%f", target_point_.x, target_point_.y, target_point_.z);
-	ImGui::Text("distance%f",dis);
-	ImGui::Checkbox("is_move:",&is_move_);
-	ImGui::Checkbox("undead:",&undead_);
-	ImGui::Checkbox("is_ground", &is_ground_);
-	ImGui::Checkbox("next: ", &next_point);
-	ImGui::Checkbox("is_chase:", &is_chase_);
-	ImGui::End();
+	//ImGui::Begin("Kuribo");
+	//ImGui::Text("x:%f y:%f z:%f", transform_.position().x, transform_.position().y, transform_.position().z);
+	//ImGui::Text("x:%f y:%f z:%f", transform_.up().x, transform_.up().y, transform_.up().z);
+	//ImGui::Text("x:%f y:%f z:%f", transform_.forward().x, transform_.forward().y, transform_.forward().z);
+	//ImGui::Text("x:%f y:%f z:%f", velocity_.x, velocity_.y, velocity_.z);
+	//ImGui::Text("x:%f y:%f z:%f", target_point_.x, target_point_.y, target_point_.z);
+	//ImGui::Text("distance%f",dis);
+	//ImGui::Checkbox("is_move:",&is_move_);
+	//ImGui::Checkbox("undead:",&undead_);
+	//ImGui::Checkbox("is_ground", &is_ground_);
+	//ImGui::Checkbox("next: ", &next_point);
+	//ImGui::Checkbox("is_chase:", &is_chase_);
+	//ImGui::End();
 }
 void Kuribo::draw()const {
 	mesh_->draw();
@@ -79,11 +83,13 @@ void Kuribo::react(Actor& other) {
 	}
 	else if (other.tag() == "PlayerTag") {
 		first_position_ = transform_.position();
+		kuribo_position_ = transform_.position();
 		change_state(EnemyState::Idle);
 	}
 }
 void Kuribo::idle(float delta_time) {
 	if (player_ == nullptr)return;
+	transform_.position(kuribo_position_);
 	Delay::after(1.5f, [this]() {
 		if (this->is_player_in_sight()) {
 			this->change_state(EnemyState::Chase);
@@ -117,6 +123,10 @@ void Kuribo::chase(float delta_time) {
 	to_target(delta_time, target_point_);
 	//プレイヤーが視界から消えたらサーチ状態に戻る
 	if (!is_player_in_sight()) {
+		//up_vector_update();
+		velocity_ = GSvector3::zero();
+		kuribo_position_ = transform_.position();
+		set_next_point();
 		change_state(EnemyState::Idle);
 	}
 }
