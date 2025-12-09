@@ -35,6 +35,7 @@ MiniDragon::MiniDragon(IWorld* world, GSvector3 position) :
 	foot_offset_ = 2.0f;
 	walk_speed_ = 0.15f;
 	health_ = 3;
+	stop_position_ = position;
 	state_.add_state(EnemyState::Idle, new EnemyStateIdle(this));
 	state_.add_state(EnemyState::Chase, new EnemyStateChase(this));
 	state_.add_state(EnemyState::Attack, new EnemyStateAttack(this));
@@ -45,6 +46,7 @@ MiniDragon::MiniDragon(IWorld* world, GSvector3 position) :
 	build_attack_behavior_tree();
 }
 void MiniDragon::update(float delta_time) {
+	delta_time_ = delta_time;
 	//キャラクターの基礎アップデート
 	state_.update(delta_time);
 	collide_field();
@@ -78,11 +80,14 @@ void MiniDragon::chase(float delta_time) {
 	target_point_ = player_->transform().position();
 	to_target(delta_time, target_point_);
 	if (player_distance_ <= CloseDistance) {
+		stop_position_ = transform_.position();
 		change_state(EnemyState::Attack);
 		saved_position_ = transform_.position();
 	}
 }
 void MiniDragon::attack(float delta_time) {
+	transform_.position(stop_position_);
+	mesh_->change_motion(EnemiesMotion::Idle, true);
 	attack_behavior_tree_->tick();
 }
 void MiniDragon::damage(float delta_time) {
@@ -129,39 +134,72 @@ void MiniDragon::perform_melee_attack() {
 		});
 }
 void MiniDragon::build_attack_behavior_tree() {
+	// ルートノード（ORロジック）
 	auto root = std::make_unique<SelectorNode>();
+	// ============================================
+	// 【初回ブレス攻撃】
+	// 戦闘開始時に一度だけ実行される初撃
+	// ============================================
 	auto initial_breath_sequence = std::make_unique<SequenceNode>();
+
+	// 条件：まだブレス攻撃をしていない
 	initial_breath_sequence->add_child(std::make_unique<ConditionNode>([this]() {
 		return !has_fired_fire_attack_;
-		}));
+	}));
+
+	//アクション：初回ブレスまでの待機
+	initial_breath_sequence->add_child(std::make_unique<ActionNode>([this]() {
+		mesh_->change_motion(EnemiesMotion::Idle, true);
+		
+
+		return Status::Running;
+	}));
+
+	// アクション：ブレス攻撃モーション
 	initial_breath_sequence->add_child(std::make_unique<ActionNode>(
 		[this]() {
-			change_state(EnemyState::FirstFireAttack);
-			has_fired_fire_attack_ = true;
-			if (is_fire_attack_finished_) {
-				is_fire_attack_finished_ = false;
+			mesh_->change_motion(EnemiesMotion::Attack, false);
+			if (mesh_->is_end_motion()) {
+				has_fired_fire_attack_ = true;
 				return Status::Success;
 			}
 			return Status::Running;
 		}));
 
-
+	// ============================================
+	// 【メイン行動ループ】
+	// プレイヤーとの距離に応じて行動を選択
+	// ============================================
 	auto action_loop_selector = std::make_unique<SelectorNode>();
+
+	// --------------------------------------------
+   // 【近距離行動】距離 < CloseDistance
+   // --------------------------------------------
 	auto close_range_sequence = std::make_unique<SequenceNode>();
+
+	// 条件：プレイヤーが近距離にいる
 	close_range_sequence->add_child(std::make_unique<ConditionNode>(
 		[this]() {
 			return player_distance_ < CloseDistance;
 		}
 	));
 
+	// プレイヤーの状態で行動を分岐
 	auto player_state_selector = std::make_unique<SelectorNode>();
+
+	// ＜プレイヤーが空中の場合＞
 	auto airborne_sequence = std::make_unique<SequenceNode>();
+
+	// 条件：プレイヤーが飛行中
 	airborne_sequence->add_child(std::make_unique<ConditionNode>(
 		[this]() {
 		return now_player_state_ == PlayerState::StateFlying;
 		}
 	));
+	// 空中プレイヤーへの対応
 	auto airborne_action_selector = std::make_unique<SelectorNode>();
+
+	// パターンA：安全距離からブレス攻撃
 	auto safe_distance_breath_seq = std::make_unique<SequenceNode>();
 	safe_distance_breath_seq->add_child(std::make_unique<ConditionNode>(
 		[this]() {
@@ -227,6 +265,9 @@ void MiniDragon::build_attack_behavior_tree() {
 		}
 	));
 
+	// ============================================
+	// ツリーの組み立て
+	// ============================================
 	action_loop_selector->add_child(std::move(close_range_sequence));
 	action_loop_selector->add_child(std::move(mid_range_sequence));
 	action_loop_selector->add_child(std::move(far_range_sequence));

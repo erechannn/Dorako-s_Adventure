@@ -43,6 +43,8 @@ private:
 	GSvector3 saved_position_{ 0.0f,0.0f,0.0f };
 	bool is_fire_attack_finished_{ false };
 	int fire_attack_count_{ 0 };
+	float delta_time_{};
+
 };
 
 

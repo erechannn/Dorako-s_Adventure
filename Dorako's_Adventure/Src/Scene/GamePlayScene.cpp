@@ -16,6 +16,8 @@
 #include <GSstandard_shader.h>
 #include <GSeffect.h>
 
+#include <imgui/imgui.h>
+
 void GamePlayScene::start() {
 
     // デフォルトシェーダーの初期化
@@ -33,7 +35,7 @@ void GamePlayScene::start() {
     //// シャドウの濃さを設定(0.0:濃い～1.0:薄い)
     //gsSetShadowMapAttenuation(0.0f);
 
-    gsLoadLightmap(0, "Assets/Lightmap/Lightmap.txt");
+    gsLoadLightmap(0, "Assets/Lightmap/testLightmap.txt");
 
     gsLoadReflectionProbe(0, "Assets/RefProbe/ReflectionProbe.txt");
 
@@ -64,6 +66,8 @@ void GamePlayScene::start() {
     gsLoadOctree(Octree_TestStageCollider, "Assets/Stage/TestStage/TestStageOctreeCollider.oct");
     gsLoadOctree(Octree_Stage1, "Assets/Stage/Stage1/Stage1Octree.oct");
     gsLoadOctree(Octree_Stage1Collider, "Assets/Stage/Stage1/Stage1OctreeCollider.oct");
+    gsLoadOctree(Octree_BossStage, "Assets/Stage/BossStage/BossStageOctree.oct");
+    gsLoadOctree(Octree_BossStageCollider, "Assets/Stage/BossStage/BossStageOctreeCollider.oct");
 
     gsLoadTexture(Texture_FireCount, "Assets/Texture/GamePlayUI/fire_count_icon.png");
     gsLoadTexture(Texture_EmptyFireCount, "Assets/Texture/GamePlayUI/fire_count_empty.png");
@@ -72,17 +76,20 @@ void GamePlayScene::start() {
     gsLoadTexture(Texture_FlyGaugeEmpty, "Assets/Texture/GamePlayUI/FlyGaugeEmpty.png");
     gsLoadTexture(Texture_FlyGauge, "Assets/Texture/GamePlayUI/FlyGauge.png");
 
-    world_.add_actor(new Player{ &world_,{0.0f,0.0f,0.0f} });
+    world_.add_actor(new Player{ &world_,{3.0f,0.0f,0.0f} });
     world_.add_actor(new DummyPlayer{ &world_ });
     //world_.add_actor(new Kuribo{ &world_,{0.0f,0.0f,0.0f} });
     //world_.add_actor(new Coin{ &world_,{0.0f,0.0f,0.0f} });
     //world_.add_actor(new MiniDragon{ &world_,{0.0f,0.0f,0.0f} });
     if (StageManager::get_instance().get_current_stage_id() == 1) {
         world_.add_actor(new Coin{ &world_,{-0.806f,9.643f,5.894f} });
-        world_.add_actor(new Coin{ &world_,{31.752f,-25.0f,24.306f} });
-        world_.add_actor(new Coin{ &world_,{-2.457f,-11.665f,24.306f} });
-        world_.add_actor(new Coin{ &world_,{0.0f,-61.809f,-1.043f} });
-        world_.add_actor(new Coin{ &world_,{-6.12f,-11.245f,-23.516f} });
+        world_.add_actor(new Coin{ &world_,{31.0f,-25.08f,1.43f} });
+        world_.add_actor(new Coin{ &world_,{-2.17f,-15.0f,-26.0f} });
+        world_.add_actor(new Coin{ &world_,{0.0f,-61.0f,1.0f} });
+        world_.add_actor(new Coin{ &world_,{-2.0f,-10.2f,22.5f} });
+    }
+    if (StageManager::get_instance().get_current_stage_id() == 2) {
+        world_.add_actor(new MiniDragon{ &world_,{0.0f,0.0f,0.0f} });
     }
     if (StageManager::get_instance().get_current_stage_id() == 3) {
         world_.add_actor(new Coin{ &world_,{1.3f,-1.59f,7.37f} });
@@ -118,6 +125,7 @@ void GamePlayScene::start() {
 	next_scene_ = "GameOverScene";
     // 視錐台カリングを有効にする
     gsEnable(GS_FRUSTUM_CULLING);
+    coin_position_ = { -2.0f,-10.2f,-22.5f };
 
 }
 void GamePlayScene::update(float delta_time) {
@@ -128,6 +136,13 @@ void GamePlayScene::update(float delta_time) {
     }
     if (is_start_)          start_timer_ += delta_time; //タイマー増加
     if (start_timer_ >= 120.0f)          is_end_ = true; //シーンを終了
+
+    //ImGui::Begin("Coin_Position");
+    //ImGui::DragFloat3("Coin_position", coin_position_, 0.01f);
+    //ImGui::End();
+
+    //Actor* coin = world_.find_actor("Coin");
+    //coin->transform().position(coin_position_);
 
 }
 void GamePlayScene::game_play_update(float delta_time) {
@@ -165,8 +180,25 @@ void GamePlayScene::draw()const {
 }
 void GamePlayScene::end() {
     world_.clear();
+
     gsDeleteSkinMesh(Mesh_Player);
     gsDeleteSkinMesh(Mesh_Kuribo);
     gsDeleteMesh(Mesh_Coin);
+    gsDeleteMesh(Mesh_MiniDragon);
 
+    gsDeleteOctree(Octree_BossStage);
+    gsDeleteOctree(Octree_BossStageCollider);
+    gsDeleteOctree(Octree_Stage1);
+    gsDeleteOctree(Octree_Stage1Collider);
+    gsDeleteOctree(Octree_TestStage);
+    gsDeleteOctree(Octree_TestStageCollider);
+
+    gsDeleteTexture(Texture_EmptyFireCount);
+    gsDeleteTexture(Texture_EmptyHealth);
+    gsDeleteTexture(Texture_FireCount);
+    gsDeleteTexture(Texture_FlyGauge);
+    gsDeleteTexture(Texture_FlyGaugeEmpty);
+    gsDeleteTexture(Texture_HealthIcon);
+
+    gsDeleteEffect(Effeck_FireBoll);
 }

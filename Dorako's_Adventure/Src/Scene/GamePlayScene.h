@@ -36,6 +36,7 @@ private:
     float start_timer_{ 0.0f };
     std::string next_scene_;
     GameOverScene game_over_scene_{};
+    GSvector3 coin_position_{};
 };
 
 

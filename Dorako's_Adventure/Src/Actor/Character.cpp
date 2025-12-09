@@ -79,8 +79,9 @@ void Character::collide_ground() {
 		GSvector3 position = transform_.inverseTransformPoint(transform_.position());
 		//center = transform_.inverseTransformPoint(center);
 		// y座標は変更しない
-		center.y = transform_.position().y;
+		//center.y = transform_.position().y;
 		//center = transform_.transformPoint(center);
+		center -= transform_.up();
 		// 補正後の座標に変更する
 		transform_.position(center);
 	}
