@@ -2,7 +2,6 @@
 #include"../World/World.h"
 
 #include <iostream>
-#include <imgui/imgui.h>
 
 DummyPlayer::DummyPlayer(IWorld*world) {
 	world_ = world;
@@ -21,11 +20,4 @@ void DummyPlayer::update(float delta_time) {
 	transform_.rotation(GSquaternion::lookRotation(forward, up));
 	//transform_.forward(world_->camera()->transform().forward());
 	//transform_.right(world_->camera()->transform().right());
-
-	ImGui::Begin("DummyPlayer");
-	ImGui::Text("position:x:%f y:%f z:%f", transform_.position().x, transform_.position().y, transform_.position().z);
-	ImGui::Text("up:x:%f y:%f z:%f", transform_.up().x, transform_.up().y, transform_.up().z);
-	ImGui::Text("forward:x:%f y:%f z:%f", transform_.forward().x, transform_.forward().y, transform_.forward().z);
-	ImGui::End();
-
 }

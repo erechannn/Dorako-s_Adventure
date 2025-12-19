@@ -77,7 +77,7 @@ void GamePlayScene::start() {
     gsLoadTexture(Texture_FlyGauge, "Assets/Texture/GamePlayUI/FlyGauge.png");
     gsLoadTexture(Texture_Number, "Assets/Texture/num.png");
 
-    world_.add_actor(new Player{ &world_,{0.0f,-40.0f,0.0f} });
+    world_.add_actor(new Player{ &world_,{0.0f,0.0f,0.0f} });
     world_.add_actor(new DummyPlayer{ &world_ });
     //world_.add_actor(new Kuribo{ &world_,{0.0f,0.0f,0.0f} });
     //world_.add_actor(new Coin{ &world_,{0.0f,0.0f,0.0f} });
