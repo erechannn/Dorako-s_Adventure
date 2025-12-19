@@ -4,6 +4,7 @@
 #include "../Shape/Line.h"
 #include "../Stage/StageManager.h"
 #include "../Assets.h"
+#include "../LookRotation.h"
 #include <iostream>
 
 Character::Character(GSuint mesh) :
@@ -76,23 +77,10 @@ void Character::collide_ground() {
 	// 壁との衝突判定（球体との判定）
 	GSvector3 center; // 衝突後の球体の中心座標
 	if (world_->field()->collide(collider(), &center)) {
-		GSvector3 position = transform_.inverseTransformPoint(transform_.position());
-		//center = transform_.inverseTransformPoint(center);
-		// y座標は変更しない
-		//center.y = transform_.position().y;
-		//center = transform_.transformPoint(center);
 		center -= transform_.up();
 		// 補正後の座標に変更する
 		transform_.position(center);
 	}
-	GSvector3 planet_position = StageManager::get_instance().get_current_stage_planet_position();
-	GSvector3 up = (transform_.position() - planet_position);
-	up.normalize();
-	GSvector3 left = GSvector3::cross(up, transform_.forward());
-	GSvector3 forward = GSvector3::cross(left, up);
-	transform_.rotation(GSquaternion::lookRotation(forward, up));
-
-
 	// 地面との衝突判定（線分との交差判定）
 	GSvector3 line_start = transform_.position() + transform_.up() * height_;
 	GSvector3 down_direction = -transform_.up();
@@ -122,7 +110,7 @@ void Character::collide_ground() {
 		up.normalize();
 		GSvector3 left = GSvector3::cross(up, transform_.forward());
 		GSvector3 forward = GSvector3::cross(left, up);
-		transform_.rotation(GSquaternion::lookRotation(forward, up));
+		transform_.rotation(lookRotation(forward, up));
 	}
 	else  is_ground_ = false;
 

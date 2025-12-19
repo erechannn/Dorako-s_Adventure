@@ -50,7 +50,7 @@ void TitleScene::start() {
 
 	gsLoadTexture(Texture_TitleLogo, "Assets/Texture/TitleUI/TitleLogo.png");
 	gsLoadTexture(Texture_TitleUi, "Assets/Texture/TitleUI/TitleUi.png");
-
+    gsLoadTexture(Texture_Number, "Assets/Texture/NullTexture.png");
 
     gsLoadSkinMesh(Mesh_Player, "Assets/Mesh/Player/DragonSpark.mshb");
 
@@ -87,6 +87,7 @@ void TitleScene::update(float delta_time) {
     }
 
 	if (gsXBoxPadButtonTrigger(0, GS_XBOX_PAD_A)) is_start_ = true;
+    if (gsGetKeyTrigger(GKEY_SPACE))is_start_ = true;
 	if (is_start_)          start_timer_ += delta_time; //タイマー増加
 	if (start_timer_ >= 60.0f)          is_end_ = true; //シーンを終了
 
@@ -119,5 +120,5 @@ void TitleScene::end() {
     gsDeleteTexture(Texture_TitleUi);
     gsDeleteOctree(Octree_TestStage);
     gsDeleteOctree(Octree_TestStageCollider);
-
+    gsDeleteTexture(Texture_Number);
 }

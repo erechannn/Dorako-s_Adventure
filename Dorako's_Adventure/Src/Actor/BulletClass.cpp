@@ -3,6 +3,7 @@
 #include "../Assets.h"
 #include "../World/Field.h"
 #include "../Shape/Line.h"
+#include "../Stage/StageManager.h"
 #include <GSeffect.h>
 
 BulletClass::BulletClass(IWorld* world, const GSvector3& position, const GSvector3& velocity, GSint effect_handle,
@@ -27,7 +28,7 @@ void BulletClass::update(float delta_time) {
 	}
 
 	GSmatrix4 world = transform_.localToWorldMatrix();
-	world.translate(0.0f, 1.0f, 0.0f);
+	world.translate(transform_.up());
 	gsSetEffectMatrix(effect_handle_, &world); // ワールド変換行列を設定
 	lifespan_timer_ -= delta_time;
 	// フィールドとの衝突判定
@@ -44,7 +45,7 @@ void BulletClass::update(float delta_time) {
 		return;
 	}
 	//地面にそらして回転させる
-	GSvector3 planet_position{ 0.0f,-20.0f,0.0f };
+	GSvector3 planet_position = StageManager::get_instance().get_current_stage_planet_position();
 	GSvector3 up = transform_.position() - planet_position;
 	GSvector3 left = GSvector3::cross(up, transform_.forward());
 	GSvector3 forward = GSvector3::cross(left, up);

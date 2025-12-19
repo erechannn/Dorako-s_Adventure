@@ -12,6 +12,8 @@
 #include "PlayerState/PlayerStateJumpEnd.h"
 #include "PlayerState/PlayerStateDead.h"
 #include "PlayerState/PlayerStateAttack.h"
+
+#include "../../LookRotation.h"
 #include <imgui/imgui.h>
 #include <iostream>
 
@@ -93,6 +95,9 @@ void Player::update(float delta_time) {
 	if (ImGui::Button("add_health")) {
 		health_ += 1;
 	}
+	if (ImGui::Button("add_scone")) {
+		world_->add_score(1);
+	}
 	ImGui::End();
 }
 void Player::draw()const {
@@ -136,6 +141,7 @@ void Player::move(float delta_time) {
 	if (!is_move_)return;
 	// カメラの前方向ベクトルを取得
 	GSvector3 forward = world_->camera()->transform().forward();
+	//forward = transform_.forward();
 	forward = transform_.inverseTransformVector(forward);//ワールドからローカルに
 	forward.y = 0.0f;//Yは無効
 	forward = forward.normalize();//正規化
@@ -164,7 +170,7 @@ void Player::move(float delta_time) {
 		GSquaternion rotation =
 			GSquaternion::rotateTowards(
 				transform_.rotation(),
-				GSquaternion::lookRotation(velocity_world,transform_.up()), 15.0f * delta_time);
+				lookRotation(velocity_world,transform_.up()), 15.0f * delta_time);
 		transform_.rotation(rotation);
 		//プレイヤーの移動量に合わせてモーションの変化
 		if (result_normalize <= 0.2f) {

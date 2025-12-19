@@ -27,6 +27,9 @@ public:
         scene_manager_.add("GameOverScene", new GameOverScene());
         scene_manager_.change("TitleScene");
 
+        // マウスカーソルを非表示にする 
+        //gsHideMouseCursor();
+
     }
     void update(float delta_time)override {
         scene_manager_.update(delta_time);

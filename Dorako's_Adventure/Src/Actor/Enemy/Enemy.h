@@ -29,7 +29,7 @@ protected:
 	float walk_speed_{ 0.05f };
 	GSvector3 target_point_{};
 	GStransform first_transform_{};
-	GSvector3 stop_position_{};
+	GSvector3 base_position_{};
 
 };
 

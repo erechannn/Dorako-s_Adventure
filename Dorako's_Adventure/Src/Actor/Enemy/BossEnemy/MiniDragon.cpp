@@ -35,7 +35,7 @@ MiniDragon::MiniDragon(IWorld* world, GSvector3 position) :
 	foot_offset_ = 2.0f;
 	walk_speed_ = 0.15f;
 	health_ = 3;
-	stop_position_ = position;
+	base_position_ = position;
 	state_.add_state(EnemyState::Idle, new EnemyStateIdle(this));
 	state_.add_state(EnemyState::Chase, new EnemyStateChase(this));
 	state_.add_state(EnemyState::Attack, new EnemyStateAttack(this));
@@ -80,13 +80,13 @@ void MiniDragon::chase(float delta_time) {
 	target_point_ = player_->transform().position();
 	to_target(delta_time, target_point_);
 	if (player_distance_ <= CloseDistance) {
-		stop_position_ = transform_.position();
+		base_position_ = transform_.position();
 		change_state(EnemyState::Attack);
 		saved_position_ = transform_.position();
 	}
 }
 void MiniDragon::attack(float delta_time) {
-	transform_.position(stop_position_);
+	transform_.position(base_position_);
 	mesh_->change_motion(EnemiesMotion::Idle, true);
 	attack_behavior_tree_->tick();
 }

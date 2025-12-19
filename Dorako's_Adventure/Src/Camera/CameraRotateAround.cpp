@@ -2,8 +2,10 @@
 #include "World/IWorld.h"
 #include "Shape/Line.h"
 #include "World/Field.h"
+#include "../LookRotation.h"
 
 #include <iostream>
+#include <imgui/imgui.h>
 
 
 const GSvector3 PlayerOffset{ 0.0f,0.0f,-7.0f };
@@ -16,6 +18,7 @@ CameraRotateAround::CameraRotateAround(IWorld* world,
 	tag_ = "CameraTag";
 	name_ = "Camera";
 	transform_.position(position);
+	first_position_ = position;
 	transform_.lookAt(at);
 	pitch_ = (at - position).getPitch();
 	yaw_ = (at - position).getYaw();
@@ -36,31 +39,43 @@ void CameraRotateAround::update(float delta_time) {
 		transform_.forward(dummy_player->transform().forward());
 	}
 
-	if (gsGetKeyState(GKEY_LEFT)) yaw_ += 3.0f * delta_time;
-	if (gsGetKeyState(GKEY_RIGHT))yaw_ -= 3.0f * delta_time;
+	if (gsGetKeyState(GKEY_LEFT)) yaw_ -= 0.2f * delta_time;
+	if (gsGetKeyState(GKEY_RIGHT))yaw_ += 0.2f * delta_time;
+	if (gsGetKeyState(GKEY_UP))pitch_ -= 0.5f * delta_time;
+	if (gsGetKeyState(GKEY_DOWN))pitch_ += 0.5f * delta_time;
 	//右スティックの移動量からカメラの移動
 	if (result.x < 0.0f) yaw_ += 2.0f * result_normalize * delta_time;
 	if (result.x > 0.0f)yaw_ -= 2.0f * result_normalize * delta_time;
-	if (result.y < 0.0f)pitch_ += 1.0f * result_normalize * delta_time;
-	if (result.y > 0.0f) pitch_ -= 1.0f * result_normalize * delta_time;
+	if (result.y > 0.0f)pitch_ += 1.0f * result_normalize * delta_time;
+	if (result.y < 0.0f) pitch_ -= 1.0f * result_normalize * delta_time;
 	pitch_ = CLAMP(pitch_, -70.0f, 30.0f);
+
+	GSquaternion player_rotate = dummy_player->transform().rotation();
+	std::cout << "x: " << player_rotate.x << " y: " << player_rotate.y << " z: " << player_rotate.z << " w: " << player_rotate.w << std::endl;
 
 	GSvector3 at = dummy_player->transform().transformPoint(ReferencePointOffset);
 	//ピッチとヨウの単一ベクトル
 	GSvector3 view = GSvector3::createFromPitchYaw(pitch_, yaw_)*10.0f;
 	//プレイヤーの上方向ベクトルを軸に回転
 	GSvector3 position = dummy_player->transform().transformPoint(view);
-
 	
 	//フィールドとの当たり判定
 	Line line{ at, position };
 	GSvector3 intersect;
-	if (world_->field()->collide(line, &intersect)) {
-		//当たった位置にカメラの位置を補正する
-		position = intersect;
+	//if (world_->field()->collide(line, &intersect)) {
+	//	//当たった位置にカメラの位置を補正する
+	//	position = intersect;
+	//}
+	//カメラのリセット
+	if (gsXBoxPadButtonTrigger(0, GS_XBOX_PAD_RIGHT_THUMB) || gsGetKeyState(GKEY_L)) {
+		yaw_ = -180.0f;
+		pitch_ = -20.0f;
 	}
+
+	GSvector3 camera_position = GSvector3::lerp(transform_.position(), position, 0.07f);
 	//カメラの移動
 	transform_.position(position);
+
 	GSvector3 up=dummy_player->transform().transformVector(GSvector3{0.0f,1.0f,0.0f});
 	//GSquaternion target_rotation = GSquaternion::lookRotation(at, up);
 	//transform_.rotation(target_rotation);
@@ -70,6 +85,19 @@ void CameraRotateAround::update(float delta_time) {
 	//std::cout << " ax: " << at.x << " ay: " << at.y << " az: " << at.z << std::endl;;
 	//up = up.normalize();
 	//std::cout << " ux: " << up.x << " uy: " << up.y << " uz: " << up.z << std::endl;;
+
+	ImGui::Begin("Camera");
+	ImGui::Text("transform_position:x:%f y:%f z:%f", transform_.position().x, transform_.position().y, transform_.position().z);
+	ImGui::Text("Up:x:%f y:%f z:%f", transform_.up().x, transform_.up().y, transform_.up().z);
+	ImGui::Text("forward:x:%f y:%f z:%f", transform_.forward().x, transform_.forward().y, transform_.forward().z);
+	ImGui::Text("at:x:%f y:%f z:%f", at.x, at.y, at.z);
+	ImGui::Text("view:x:%f y:%f z:%f", view.x, view.y, view.z);
+	ImGui::Text("position:x:%f y:%f z:%f", position.x, position.y, position.z);
+	ImGui::Text("yaw:%f", yaw_);
+	ImGui::Text("pitch:%f", pitch_);
+
+	ImGui::End();
+
 }
 void CameraRotateAround::draw()const {
 	GSvector3 eye = transform_.position();

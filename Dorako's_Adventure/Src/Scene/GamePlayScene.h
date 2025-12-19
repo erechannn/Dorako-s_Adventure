@@ -3,7 +3,6 @@
 
 #include"IScene.h"
 #include"../World/World.h"
-#include "GameOverScene.h"
 
 class GamePlayScene :public IScene {
 public:
@@ -21,13 +20,11 @@ public:
     virtual void end() override;
 private:
     void game_play_update(float delta_time);
-    void game_over_update(float delta_time);
     void pose_update(float delta_time);
 private:
     enum class State {
         Playing,
         Pose,
-        GameOver,
     };
     State state_{ State::Playing };
     World world_;
@@ -35,7 +32,6 @@ private:
     bool is_start_{ false };
     float start_timer_{ 0.0f };
     std::string next_scene_;
-    GameOverScene game_over_scene_{};
     GSvector3 coin_position_{};
 };
 

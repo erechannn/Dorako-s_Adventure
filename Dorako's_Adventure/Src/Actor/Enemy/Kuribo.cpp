@@ -24,7 +24,7 @@ Kuribo::Kuribo(IWorld* world, GSvector3 position) :
 	mesh_->transform(transform_.localToWorldMatrix());
 	foot_offset_ = 2.0f;
 	first_transform_ = transform_;
-	kuribo_position_ = position;
+	base_position_ = position;
 	set_next_point();
 	state_.add_state(EnemyState::Idle, new EnemyStateIdle(this));
 	state_.add_state(EnemyState::Search, new EnemyStateSearch(this));
@@ -79,25 +79,29 @@ void Kuribo::draw()const {
 void Kuribo::react(Actor& other) {
 	//ƒvƒŒƒCƒ„[‚ªã‚©‚ç“–‚½‚Á‚½‚çŽ€‚Ê
 	if (other.tag()=="PlayerAttackTag" || is_above_player(other) && !undead_ && other.tag() == "PlayerTag") {
+		is_dead_ = true;
+		base_position_ = transform_.position();
 		change_state(EnemyState::Dead);
 	}
 	else if (other.tag() == "PlayerTag") {
 		first_position_ = transform_.position();
-		kuribo_position_ = transform_.position();
+		base_position_ = transform_.position();
 		change_state(EnemyState::Idle);
 	}
 }
 void Kuribo::idle(float delta_time) {
 	if (player_ == nullptr)return;
-	transform_.position(kuribo_position_);
-	Delay::after(1.5f, [this]() {
+	transform_.position(base_position_);
+	if (idle_timer_ >= 90.0f) {
 		if (this->is_player_in_sight()) {
 			this->change_state(EnemyState::Chase);
 		}
 		else {
 			this->change_state(EnemyState::Search);
 		}
-		});
+
+	}
+	idle_timer_ += delta_time;
 }
 
 void Kuribo::search(float delta_time) {
@@ -125,7 +129,7 @@ void Kuribo::chase(float delta_time) {
 	if (!is_player_in_sight()) {
 		//up_vector_update();
 		velocity_ = GSvector3::zero();
-		kuribo_position_ = transform_.position();
+		base_position_ = transform_.position();
 		set_next_point();
 		change_state(EnemyState::Idle);
 	}

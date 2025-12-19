@@ -75,8 +75,9 @@ void GamePlayScene::start() {
     gsLoadTexture(Texture_EmptyHealth, "Assets/Texture/GamePlayUI/health_icon_empty.png");
     gsLoadTexture(Texture_FlyGaugeEmpty, "Assets/Texture/GamePlayUI/FlyGaugeEmpty.png");
     gsLoadTexture(Texture_FlyGauge, "Assets/Texture/GamePlayUI/FlyGauge.png");
+    gsLoadTexture(Texture_Number, "Assets/Texture/num.png");
 
-    world_.add_actor(new Player{ &world_,{3.0f,0.0f,0.0f} });
+    world_.add_actor(new Player{ &world_,{0.0f,-40.0f,0.0f} });
     world_.add_actor(new DummyPlayer{ &world_ });
     //world_.add_actor(new Kuribo{ &world_,{0.0f,0.0f,0.0f} });
     //world_.add_actor(new Coin{ &world_,{0.0f,0.0f,0.0f} });
@@ -117,14 +118,13 @@ void GamePlayScene::start() {
     world_.add_field(new Field{ stage_octree,stage_collider,Texture_Skybox });
 
     world_.add_camera(new CameraRotateAround{
-                 &world_, GSvector3{ -180.0f, 1.0f, 5.0f }, GSvector3{ 0.0f, 1.0f, 0.0f } });
+                 &world_, GSvector3{ 0.0f, 1.0f, 3.0f }, GSvector3{ 0.0f, 1.0f, 0.0f } });
 
     world_.add_light(new Light{ &world_ });
 
 
     world_.add_actor(new GamePlayUI{ &world_,true });
 
-    game_over_scene_.start();
 
 	is_end_ = false;
 	is_start_ = false;
@@ -138,7 +138,6 @@ void GamePlayScene::start() {
 void GamePlayScene::update(float delta_time) {
     switch (state_) {
     case State::Playing:game_play_update(delta_time); break;
-    case State::GameOver:game_over_update(delta_time); break;
     case State::Pose:pose_update(delta_time); break;
     }
     if (is_start_)          start_timer_ += delta_time; //タイマー増加
@@ -155,12 +154,14 @@ void GamePlayScene::update(float delta_time) {
 void GamePlayScene::game_play_update(float delta_time) {
     // ワールドクラスの更新
     world_.update(delta_time);
+    //ゲームクリアの条件
     if (world_.get_score() >= StageManager::get_instance().get_clear_score() &&
         StageManager::get_instance().get_current_stage_type() == StageManager::StageType::NORMAL) {
 
         next_scene_ = "GameClearScene";
         is_start_ = true;
     }
+    //ゲームオーバーの条件
     Actor* player_actor = world_.find_actor("Player");
     Player* player = (Player*)player_actor;
     if (player == nullptr) return;
@@ -168,9 +169,6 @@ void GamePlayScene::game_play_update(float delta_time) {
         next_scene_ = "GameOverScene";
         is_start_ = true;
     }
-}
-void GamePlayScene::game_over_update(float delta_time) {
-    game_over_scene_.update(delta_time);
 }
 void GamePlayScene::pose_update(float delta_time) {
 
@@ -206,5 +204,6 @@ void GamePlayScene::end() {
     gsDeleteTexture(Texture_FlyGauge);
     gsDeleteTexture(Texture_FlyGaugeEmpty);
     gsDeleteTexture(Texture_HealthIcon);
+    gsDeleteTexture(Texture_Number);
 
 }
