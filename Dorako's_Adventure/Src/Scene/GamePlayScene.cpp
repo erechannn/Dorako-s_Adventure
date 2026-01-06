@@ -76,6 +76,7 @@ void GamePlayScene::start() {
     gsLoadTexture(Texture_FlyGaugeEmpty, "Assets/Texture/GamePlayUI/FlyGaugeEmpty.png");
     gsLoadTexture(Texture_FlyGauge, "Assets/Texture/GamePlayUI/FlyGauge.png");
     gsLoadTexture(Texture_Number, "Assets/Texture/num.png");
+    gsLoadTexture(Texture_BackGround, "Assets/Texture/Black.png");
 
     world_.add_actor(new Player{ &world_,{0.0f,0.0f,0.0f} });
     world_.add_actor(new DummyPlayer{ &world_ });
@@ -124,6 +125,10 @@ void GamePlayScene::start() {
 
 
     world_.add_actor(new GamePlayUI{ &world_,true });
+    //ポーズ画面の初期化
+    pause_scene_.initialize();
+    //状態の初期化
+    state_ = State::Playing;
 
 
 	is_end_ = false;
@@ -138,7 +143,7 @@ void GamePlayScene::start() {
 void GamePlayScene::update(float delta_time) {
     switch (state_) {
     case State::Playing:game_play_update(delta_time); break;
-    case State::Pose:pose_update(delta_time); break;
+    case State::Pause:pause_update(delta_time); break;
     }
     if (is_start_)          start_timer_ += delta_time; //タイマー増加
     if (start_timer_ >= 120.0f)          is_end_ = true; //シーンを終了
@@ -154,6 +159,11 @@ void GamePlayScene::update(float delta_time) {
 void GamePlayScene::game_play_update(float delta_time) {
     // ワールドクラスの更新
     world_.update(delta_time);
+    //スタートボタンでポーズ画面へ
+    if (gsXBoxPadButtonTrigger(0,GS_XBOX_PAD_START)) {
+        pause_scene_.initialize();
+        state_ = State::Pause;
+    }
     //ゲームクリアの条件
     if (world_.get_score() >= StageManager::get_instance().get_clear_score() &&
         StageManager::get_instance().get_current_stage_type() == StageManager::StageType::NORMAL) {
@@ -170,8 +180,15 @@ void GamePlayScene::game_play_update(float delta_time) {
         is_start_ = true;
     }
 }
-void GamePlayScene::pose_update(float delta_time) {
-
+void GamePlayScene::pause_update(float delta_time) {
+    pause_scene_.update(delta_time);
+    if (pause_scene_.is_end()) {
+        state_ = State::Playing;
+    }
+    if (pause_scene_.is_game_play_end()) {
+        next_scene_ = pause_scene_.get_next_scene_name();
+        is_start_ = true;
+    }
 }
 bool GamePlayScene::is_end()const {
     return is_end_;
@@ -182,6 +199,10 @@ std::string GamePlayScene::next()const {
 void GamePlayScene::draw()const {
     // ワールドの描画
     world_.draw();
+    if (state_ == State::Pause) {
+        //ポーズ画面の描画
+        pause_scene_.draw();
+    }
 }
 void GamePlayScene::end() {
     world_.clear();

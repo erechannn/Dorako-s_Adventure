@@ -28,6 +28,7 @@ enum {
 	Texture_ArrowIcon,
 	Texture_StageSelectSceneBackground,
 	Texture_Number,
+	Texture_BackGround,
 };
 enum {
 	Octree_TestStage,

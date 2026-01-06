@@ -19,6 +19,8 @@ public:
 	void update(float delta_time);
 	void draw()const;
 	bool is_end();
+	bool is_game_play_end();
+	std::string get_next_scene_name();
 private:
 	SelectState to_state(int value);
 	void pause_update(float delta_time);
@@ -27,19 +29,18 @@ private:
 	void reset_stage_update(float delta_time);
 	void stage_select_update(float delta_time);
 	void title_update(float delta_time);
+	void confirm_window_update(float delta_time);
 	void draw_back_ground()const;
 	void draw_pause_menu()const;
 	void draw_option()const;
 	void draw_confirm_window()const;
 private:
 	SelectState select_state_{};
-	bool is_end_{false};
+	bool is_end_{ false };
 	int select_num_{ 0 };
+	bool is_game_play_end_{ false };
+	bool is_confirm_{ false };
+	std::string next_scene_name_{ "" };
 };
-
-
-
-
-
 
 #endif

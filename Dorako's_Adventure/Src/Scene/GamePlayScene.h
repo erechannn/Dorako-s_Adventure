@@ -3,6 +3,7 @@
 
 #include"IScene.h"
 #include"../World/World.h"
+#include "PauseScreen.h"
 
 class GamePlayScene :public IScene {
 public:
@@ -20,14 +21,16 @@ public:
     virtual void end() override;
 private:
     void game_play_update(float delta_time);
-    void pose_update(float delta_time);
+    void pause_update(float delta_time);
 private:
     enum class State {
         Playing,
-        Pose,
+        Pause,
     };
     State state_{ State::Playing };
     World world_;
+    //ポーズシーン
+    PauseScene pause_scene_{};
     bool is_end_{ false };
     bool is_start_{ false };
     float start_timer_{ 0.0f };
