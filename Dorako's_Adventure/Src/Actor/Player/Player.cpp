@@ -220,7 +220,7 @@ void Player::flying(float delta_time) {
 	move(delta_time);
 }
 void Player::landing(float delta_time) {
-
+	is_zero_gravity_ = false;
 }
 void Player::attack() {
 
