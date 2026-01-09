@@ -1,5 +1,7 @@
 #include "GamePlayUI.h"
 #include "../../../World/IWorld.h"
+#include "../../../Stage/StageManager.h"
+#include "../../Number/NumberTexture.h"
 #include "../../../Assets.h"
 #include<imgui/imgui.h>
 
@@ -19,12 +21,14 @@ void GamePlayUI::update(float delta_time) {
     fire_count_ = player_->fire_count();
     player_health_ = player_->now_health();
     player_fly_timer_ = player_->get_fly_timer();
+    now_coin_count_ = world_->get_score();
+    clear_coin_count_ = StageManager::get_instance().get_clear_score();
 
-    //if (ImGui::Begin("UI_position")) {
-    //    ImGui::DragFloat2("Position : ", position_, 0.1f);
-    //    ImGui::DragFloat2("Center : ", center_, 0.1f);
-    //}
-    //ImGui::End();
+    if (ImGui::Begin("UI_position")) {
+        ImGui::DragFloat2("Position : ", position_, 0.1f);
+        ImGui::DragFloat2("Center : ", center_, 0.1f);
+    }
+    ImGui::End();
 
     for (int i = 0; i < fire_count_; i++) {
         fire_count_positions_[i] = fire_count_position_;
@@ -70,4 +74,17 @@ void GamePlayUI::draw_player_ui()const {
     float fly_gauge_rect_up = (600 / max_fly_timer) * player_fly_timer_;
     GSrect fly_gauge_rect{ 0.0f,0.0f,400.0f,fly_gauge_rect_up };
     gsDrawSprite2D(Texture_FlyGauge, &fly_gauge_position, &fly_gauge_rect, NULL, NULL, NULL, 0.0f);
+    
+
+    if (StageManager::get_instance().get_current_stage_type() == StageManager::StageType::NORMAL) {
+        const GSvector2 slash_position{ 1730.0f,30.0f };
+        const GSvector2 coin_position{ 1580.0f,30.0f };
+        const GSvector2 now_coin_count_position{ 1680.0f,10.0f };
+        const GSvector2 clear_coin_count_position{ 1800.0f,10.0f };
+        gsDrawSprite2D(Texture_Slash, &slash_position, NULL, NULL, NULL, NULL, 0.0f);
+        gsDrawSprite2D(Texture_Coin, &coin_position, NULL, NULL, NULL, NULL, 0.0f);
+        static const NumberTexture number{ Texture_Number,64,128 };
+        number.draw(now_coin_count_position, now_coin_count_, 1);
+        number.draw(clear_coin_count_position, clear_coin_count_, 1);
+    }
 }

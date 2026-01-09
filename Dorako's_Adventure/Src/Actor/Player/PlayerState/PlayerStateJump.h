@@ -10,7 +10,7 @@ public:
 	void start()override;
 	void end()override;
 private:
-	float jump_power_{ 0.2f };
+	float jump_power_{ 0.25f };
 };
 
 

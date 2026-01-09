@@ -44,7 +44,7 @@ void TitleScene::start() {
     //デフォルトシェーダーの初期化（メッシュファイルを読み込む前に有効にする）
     gsInitDefaultShader();
 
-    gsLoadTexture(Texture_Skybox, "Assets/Skybox/TestStageSkybox.dds");
+    gsLoadTexture(Texture_Skybox, "Assets/Skybox/CosmicSkybox.dds");
     gsLoadOctree(Octree_TestStage, "Assets/Stage/TestStage/TestStageOctree.oct");
     gsLoadOctree(Octree_TestStageCollider, "Assets/Stage/TestStage/TestStageOctreeCollider.oct");
 

@@ -8,6 +8,7 @@ enum {
 	Mesh_WoodBox,
 	Mesh_MiniDragon,
 	Mesh_Coin,
+	Mesh_Door,
 
 };
 enum {
@@ -29,6 +30,8 @@ enum {
 	Texture_StageSelectSceneBackground,
 	Texture_Number,
 	Texture_BackGround,
+	Texture_Coin,
+	Texture_Slash,
 };
 enum {
 	Octree_TestStage,

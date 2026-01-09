@@ -54,9 +54,11 @@ GSvector3 StageManager::get_current_stage_planet_position()const {
 float StageManager::get_current_stage_planet_radius()const {
 	return stages_[selected_stage_id_ - 1].planet_radius;
 }
+//クリアするために必要なコインの枚数
 int StageManager::get_clear_score()const {
 	return stages_[selected_stage_id_ - 1].clear_score;
 }
+//ステージがアンロックされているか
 bool StageManager::is_stage_unlocked(int stage_id)const {
 	return stages_[stage_id - 1].is_stage_unlocked;
 }

@@ -60,7 +60,7 @@ void GamePlayScene::start() {
 
     gsLoadEffect(Effeck_FireBoll, "Assets/Effect/FireBall_Orange.efkefc");
 
-    gsLoadTexture(Texture_Skybox, "Assets/Skybox/TestStageSkybox.dds");
+    gsLoadTexture(Texture_Skybox, "Assets/Skybox/CosmicSkybox.dds");
 
     gsLoadOctree(Octree_TestStage, "Assets/Stage/TestStage/TestStageOctree.oct");
     gsLoadOctree(Octree_TestStageCollider, "Assets/Stage/TestStage/TestStageOctreeCollider.oct");
@@ -77,6 +77,8 @@ void GamePlayScene::start() {
     gsLoadTexture(Texture_FlyGauge, "Assets/Texture/GamePlayUI/FlyGauge.png");
     gsLoadTexture(Texture_Number, "Assets/Texture/num.png");
     gsLoadTexture(Texture_BackGround, "Assets/Texture/Black.png");
+    gsLoadTexture(Texture_Coin, "Assets/Texture/GamePlayUI/coin.png");
+    gsLoadTexture(Texture_Slash, "Assets/Texture/GamePlayUI/Slash.png");
 
     world_.add_actor(new Player{ &world_,{0.0f,0.0f,0.0f} });
     world_.add_actor(new DummyPlayer{ &world_ });
@@ -226,5 +228,7 @@ void GamePlayScene::end() {
     gsDeleteTexture(Texture_FlyGaugeEmpty);
     gsDeleteTexture(Texture_HealthIcon);
     gsDeleteTexture(Texture_Number);
+    gsDeleteTexture(Texture_Coin);
+    gsDeleteTexture(Texture_Slash);
 
 }

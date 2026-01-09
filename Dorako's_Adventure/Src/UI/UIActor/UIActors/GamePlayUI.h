@@ -48,6 +48,10 @@ private:
     GSvector2 fire_count_positions_[3];
 
     GSvector2 heart_positions_[3];
+
+    int clear_coin_count_{};
+
+    int now_coin_count_{};
 };
 
 
