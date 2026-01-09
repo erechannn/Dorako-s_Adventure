@@ -122,8 +122,6 @@ void StageSelectScene::update(float delta_time) {
 	if (start_timer_ >= 60.0f)          is_end_ = true; //ÉVÅ[ÉìÇèIóπ
 
 	if (ImGui::Begin("UI_position")) {
-		//ImGui::DragFloat2("Position : ", position_, 0.1f);
-		//ImGui::DragFloat2("Center : ", center_, 0.1f);
 		ImGui::Checkbox("into_the_door", &is_into_the_door_);
 		ImGui::End();
 	}
@@ -132,18 +130,6 @@ void StageSelectScene::update(float delta_time) {
 
 void StageSelectScene::draw()const {
 	world_.draw();
-
-	//GSvector2 Background_position{ 0.0f,0.0f };
-	//const GSvector2 ui_position{ 480.0f,-100.0f };
-	//const GSvector2 stage_select_stage1_position{ 600.0f,425.0f };
-	//const GSvector2 stage_select_boss_position{ 1133.0f,425.0f };
-	//gsDrawSprite2D(Texture_StageSelectSceneBackground, &Background_position, NULL, NULL, NULL, NULL, 0.0f);
-	//gsDrawSprite2D(Texture_StageSelect, &ui_position, NULL, NULL, NULL, NULL, 0.0f);
-	//gsDrawSprite2D(Texture_StageSelectStage1, &stage_select_stage1_position, NULL, NULL, NULL, NULL, 0.0f);
-	//gsDrawSprite2D(Texture_StageSelectBoss, &stage_select_boss_position, NULL, NULL, NULL, NULL, 0.0f);
-	//gsDrawSprite2D(Texture_ArrowIcon, &arrow_icon_position_, NULL, NULL, NULL, NULL, 0.0f);
-
-
 }
 
 bool StageSelectScene::is_end()const {

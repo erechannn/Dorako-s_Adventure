@@ -21,8 +21,12 @@ StageSelectDoor::StageSelectDoor(IWorld* world, GSvector3 position, int stage_id
 	is_unlock_ = StageManager::get_instance().is_stage_unlocked(stage_id_);
 }
 void StageSelectDoor::update(float delta_time) {
+	Actor* player = world_->find_actor("Player");
 	if (is_unlock_) {
 		mesh_->change_motion(Open_Door, false);
+	}
+	if (!is_collide(*player)) {
+		is_into_the_door_ = false;
 	}
 }
 void StageSelectDoor::draw()const {
