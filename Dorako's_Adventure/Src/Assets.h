@@ -32,6 +32,7 @@ enum {
 	Texture_BackGround,
 	Texture_Coin,
 	Texture_Slash,
+	Texture_StageStartText,
 };
 enum {
 	Octree_TestStage,
@@ -42,9 +43,21 @@ enum {
 	Octree_BossStageCollider,
 };
 enum {
-	Effeck_FireBoll,
+	Effect_FireBoll,
+	Effect_Teleportation
 };
+enum {
+	BGM_TitleBGM,
+	BGM_StageSelectBGM,
+	BGM_GamePlayBGM,
+};
+enum {
+	SE_StartSelect,
+	SE_Select,
+	SE_WalkSound,
+	SE_Jump,
 
+};
 
 
 

@@ -42,6 +42,9 @@ Player::Player(IWorld* world, GSvector3 position) :
 	state_.add_state(PlayerState::StateDead, new PlayerStateDead(this));
 	state_.add_state(PlayerState::StateAttack, new PlayerStateAttack(this, world_));
 	state_.change_state(PlayerState::StateMove);
+	//アニメーションイベント
+	mesh_->add_event(PlayerMotion::Run, 4, [] {gsPlaySE(SE_WalkSound); });
+	mesh_->add_event(PlayerMotion::Run, 22, [] {gsPlaySE(SE_WalkSound); });
 
 }
 void Player::update(float delta_time) {
@@ -58,6 +61,7 @@ void Player::update(float delta_time) {
 	if (state_.now_state_ == PlayerState::StateMove && gsXBoxPadButtonTrigger(0,GS_XBOX_PAD_A)) {	//Aボタンでジャンプ
 
 		state_.change_state(PlayerState::StateJumpStart);
+		gsPlaySE(SE_Jump);
 	}
 
 	//動ける状態か

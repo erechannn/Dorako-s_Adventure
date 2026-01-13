@@ -50,14 +50,23 @@ void StageSelectScene::start() {
 	gsInitDefaultShader();
 
 	gsLoadTexture(Texture_Skybox, "Assets/Skybox/CosmicSkybox.dds");
-	gsLoadOctree(Octree_TestStage, "Assets/Stage/TestStage/TestStageOctree.oct");
-	gsLoadOctree(Octree_TestStageCollider, "Assets/Stage/TestStage/TestStageOctreeCollider.oct");
-
-	gsLoadTexture(Texture_TitleLogo, "Assets/Texture/TitleUI/TitleLogo.png");
-	gsLoadTexture(Texture_TitleUi, "Assets/Texture/TitleUI/TitleUi.png");
-	gsLoadTexture(Texture_Number, "Assets/Texture/NullTexture.png");
+	gsLoadOctree(Octree_TestStage, "Assets/Stage/SelectStage/SelectStageOctree.oct");
+	gsLoadOctree(Octree_TestStageCollider, "Assets/Stage/SelectStage/SelectStageOctreeCollider.oct");
 
 	gsLoadSkinMesh(Mesh_Player, "Assets/Mesh/Player/DragonSpark.mshb");
+
+	gsLoadTexture(Texture_StageSelect, "Assets/Texture/StageSelectUI/StageSelect.png");
+	gsLoadTexture(Texture_StageStartText, "Assets/Texture/StageSelectUI/StageStratText.png");
+
+	gsLoadBGM(BGM_StageSelectBGM, "Assets/Sound/BGM/StageSelectBGM.oga", GS_TRUE);
+	gsLoadSE(SE_Select, "Assets/Sound/SE/SelectSE.wav", 1, GS_TRUE);
+	gsLoadSE(SE_WalkSound, "Assets/Sound/SE/WalkSound.wav", 10, GS_TRUE);
+	gsLoadSE(SE_Jump, "Assets/Sound/SE/JumpSE.wav", 1, GS_TRUE);
+
+	gsLoadEffect(Effect_Teleportation, "Assets/Effect/MagicCircle01.efkefc");
+
+
+	StageManager::get_instance().select_stage(4);
 
 	world_.add_actor(new StageSelectDoor{ &world_,{0.0f,0.0f,0.0f},1 });
 
@@ -79,6 +88,7 @@ void StageSelectScene::start() {
 	next_scene_ = "GamePlayScene";
 	stage_count_ = 1;
 	arrow_icon_position_ = { 560.0f,382.0f };
+	gsPlayBGM(BGM_StageSelectBGM);
 }
 
 void StageSelectScene::update(float delta_time) {
@@ -114,6 +124,7 @@ void StageSelectScene::update(float delta_time) {
 		if (is_into_the_door_) {
 			if (gsXBoxPadButtonTrigger(0, GS_XBOX_PAD_A)) {
 				is_start_ = true;
+				gsPlaySE(SE_Select);
 			}
 		}
 	}
@@ -123,6 +134,7 @@ void StageSelectScene::update(float delta_time) {
 
 	if (ImGui::Begin("UI_position")) {
 		ImGui::Checkbox("into_the_door", &is_into_the_door_);
+		ImGui::DragFloat2("UIPosition:", position_, 0.1f);
 		ImGui::End();
 	}
 
@@ -130,6 +142,12 @@ void StageSelectScene::update(float delta_time) {
 
 void StageSelectScene::draw()const {
 	world_.draw();
+	const GSvector2 stage_select_UI_position{ 546.0,-86.0f };
+	const GSvector2 stage_start_text_position{ 1130.0f,600.0f };
+	gsDrawSprite2D(Texture_StageSelect, &stage_select_UI_position, NULL, NULL, NULL, NULL, 0.0f);
+	if (is_into_the_door_) {
+		gsDrawSprite2D(Texture_StageStartText, &stage_start_text_position, NULL, NULL, NULL, NULL, 0.0f);
+	}
 }
 
 bool StageSelectScene::is_end()const {
@@ -143,4 +161,14 @@ std::string StageSelectScene::next()const {
 void StageSelectScene::end() {
 	world_.clear();
 	StageManager::get_instance().select_stage(stage_count_);
+	gsStopBGM();
+
+	gsDeleteBGM(BGM_StageSelectBGM);
+	gsDeleteSE(SE_Select);
+	gsDeleteSE(SE_WalkSound);
+	gsDeleteSE(SE_Jump);
+	gsDeleteMesh(Mesh_Player);
+	gsDeleteOctree(Octree_TestStage);
+	gsDeleteOctree(Octree_TestStageCollider);
+	gsDeleteTexture(Texture_Skybox);
 }

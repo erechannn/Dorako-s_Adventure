@@ -17,6 +17,7 @@ private:
 	bool is_unlock_{ false };
 	int stage_id_{};
 	bool is_into_the_door_{ false };
+	GSint effect_handle_{};
 };
 
 

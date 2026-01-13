@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Src\Actor\StageSelectDoor.cpp" />
+    <ClCompile Include="Src\Scene\OptionScene.cpp" />
     <ClCompile Include="Src\Scene\PauseScreen.cpp" />
     <ClCompile Include="Src\Scene\GameClearScene.cpp" />
     <ClCompile Include="Src\Score\Score.cpp" />
@@ -207,6 +208,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Actor\StageSelectDoor.h" />
+    <ClInclude Include="Src\Scene\OptionScene.h" />
     <ClInclude Include="Src\Scene\PauseScreen.h" />
     <ClInclude Include="Src\Scene\GameClearScene.h" />
     <ClInclude Include="Src\Score\Score.h" />

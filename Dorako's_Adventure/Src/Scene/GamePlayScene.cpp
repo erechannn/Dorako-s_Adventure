@@ -58,7 +58,7 @@ void GamePlayScene::start() {
     gsLoadMesh(Mesh_Coin, "Assets/Mesh/Coin/Coin.mshb");
     gsLoadSkinMesh(Mesh_MiniDragon, "Assets/Mesh/Enemy/MiniDragon/MiniDragon.mshb");
 
-    gsLoadEffect(Effeck_FireBoll, "Assets/Effect/FireBall_Orange.efkefc");
+    gsLoadEffect(Effect_FireBoll, "Assets/Effect/FireBall_Orange.efkefc");
 
     gsLoadTexture(Texture_Skybox, "Assets/Skybox/CosmicSkybox.dds");
 
@@ -79,6 +79,11 @@ void GamePlayScene::start() {
     gsLoadTexture(Texture_BackGround, "Assets/Texture/Black.png");
     gsLoadTexture(Texture_Coin, "Assets/Texture/GamePlayUI/coin.png");
     gsLoadTexture(Texture_Slash, "Assets/Texture/GamePlayUI/Slash.png");
+
+    gsLoadBGM(BGM_GamePlayBGM, "Assets/Sound/BGM/GamePlayBGM.oga", GS_TRUE);
+    gsLoadSE(SE_Select, "Assets/Sound/SE/SelectSE.wav", 1, GS_TRUE);
+    gsLoadSE(SE_WalkSound,"Assets/Sound/SE/WalkSound.wav",10,GS_TRUE);
+    gsLoadSE(SE_Jump,"Assets/Sound/SE/JumpSE.wav",1,GS_TRUE);
 
     world_.add_actor(new Player{ &world_,{0.0f,0.0f,0.0f} });
     world_.add_actor(new DummyPlayer{ &world_ });
@@ -140,7 +145,7 @@ void GamePlayScene::start() {
     // éãêçë‰ÉJÉäÉìÉOÇóLå¯Ç…Ç∑ÇÈ
     gsEnable(GS_FRUSTUM_CULLING);
     coin_position_ = { -2.0f,-10.2f,-22.5f };
-
+    gsPlayBGM(BGM_GamePlayBGM);
 }
 void GamePlayScene::update(float delta_time) {
     switch (state_) {
@@ -208,6 +213,7 @@ void GamePlayScene::draw()const {
 }
 void GamePlayScene::end() {
     world_.clear();
+    gsStopBGM();
 
     gsDeleteSkinMesh(Mesh_Player);
     gsDeleteSkinMesh(Mesh_Kuribo);
@@ -231,4 +237,8 @@ void GamePlayScene::end() {
     gsDeleteTexture(Texture_Coin);
     gsDeleteTexture(Texture_Slash);
 
+    gsDeleteBGM(BGM_GamePlayBGM);
+    gsDeleteSE(SE_Select);
+    gsDeleteSE(SE_WalkSound);
+    gsDeleteSE(SE_Jump);
 }

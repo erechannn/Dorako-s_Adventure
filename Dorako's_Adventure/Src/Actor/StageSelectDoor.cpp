@@ -3,6 +3,8 @@
 #include "../Assets.h"
 #include "../Stage/StageManager.h"
 
+#include <GSeffect.h>
+
 enum {
 	Locked_Door=0,
 	Open_Door=1
@@ -19,8 +21,12 @@ StageSelectDoor::StageSelectDoor(IWorld* world, GSvector3 position, int stage_id
 	mesh_->transform(transform_.localToWorldMatrix());
 	stage_id_ = stage_id;
 	is_unlock_ = StageManager::get_instance().is_stage_unlocked(stage_id_);
+	effect_handle_ = gsPlayEffect(Effect_Teleportation, &position);
+	
 }
 void StageSelectDoor::update(float delta_time) {
+	GSmatrix4 world = transform_.localToWorldMatrix();
+	gsSetEffectMatrix(effect_handle_, &world); // ƒ[ƒ‹ƒh•ÏŠ·s—ñ‚ðÝ’è
 	Actor* player = world_->find_actor("Player");
 	if (is_unlock_) {
 		mesh_->change_motion(Open_Door, false);

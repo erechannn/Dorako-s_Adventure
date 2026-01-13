@@ -54,6 +54,11 @@ void TitleScene::start() {
 
     gsLoadSkinMesh(Mesh_Player, "Assets/Mesh/Player/DragonSpark.mshb");
 
+    gsLoadSE(SE_StartSelect, "Assets/Sound/SE/StartSelectSE.wav", 1, GS_TRUE);
+    gsLoadBGM(BGM_TitleBGM, "Assets/Sound/BGM/TitleBGM.oga",GS_TRUE);
+
+    StageManager::get_instance().select_stage(4);
+
     world_.add_actor(new ModelPlayer{ &world_,{0.0f,0.0f,0.0f} });
 
 	world_.add_camera(new TestCamera{
@@ -71,11 +76,12 @@ void TitleScene::start() {
     first_pos_ = { 422.0f,-169.0f };
     end_pos_ = { 422.0f,-120.0f };
     Tween::vector2(first_pos_, end_pos_, 60, [=](GSvector2 pos) {logo_position_ = pos; });
-    StageManager::get_instance().select_stage(4);
+    gsPlayBGM(BGM_TitleBGM);
 
 }
 void TitleScene::update(float delta_time) {
 	world_.update(delta_time);
+
     tween_timer_ += delta_time;
     if (tween_timer_ % 60 == 0) {
         GSvector2 first_pos = end_pos_;
@@ -86,8 +92,14 @@ void TitleScene::update(float delta_time) {
 
     }
 
-	if (gsXBoxPadButtonTrigger(0, GS_XBOX_PAD_A)) is_start_ = true;
-    if (gsGetKeyTrigger(GKEY_SPACE))is_start_ = true;
+    if (gsXBoxPadButtonTrigger(0, GS_XBOX_PAD_A)) { 
+        is_start_ = true;
+        gsPlaySE(SE_StartSelect);
+    }
+    if (gsGetKeyTrigger(GKEY_SPACE)) {
+        is_start_ = true;
+        gsPlaySE(SE_StartSelect);
+    }
 	if (is_start_)          start_timer_ += delta_time; //タイマー増加
 	if (start_timer_ >= 60.0f)          is_end_ = true; //シーンを終了
 
@@ -114,11 +126,15 @@ void TitleScene::end() {
     Actor*model_player=world_.find_actor("ModelPlayer");
     model_player->die();
     Tween::clear();
+    gsStopBGM();
+
     gsDeleteMesh(Mesh_Player);
     gsDeleteTexture(Texture_Skybox);
     gsDeleteTexture(Texture_TitleLogo);
     gsDeleteTexture(Texture_TitleUi);
+    gsDeleteTexture(Texture_Number);
     gsDeleteOctree(Octree_TestStage);
     gsDeleteOctree(Octree_TestStageCollider);
-    gsDeleteTexture(Texture_Number);
+    gsDeleteBGM(BGM_TitleBGM);
+    gsDeleteSE(SE_StartSelect);
 }

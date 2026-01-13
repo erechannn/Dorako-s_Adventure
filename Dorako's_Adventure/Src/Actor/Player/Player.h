@@ -37,6 +37,8 @@ private:
 	float invincible_timer_{ 0.0f };
 	bool debug_invincible_{ false };
 	float fly_timer_{ 180.0f };
+	bool is_landing_lag_enabled{ false };
+	float flying_timer_{ 0.0f };
 };
 
 

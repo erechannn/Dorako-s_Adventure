@@ -13,6 +13,10 @@ public:
 private:
 	float yaw_{ 0.0f };
 	float pitch_{ 0.0f };
+
+	bool is_reverse_result_y_{ false };
+	bool is_reverse_result_x_{ false };
+
 	GSvector3 view_{ 0.0f,0.0f,0.0f };
 	GSvector2 result;
 	GSvector3 player_up_{ 0.0f,0.0f,0.0f };

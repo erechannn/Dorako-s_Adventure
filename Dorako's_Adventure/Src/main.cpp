@@ -30,6 +30,9 @@ public:
         // マウスカーソルを非表示にする 
         //gsHideMouseCursor();
 
+        //BGMとSEの音量を下げておく
+        gsSetVolumeBGM(0.5f);
+        gsSetMasterVolumeSE(0.5f);
     }
     void update(float delta_time)override {
         scene_manager_.update(delta_time);

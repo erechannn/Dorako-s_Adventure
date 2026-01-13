@@ -30,11 +30,6 @@ void CameraRotateAround::update(float delta_time) {
 	Actor* dummy_player = world_->find_actor("DummyPlayer");
 	if (dummy_player == nullptr)return;
 	player_up_ = dummy_player->transform().up();
-	//GSvector3 planet_position{ 0.0f,-20.0f,0.0f };//星の中心
-	//GSvector3 my_position = transform_.position();//自分の位置
-	//GSvector3 planet_vector = my_position - planet_position;
-	//GSvector3 planet_normal = planet_vector.normalize();
-	//transform_.forward() = GSvector3::projectOnPlane(transform_.forward(), planet_normal).normalize();
 	if (transform_.forward().magnitude() < 0.1f) {
 		transform_.forward(dummy_player->transform().forward());
 	}
@@ -44,10 +39,22 @@ void CameraRotateAround::update(float delta_time) {
 	if (gsGetKeyState(GKEY_UP))pitch_ -= 0.5f * delta_time;
 	if (gsGetKeyState(GKEY_DOWN))pitch_ += 0.5f * delta_time;
 	//右スティックの移動量からカメラの移動
-	if (result.x < 0.0f) yaw_ += 2.0f * result_normalize * delta_time;
-	if (result.x > 0.0f)yaw_ -= 2.0f * result_normalize * delta_time;
-	if (result.y > 0.0f)pitch_ += 1.0f * result_normalize * delta_time;
-	if (result.y < 0.0f) pitch_ -= 1.0f * result_normalize * delta_time;
+	if (is_reverse_result_x_) {
+		if (result.x > 0.0f) yaw_ += 2.0f * result_normalize * delta_time;
+		if (result.x < 0.0f)yaw_ -= 2.0f * result_normalize * delta_time;
+	}
+	else {
+		if (result.x < 0.0f) yaw_ += 2.0f * result_normalize * delta_time;
+		if (result.x > 0.0f)yaw_ -= 2.0f * result_normalize * delta_time;
+	}
+	if (is_reverse_result_y_) {
+		if (result.y < 0.0f)pitch_ += 1.0f * result_normalize * delta_time;
+		if (result.y > 0.0f) pitch_ -= 1.0f * result_normalize * delta_time;
+	}
+	else {
+		if (result.y > 0.0f)pitch_ += 1.0f * result_normalize * delta_time;
+		if (result.y < 0.0f) pitch_ -= 1.0f * result_normalize * delta_time;
+	}
 	pitch_ = CLAMP(pitch_, -70.0f, 30.0f);
 
 	GSquaternion player_rotate = dummy_player->transform().rotation();
