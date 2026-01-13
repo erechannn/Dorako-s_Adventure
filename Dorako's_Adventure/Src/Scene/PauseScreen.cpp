@@ -14,6 +14,7 @@ void PauseScene::initialize() {
 	is_game_play_end_ = false;
 	is_confirm_ = false;
 	select_num_ = 1;
+	option_.initialize();
 	next_scene_name_ = "NULL";
 }
 void PauseScene::update(float delta_time) {
@@ -94,7 +95,11 @@ void PauseScene::restart_game_update(float delta_time) {
 	is_end_ = true;
 }
 void PauseScene::option_game_update(float delta_time) {
-
+	option_.update(delta_time);
+	if (option_.is_end()) {
+		option_.initialize();
+		select_state_ = SelectState::SelectNull;
+	}
 }
 void PauseScene::reset_stage_update(float delta_time) {
 	confirm_window_update(delta_time);

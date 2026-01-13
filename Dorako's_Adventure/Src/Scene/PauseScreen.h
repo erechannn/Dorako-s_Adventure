@@ -1,6 +1,7 @@
 #ifndef PAUSE_SCENE_H_
 #define PAUSE_SCENE_H_
 
+#include "OptionScene.h"
 
 enum class SelectState {
 	SelectNull=0,
@@ -41,6 +42,7 @@ private:
 	bool is_game_play_end_{ false };
 	bool is_confirm_{ false };
 	std::string next_scene_name_{ "" };
+	OptionScene option_{};
 };
 
 #endif
