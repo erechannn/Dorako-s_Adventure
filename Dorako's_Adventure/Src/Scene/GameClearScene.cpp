@@ -4,11 +4,15 @@
 
 void GameClearScene::start() {
 	gsLoadTexture(Texture_StageClear, "Assets/Texture/GameClearUI/StageClear.png");
+	gsLoadBGM(BGM_StageSelectBGM, "Assets/Sound/BGM/StageSelectBGM.oga", GS_TRUE);
+
 
 	is_end_ = false;
 	is_start_ = false;
 	start_timer_ = 0.0f;
 	next_scene_ = "TitleScene";
+	gsPlayBGM(BGM_StageSelectBGM);
+
 }
 
 void GameClearScene::update(float delta_time) {
@@ -28,5 +32,6 @@ std::string GameClearScene::next() const{
 	return next_scene_;
 }
 void GameClearScene::end() {
+	gsStopBGM();
 
 }

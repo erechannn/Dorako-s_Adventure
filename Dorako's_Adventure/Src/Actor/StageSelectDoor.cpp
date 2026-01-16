@@ -37,7 +37,6 @@ void StageSelectDoor::update(float delta_time) {
 }
 void StageSelectDoor::draw()const {
 	mesh_->draw();
-	collider().draw();
 }
 void StageSelectDoor::react(Actor& other) {
 	if (other.name() == "Player") {

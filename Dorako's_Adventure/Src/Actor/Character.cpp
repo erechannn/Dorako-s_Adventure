@@ -92,25 +92,17 @@ void Character::collide_ground() {
 		&line_start, &line_end, &collision_point, &ground_plane)) {
 		// 衝突した位置に座標を補正する
 		transform_.position(collision_point);
-		GSvector3 hit_position = collision_point;
 		collider_point_ = collision_point;
-		if (GSvector3::distance(hit_position,transform_.position()) >= 2.0f) {
-			std::cout << "異常発生" << std::endl;
-			std::cout << "x: " << hit_position.x << " y: " << hit_position.y << " z: " << hit_position.z << std::endl;
-
-		}
-		hit_position_ = hit_position;
 		//重力を無効
 		is_ground_ = true;
 		gravity_velocity_ = GSvector3::zero();
 		// 斜面に合わせてキャラクタを傾かせる
-
-		GSvector3 planet_position = StageManager::get_instance().get_current_stage_planet_position();
-		GSvector3 up = (transform_.position() - planet_position);
-		up.normalize();
-		GSvector3 left = GSvector3::cross(up, transform_.forward());
-		GSvector3 forward = GSvector3::cross(left, up);
-		transform_.rotation(lookRotation(forward, up));
+		GSvector3 planet_position = StageManager::get_instance().get_current_stage_planet_position();//星の中心の座標
+		GSvector3 up = (transform_.position() - planet_position);//星から自分までのベクトル
+		up.normalize();//正規化
+		GSvector3 left = GSvector3::cross(up, transform_.forward());//新しい上方向ベクトルとキャラクターの正面ベクトルから左方向ベクトルを作る
+		GSvector3 forward = GSvector3::cross(left, up);//左方向ベクトルと上方向ベクトルから正面ベクトルを作る
+		transform_.rotation(lookRotation(forward, up));//新しい正面と上向きベクトルを使い回転させる
 	}
 	else  is_ground_ = false;
 

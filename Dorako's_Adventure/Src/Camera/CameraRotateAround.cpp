@@ -87,23 +87,18 @@ void CameraRotateAround::update(float delta_time) {
 	//GSquaternion target_rotation = GSquaternion::lookRotation(at, up);
 	//transform_.rotation(target_rotation);
 	transform_.lookAt(at,up);
-	//at = at - transform_.position();
-	//at = at.normalize();
-	//std::cout << " ax: " << at.x << " ay: " << at.y << " az: " << at.z << std::endl;;
-	//up = up.normalize();
-	//std::cout << " ux: " << up.x << " uy: " << up.y << " uz: " << up.z << std::endl;;
 
-	ImGui::Begin("Camera");
-	ImGui::Text("transform_position:x:%f y:%f z:%f", transform_.position().x, transform_.position().y, transform_.position().z);
-	ImGui::Text("Up:x:%f y:%f z:%f", transform_.up().x, transform_.up().y, transform_.up().z);
-	ImGui::Text("forward:x:%f y:%f z:%f", transform_.forward().x, transform_.forward().y, transform_.forward().z);
-	ImGui::Text("at:x:%f y:%f z:%f", at.x, at.y, at.z);
-	ImGui::Text("view:x:%f y:%f z:%f", view.x, view.y, view.z);
-	ImGui::Text("position:x:%f y:%f z:%f", position.x, position.y, position.z);
-	ImGui::Text("yaw:%f", yaw_);
-	ImGui::Text("pitch:%f", pitch_);
+	//ImGui::Begin("Camera");
+	//ImGui::Text("transform_position:x:%f y:%f z:%f", transform_.position().x, transform_.position().y, transform_.position().z);
+	//ImGui::Text("Up:x:%f y:%f z:%f", transform_.up().x, transform_.up().y, transform_.up().z);
+	//ImGui::Text("forward:x:%f y:%f z:%f", transform_.forward().x, transform_.forward().y, transform_.forward().z);
+	//ImGui::Text("at:x:%f y:%f z:%f", at.x, at.y, at.z);
+	//ImGui::Text("view:x:%f y:%f z:%f", view.x, view.y, view.z);
+	//ImGui::Text("position:x:%f y:%f z:%f", position.x, position.y, position.z);
+	//ImGui::Text("yaw:%f", yaw_);
+	//ImGui::Text("pitch:%f", pitch_);
 
-	ImGui::End();
+	//ImGui::End();
 
 }
 void CameraRotateAround::draw()const {

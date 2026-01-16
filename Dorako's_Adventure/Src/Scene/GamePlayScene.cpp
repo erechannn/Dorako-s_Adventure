@@ -79,6 +79,15 @@ void GamePlayScene::start() {
     gsLoadTexture(Texture_BackGround, "Assets/Texture/Black.png");
     gsLoadTexture(Texture_Coin, "Assets/Texture/GamePlayUI/coin.png");
     gsLoadTexture(Texture_Slash, "Assets/Texture/GamePlayUI/Slash.png");
+    gsLoadTexture(Texture_menu, "Assets/Texture/menu.png");
+    gsLoadTexture(Texture_Pause, "Assets/Texture/PauseUI/PauseTexture.png");
+    gsLoadTexture(Texture_Confirm_Window, "Assets/Texture/PauseUI/ConfirmWindow.png");
+    gsLoadTexture(Texture_ArrowIcon, "Assets/Texture/ArrowIcon.png");
+    gsLoadTexture(Texture_Option, "Assets/Texture/OptionUI/OptionTexture.png");
+    gsLoadTexture(Texture_SoundGauge, "Assets/Texture/OptionUI/SoundGauge.png");
+    gsLoadTexture(Texture_SoundGaugeEmpty, "Assets/Texture/OptionUI/SoundGaugeEmpty.png");
+    gsLoadTexture(Texture_kaihatu, "Assets/Texture/kaihatu.png");
+
 
     gsLoadBGM(BGM_GamePlayBGM, "Assets/Sound/BGM/GamePlayBGM.oga", GS_TRUE);
     gsLoadSE(SE_Select, "Assets/Sound/SE/SelectSE.wav", 1, GS_TRUE);
@@ -236,6 +245,14 @@ void GamePlayScene::end() {
     gsDeleteTexture(Texture_Number);
     gsDeleteTexture(Texture_Coin);
     gsDeleteTexture(Texture_Slash);
+    gsDeleteTexture(Texture_menu);
+    gsDeleteTexture(Texture_ArrowIcon);
+    gsDeleteTexture(Texture_Confirm_Window);
+    gsDeleteTexture(Texture_Pause);
+    gsDeleteTexture(Texture_Option);
+    gsDeleteTexture(Texture_SoundGauge);
+    gsDeleteTexture(Texture_SoundGaugeEmpty);
+    gsDeleteTexture(Texture_kaihatu);
 
     gsDeleteBGM(BGM_GamePlayBGM);
     gsDeleteSE(SE_Select);

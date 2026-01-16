@@ -33,6 +33,13 @@ enum {
 	Texture_Coin,
 	Texture_Slash,
 	Texture_StageStartText,
+	Texture_menu,
+	Texture_Pause,
+	Texture_Confirm_Window,
+	Texture_Option,
+	Texture_SoundGauge,
+	Texture_SoundGaugeEmpty,
+	Texture_kaihatu,
 };
 enum {
 	Octree_TestStage,

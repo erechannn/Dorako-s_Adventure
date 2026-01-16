@@ -132,11 +132,11 @@ void StageSelectScene::update(float delta_time) {
 	if (is_start_)          start_timer_ += delta_time; //タイマー増加
 	if (start_timer_ >= 60.0f)          is_end_ = true; //シーンを終了
 
-	if (ImGui::Begin("UI_position")) {
-		ImGui::Checkbox("into_the_door", &is_into_the_door_);
-		ImGui::DragFloat2("UIPosition:", position_, 0.1f);
-		ImGui::End();
-	}
+	//if (ImGui::Begin("UI_position")) {
+	//	ImGui::Checkbox("into_the_door", &is_into_the_door_);
+	//	ImGui::DragFloat2("UIPosition:", position_, 0.1f);
+	//	ImGui::End();
+	//}
 
 }
 
@@ -162,6 +162,7 @@ void StageSelectScene::end() {
 	world_.clear();
 	StageManager::get_instance().select_stage(stage_count_);
 	gsStopBGM();
+	gsStopAllEffects();
 
 	gsDeleteBGM(BGM_StageSelectBGM);
 	gsDeleteSE(SE_Select);
@@ -171,4 +172,5 @@ void StageSelectScene::end() {
 	gsDeleteOctree(Octree_TestStage);
 	gsDeleteOctree(Octree_TestStageCollider);
 	gsDeleteTexture(Texture_Skybox);
+	gsDeleteEffect(Effect_Teleportation);
 }

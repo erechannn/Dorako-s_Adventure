@@ -37,12 +37,16 @@ private:
 	void draw_confirm_window()const;
 private:
 	SelectState select_state_{};
+	float flash_time_{};
 	bool is_end_{ false };
 	int select_num_{ 0 };
 	bool is_game_play_end_{ false };
 	bool is_confirm_{ false };
 	std::string next_scene_name_{ "" };
 	OptionScene option_{};
+	GSvector2 position_{};
+	GSvector4 rect_{};
+	GSvector2 size_{};
 };
 
 #endif
