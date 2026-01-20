@@ -17,6 +17,7 @@ CameraRotateAround::CameraRotateAround(IWorld* world,
 	world_ = world;
 	tag_ = "CameraTag";
 	name_ = "Camera";
+	collider_ = BoundingSphere{ 0.5f,{0.0f,0.0f,0.0f} };
 	transform_.position(position);
 	first_position_ = position;
 	transform_.lookAt(at);
@@ -66,13 +67,17 @@ void CameraRotateAround::update(float delta_time) {
 	//プレイヤーの上方向ベクトルを軸に回転
 	GSvector3 position = dummy_player->transform().transformPoint(view);
 	
-	//フィールドとの当たり判定
-	Line line{ at, position };
-	GSvector3 intersect;
-	//if (world_->field()->collide(line, &intersect)) {
-	//	//当たった位置にカメラの位置を補正する
-	//	position = intersect;
-	//}
+	GSvector3 center;
+	if (world_->field()->collide(collider(), &center)) {
+		//フィールドとの当たり判定
+		Line line{ at, position };
+		GSvector3 intersect;
+		if (world_->field()->collide(line, &intersect)) {
+			//当たった位置にカメラの位置を補正する
+			position = intersect;
+		}
+	}
+
 	//カメラのリセット
 	if (gsXBoxPadButtonTrigger(0, GS_XBOX_PAD_RIGHT_THUMB) || gsGetKeyState(GKEY_L)) {
 		yaw_ = -180.0f;
@@ -112,5 +117,6 @@ void CameraRotateAround::draw()const {
 		at.x, at.y, at.z,     // 注視点の位置
 		up.x, up.y, up.z      // 視点の上方向
 	);
+
 
 }

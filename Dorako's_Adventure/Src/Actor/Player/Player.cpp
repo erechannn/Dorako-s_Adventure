@@ -108,7 +108,7 @@ void Player::draw()const {
 	if (std::fmod(invincible_timer_, 10.0f) <= 3.0f) {
 		mesh_->draw();
 	}
-	GSvector3 shadow_map_position = transform_.up() * 5.0f;
+	GSvector3 shadow_map_position = transform_.up() * 100.0f;
 	GSvector3 shadow_map_target = transform_.position();
 	gsSetShadowMapLightPosition(&shadow_map_position);
 }
