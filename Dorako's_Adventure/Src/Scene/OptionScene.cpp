@@ -99,6 +99,7 @@ void OptionScene::sound_option_update() {
 
 }
 void OptionScene::camera_option_update() {
+
 	if (gsXBoxPadButtonTrigger(0, GS_XBOX_PAD_B)) {
 		option_ = Option::NullSelect;
 	}

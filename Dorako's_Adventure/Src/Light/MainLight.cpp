@@ -18,7 +18,4 @@ void Light::draw()const {
 	glLightfv(GL_LIGHT0, GL_POSITION, position);
 	glEnable(GL_LIGHT0);
 
-	GSvector3 shadow_map_light_position{ position[0], position[1], position[2] };
-	gsSetShadowMapLightPosition(&shadow_map_light_position);
-
 }

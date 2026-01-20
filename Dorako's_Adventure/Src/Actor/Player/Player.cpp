@@ -84,30 +84,33 @@ void Player::update(float delta_time) {
 
 
 	//デバック表示
-	//ImGui::Begin("Player");
-	//ImGui::Text("x:%f y:%f z:%f", transform_.position().x, transform_.position().y, transform_.position().z);
-	//ImGui::Text("x:%f y:%f z:%f", velocity_.x, velocity_.y, velocity_.z);
-	//ImGui::Text("x:%f y:%f z:%f", transform_.up().x, transform_.up().y, transform_.up().z);
-	//ImGui::Text("gravity:%f", gravity_);
-	//ImGui::Text("gravity:%f", foot_offset_);
-	//ImGui::Text("planet_dis:%f", dis);
-	//ImGui::Checkbox("地上にいるか", &is_ground_);
-	//ImGui::Checkbox("debug_invincible", &debug_invincible_);
-	//if (ImGui::Button("add_fire_count")) {
-	//	fire_count_ += 1;
-	//}
-	//if (ImGui::Button("add_health")) {
-	//	health_ += 1;
-	//}
-	//if (ImGui::Button("add_scone")) {
-	//	world_->add_score(1);
-	//}
-	//ImGui::End();
+	ImGui::Begin("Player");
+	ImGui::Text("x:%f y:%f z:%f", transform_.position().x, transform_.position().y, transform_.position().z);
+	ImGui::Text("x:%f y:%f z:%f", velocity_.x, velocity_.y, velocity_.z);
+	ImGui::Text("x:%f y:%f z:%f", transform_.up().x, transform_.up().y, transform_.up().z);
+	ImGui::Text("gravity:%f", gravity_);
+	ImGui::Text("gravity:%f", foot_offset_);
+	ImGui::Text("planet_dis:%f", dis);
+	ImGui::Checkbox("地上にいるか", &is_ground_);
+	ImGui::Checkbox("debug_invincible", &debug_invincible_);
+	if (ImGui::Button("add_fire_count")) {
+		fire_count_ += 1;
+	}
+	if (ImGui::Button("add_health")) {
+		health_ += 1;
+	}
+	if (ImGui::Button("add_scone")) {
+		world_->add_score(1);
+	}
+	ImGui::End();
 }
 void Player::draw()const {
 	if (std::fmod(invincible_timer_, 10.0f) <= 3.0f) {
 		mesh_->draw();
 	}
+	GSvector3 shadow_map_position = transform_.up() * 5.0f;
+	GSvector3 shadow_map_target = transform_.position();
+	gsSetShadowMapLightPosition(&shadow_map_position);
 }
 //当たり判定
 void Player::react(Actor& other) {
@@ -165,6 +168,20 @@ void Player::move(float delta_time) {
 	if (result.x > 0.0f) velocity += right;
 	//移動量を倒した量によってスピードを調整
 	velocity = velocity.normalized() * WalkSpeed  *result_normalize* delta_time;
+
+	// 方向転換
+	float yaw = 0.0f;
+	if (gsGetKeyState(GKEY_A))  yaw = 1.0f;
+	if (gsGetKeyState(GKEY_D)) yaw = -1.0f;
+	transform_.rotate(0.0f, yaw * delta_time, 0.0f);
+	// 前後移動
+	float speed = 0.0f;
+	if (gsGetKeyState(GKEY_W))   speed = 0.25f;
+	if (gsGetKeyState(GKEY_S)) speed = -0.25f;
+	transform_.translate(0.0f, 0.0f, speed * delta_time);
+
+
+
 	// 移動してなければアイドル状態
 	GSint motion{ PlayerMotion::Idle };
 	// 移動しているか？

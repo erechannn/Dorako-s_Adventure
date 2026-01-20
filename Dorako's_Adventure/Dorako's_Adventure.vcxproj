@@ -282,6 +282,10 @@
     <ClInclude Include="Src\World\IWorld.h" />
     <ClInclude Include="Src\World\World.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Shader\RenderTexture.vert" />
+    <None Include="Assets\Shader\Silhouette.frag" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

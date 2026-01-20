@@ -25,15 +25,15 @@ void GamePlayScene::start() {
     // 視錐台カリングを有効にする
     gsEnable(GS_FRUSTUM_CULLING);
 
-    //// シャドウマップの作成
-    //static const GSuint shadow_map_size[] = { 2048, 2048 };
-    //gsCreateShadowMap(2, shadow_map_size, GS_TRUE);
-    //// シャドウマップを適用する距離(視点からの距離）
-    //gsSetShadowMapDistance(60.0f);
-    //// カスケードシャドウマップの分割位置を調整（デフォルトは0.5）
-    //gsSetShadowMapCascadeLamda(0.7f);
-    //// シャドウの濃さを設定(0.0:濃い～1.0:薄い)
-    //gsSetShadowMapAttenuation(0.0f);
+    // シャドウマップの作成
+    static const GSuint shadow_map_size[] = { 2048, 2048 };
+    gsCreateShadowMap(2, shadow_map_size, GS_TRUE);
+    // シャドウマップを適用する距離(視点からの距離）
+    gsSetShadowMapDistance(60.0f);
+    // カスケードシャドウマップの分割位置を調整（デフォルトは0.5）
+    gsSetShadowMapCascadeLamda(0.7f);
+    // シャドウの濃さを設定(0.0:濃い～1.0:薄い)
+    gsSetShadowMapAttenuation(0.0f);
 
     gsLoadLightmap(0, "Assets/Lightmap/testLightmap.txt");
 
@@ -48,6 +48,24 @@ void GamePlayScene::start() {
     glFogf(GL_FOG_START, fog_start);    // フォグの開始位置（視点からの距離）
     glFogf(GL_FOG_END, fog_end);        // フォグの終了位置（視点からの距離）
     glEnable(GL_FOG);                   // フォグを有効にする
+
+    // シルエット用のシェーダーを読み込む
+    gsLoadShader(Shader_Silhouette, "Assets/Shader/RenderTexture.vert", "Assets/Shader/Silhouette.frag");
+    // レンダーターゲットを作成(ベースシーン用）
+    gsCreateRenderTarget(Rt_BaseScene, 1920, 1080, GS_TRUE, GS_FALSE, GS_FALSE);
+    // レンダーターゲットを作成(背景のみ）
+    gsCreateRenderTarget(Rt_Field, 1920, 1080, GS_TRUE, GS_FALSE, GS_FALSE);
+    // レンダーターゲットを作成(シルエット用）
+    gsCreateRenderTarget(Rt_Silhouette, 1920, 1080, GS_TRUE, GS_FALSE, GS_FALSE);
+    // レンダーターゲットを作成（デプスバッファ用）
+    gsCreateRenderTarget(Rt_Detpth, 1920, 1080, GS_FALSE, GS_TRUE, GS_FALSE);
+    // 各レンダーターゲットにデプスバッファをアタッチ
+    gsAttachDepthBufferToRenderTarget(Rt_BaseScene, Rt_Detpth);
+    gsAttachDepthBufferToRenderTarget(Rt_Field, Rt_Detpth);
+    gsAttachDepthBufferToRenderTarget(Rt_Silhouette, Rt_Detpth);
+
+
+
 
     //デフォルトシェーダーの初期化（メッシュファイルを読み込む前に有効にする）
     gsInitDefaultShader();
@@ -180,6 +198,11 @@ void GamePlayScene::game_play_update(float delta_time) {
         pause_scene_.initialize();
         state_ = State::Pause;
     }
+    if (gsGetKeyState(GKEY_ESCAPE)) {
+        pause_scene_.initialize();
+        state_ = State::Pause;
+
+    }
     //ゲームクリアの条件
     if (world_.get_score() >= StageManager::get_instance().get_clear_score() &&
         StageManager::get_instance().get_current_stage_type() == StageManager::StageType::NORMAL) {
@@ -223,6 +246,8 @@ void GamePlayScene::draw()const {
 void GamePlayScene::end() {
     world_.clear();
     gsStopBGM();
+
+    gsDeleteShader(Shader_Silhouette);
 
     gsDeleteSkinMesh(Mesh_Player);
     gsDeleteSkinMesh(Mesh_Kuribo);

@@ -41,6 +41,22 @@ void TitleScene::start() {
     glFogf(GL_FOG_END, fog_end);        // フォグの終了位置（視点からの距離）
     glEnable(GL_FOG);                   // フォグを有効にする
 
+    // シルエット用のシェーダーを読み込む
+    gsLoadShader(Shader_Silhouette, "Assets/Shader/RenderTexture.vert", "Assets/Shader/Silhouette.frag");
+    // レンダーターゲットを作成(ベースシーン用）
+    gsCreateRenderTarget(Rt_BaseScene, 1920, 1080, GS_TRUE, GS_FALSE, GS_FALSE);
+    // レンダーターゲットを作成(背景のみ）
+    gsCreateRenderTarget(Rt_Field, 1920, 1080, GS_TRUE, GS_FALSE, GS_FALSE);
+    // レンダーターゲットを作成(シルエット用）
+    gsCreateRenderTarget(Rt_Silhouette, 1920, 1080, GS_TRUE, GS_FALSE, GS_FALSE);
+    // レンダーターゲットを作成（デプスバッファ用）
+    gsCreateRenderTarget(Rt_Detpth, 1920, 1080, GS_FALSE, GS_TRUE, GS_FALSE);
+    // 各レンダーターゲットにデプスバッファをアタッチ
+    gsAttachDepthBufferToRenderTarget(Rt_BaseScene, Rt_Detpth);
+    gsAttachDepthBufferToRenderTarget(Rt_Field, Rt_Detpth);
+    gsAttachDepthBufferToRenderTarget(Rt_Silhouette, Rt_Detpth);
+
+
     //デフォルトシェーダーの初期化（メッシュファイルを読み込む前に有効にする）
     gsInitDefaultShader();
 
@@ -128,6 +144,7 @@ void TitleScene::end() {
     Tween::clear();
     gsStopBGM();
 
+    gsDeleteShader(Shader_Silhouette);
     gsDeleteMesh(Mesh_Player);
     gsDeleteTexture(Texture_Skybox);
     gsDeleteTexture(Texture_TitleLogo);

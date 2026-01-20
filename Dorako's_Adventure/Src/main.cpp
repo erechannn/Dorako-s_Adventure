@@ -45,9 +45,10 @@ public:
         scene_manager_.draw();
     }
     void end()override {
-        gsFinishEffect();
         scene_manager_.end();
         scene_manager_.clear();
+        gsStopAllEffects();
+        gsFinishEffect();
     }
 private:
     SceneManager scene_manager_;
