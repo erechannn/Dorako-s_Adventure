@@ -11,7 +11,6 @@
 #include <algorithm>
 #include <iostream>
 
-const float M_PI{ 3.14159265358979323846 };
 
 Kuribo::Kuribo(IWorld* world, GSvector3 position) :
 	Enemy{ Mesh_Kuribo },
@@ -22,10 +21,15 @@ Kuribo::Kuribo(IWorld* world, GSvector3 position) :
 	collider_ = BoundingSphere(1.0f, GSvector3{ 0.0f,height_,0.0f });
 	transform_.position(position);
 	mesh_->transform(transform_.localToWorldMatrix());
+	//バグ防止のために足元の設定を高くする
 	foot_offset_ = 2.0f;
-	first_transform_ = transform_;
+	//ずれの修正用の変数
 	base_position_ = position;
+	//ランダムな目的地を設定するための中心
+	first_transform_ = transform_;
+	//ランダムに目的地を設定
 	set_next_point();
+	//ステートマシン
 	state_.add_state(EnemyState::Idle, new EnemyStateIdle(this));
 	state_.add_state(EnemyState::Search, new EnemyStateSearch(this));
 	state_.add_state(EnemyState::Chase, new EnemyStateChase(this));
@@ -35,8 +39,6 @@ Kuribo::Kuribo(IWorld* world, GSvector3 position) :
 void Kuribo::update(float delta_time) {
 	//アクターのプレイヤーを代入
 	player_ = world_->find_actor("Player");
-
-	up_vector_update();
 	//キャラクターの基礎アップデート
 	state_.update(delta_time);
 	collide_field();
@@ -49,14 +51,16 @@ void Kuribo::update(float delta_time) {
 	//視界の更新
 	enemy_eye_.setOrigin(transform_.position());
 	enemy_eye_.setForward(transform_.forward());
-	//デバック用の処理
-	bool next_point = false;
-	float dis = GSvector3::distance(target_point_, transform_.position());
-	if (next_point) {
-		set_next_point();
-		next_point = false;
 
-	}
+
+	//デバック用の処理
+	//bool next_point = false;
+	//float dis = GSvector3::distance(target_point_, transform_.position());
+	//if (next_point) {
+	//	set_next_point();
+	//	next_point = false;
+
+	//}
 	//デバック表示
 	//ImGui::Begin("Kuribo");
 	//ImGui::Text("x:%f y:%f z:%f", transform_.position().x, transform_.position().y, transform_.position().z);
@@ -74,7 +78,6 @@ void Kuribo::update(float delta_time) {
 }
 void Kuribo::draw()const {
 	mesh_->draw();
-	//enemy_eye_.draw();
 }
 void Kuribo::react(Actor& other) {
 	//プレイヤーが上から当たったら死ぬ
@@ -84,7 +87,6 @@ void Kuribo::react(Actor& other) {
 		change_state(EnemyState::Dead);
 	}
 	else if (other.tag() == "PlayerTag") {
-		first_position_ = transform_.position();
 		base_position_ = transform_.position();
 		change_state(EnemyState::Idle);
 	}
@@ -92,12 +94,13 @@ void Kuribo::react(Actor& other) {
 void Kuribo::idle(float delta_time) {
 	if (player_ == nullptr)return;
 	transform_.position(base_position_);
+	//少し止まる(90フレーム)
 	if (idle_timer_ >= 90.0f) {
-		if (this->is_player_in_sight()) {
-			this->change_state(EnemyState::Chase);
+		if (this->is_player_in_sight()) {			//プレイヤーが近くにいたら
+			this->change_state(EnemyState::Chase);	//追いかける
 		}
-		else {
-			this->change_state(EnemyState::Search);
+		else {										//それ以外なら
+			this->change_state(EnemyState::Search); //徘徊する
 		}
 
 	}
@@ -105,29 +108,25 @@ void Kuribo::idle(float delta_time) {
 }
 
 void Kuribo::search(float delta_time) {
-	if (is_move_) {
-		//目的地に近づいたら次の目的地に設定
-		float dis = GSvector3::distance(target_point_, transform_.position());
-		if (dis <= 0.3f) {
-			set_next_point();
-		}
-		//目的地に移動
-		to_target(delta_time, target_point_);
-		//視界内にプレイヤーがいたら追いかける状態に遷移
-		if (is_player_in_sight() && is_chase_) {
-			change_state(EnemyState::Chase);
-		}
-
+	//目的地に近づいたら次の目的地に設定
+	float dis = GSvector3::distance(target_point_, transform_.position());
+	if (dis <= 0.3f) {
+		set_next_point();
+	}
+	//目的地に移動
+	to_target(delta_time, target_point_);
+	//視界内にプレイヤーがいたら追いかける状態に遷移
+	if (is_player_in_sight() && is_chase_) {
+		change_state(EnemyState::Chase);
 	}
 }
 void Kuribo::chase(float delta_time) {
-	if (player_ == nullptr)return;
-	target_point_ = player_->transform().position();
+	//ターゲットをプレイヤーに変更
+	target_point_ = player_position();
 	//プレイヤーの位置へ移動
 	to_target(delta_time, target_point_);
 	//プレイヤーが視界から消えたらサーチ状態に戻る
 	if (!is_player_in_sight()) {
-		//up_vector_update();
 		velocity_ = GSvector3::zero();
 		base_position_ = transform_.position();
 		set_next_point();

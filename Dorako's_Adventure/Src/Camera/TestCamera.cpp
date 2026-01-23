@@ -17,8 +17,6 @@ TestCamera::TestCamera(IWorld* world, const GSvector3& position, const GSvector3
 	yaw_ = (at - position).getYaw();
 }
 void TestCamera::update(float delta_time) {
-	if (gsGetKeyState(GKEY_LEFT)) yaw_ += 1.0f * delta_time;
-	if (gsGetKeyState(GKEY_RIGHT))yaw_ -= 1.0f * delta_time;
 	if (gsGetKeyState(GKEY_UP))pitch_ += 1.0f * delta_time;
 	if (gsGetKeyState(GKEY_DOWN))pitch_ -= 1.0f * delta_time;
 	

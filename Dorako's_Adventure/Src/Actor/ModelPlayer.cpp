@@ -23,10 +23,8 @@ void ModelPlayer::update(float delta_time) {
 	collide_ground();
 	//ƒ[ƒ‹ƒh•ÏŠ·s—ñ‚ðÝ’è
 	mesh_->transform(transform_.localToWorldMatrix());
-
+	//‚Ü‚Á‚·‚®ˆÚ“®
 	velocity_ = {0.0f, 0.0f,  WalkSpeed * delta_time };
-
-
 	transform_.translate(velocity_);
 }
 void ModelPlayer::draw()const {

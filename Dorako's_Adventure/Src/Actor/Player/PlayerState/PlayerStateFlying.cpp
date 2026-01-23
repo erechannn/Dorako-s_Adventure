@@ -8,6 +8,7 @@ PlayerStateFlying::PlayerStateFlying(Player* owner) :
 void PlayerStateFlying::update(float delta_time) {
 	owner_->mesh_->change_motion(PlayerMotion::Flying);
 	owner_->flying(delta_time);
+	//’…’n‚µ‚½‚çó‘Ô•Ï‰»
 	if (owner_->is_ground()) {
 		owner_->change_state(PlayerState::StateJumpEnd);
 	}

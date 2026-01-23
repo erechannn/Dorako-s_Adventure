@@ -18,11 +18,8 @@ void Character::collide_field() {
 	// 壁との衝突判定（球体との判定）
 	GSvector3 center; // 衝突後の球体の中心座標
 	if (world_->field()->collide(collider(), &center)) {
-		GSvector3 position = transform_.inverseTransformPoint(transform_.position());
-		//center = transform_.inverseTransformPoint(center);
-		// y座標は変更しない
-		center.y = transform_.position().y;
-		//center = transform_.transformPoint(center);
+		//上方向への移動を排除
+		center -= transform_.up();
 		// 補正後の座標に変更する
 		transform_.position(center);
 	}
@@ -65,13 +62,19 @@ void Character::collide_actor(Actor& other) {
 void Character::gravity_update(float delta_time) {
 	//地上についていたら無視
 	if (is_ground_)return;
+	//重力を適応させないキャラは無視
 	if (is_zero_gravity_)return;
+	//星の位置
 	GSvector3 planet_position = StageManager::get_instance().get_current_stage_planet_position();
-	GSvector3 position = transform_.position();//自分の位置
-	GSvector3 gravity = position - planet_position;//方向ベクトルを求める
-	gravity = gravity.normalize();//単一ベクトル
+	//自分の位置
+	GSvector3 position = transform_.position();
+	//上方向ベクトルを求める
+	GSvector3 gravity = position - planet_position;
+	gravity = gravity.normalize();
+	//重力の移動量の設定
 	gravity_velocity_ += gravity * gravity_ * delta_time;
-	transform_.translate(gravity_velocity_, GStransform::Space::World);//移動
+	//移動
+	transform_.translate(gravity_velocity_, GStransform::Space::World);
 }
 void Character::collide_ground() {
 	// 壁との衝突判定（球体との判定）
@@ -107,13 +110,15 @@ void Character::collide_ground() {
 	else  is_ground_ = false;
 
 }
-
+//着地しているか返す
 bool Character::is_ground() {
 	return is_ground_;
 }
+//現在の体力を返す
 int Character::now_health() {
 	return health_;
 }
+//ダメージを与える
 void Character::take_damage() {
 	health_ -= 1;
 }

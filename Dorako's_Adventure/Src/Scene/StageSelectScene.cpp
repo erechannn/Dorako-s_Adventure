@@ -66,61 +66,63 @@ void StageSelectScene::start() {
 	//デフォルトシェーダーの初期化（メッシュファイルを読み込む前に有効にする）
 	gsInitDefaultShader();
 
+	//フィールドのロード
 	gsLoadTexture(Texture_Skybox, "Assets/Skybox/CosmicSkybox.dds");
 	gsLoadOctree(Octree_TestStage, "Assets/Stage/SelectStage/SelectStageOctree.oct");
 	gsLoadOctree(Octree_TestStageCollider, "Assets/Stage/SelectStage/SelectStageOctreeCollider.oct");
-
+	//メッシュのロード
 	gsLoadSkinMesh(Mesh_Player, "Assets/Mesh/Player/DragonSpark.mshb");
-
+	//テクスチャのロード
 	gsLoadTexture(Texture_StageSelect, "Assets/Texture/StageSelectUI/StageSelect.png");
 	gsLoadTexture(Texture_StageStartText, "Assets/Texture/StageSelectUI/StageStratText.png");
 	gsLoadTexture(Texture_FlyGaugeEmpty, "Assets/Texture/GamePlayUI/FlyGaugeEmpty.png");
 	gsLoadTexture(Texture_FlyGauge, "Assets/Texture/GamePlayUI/FlyGauge.png");
-
+	//サウンドのロード
 	gsLoadBGM(BGM_StageSelectBGM, "Assets/Sound/BGM/StageSelectBGM.oga", GS_TRUE);
 	gsLoadSE(SE_Select, "Assets/Sound/SE/SelectSE.wav", 1, GS_TRUE);
 	gsLoadSE(SE_WalkSound, "Assets/Sound/SE/WalkSound.wav", 10, GS_TRUE);
 	gsLoadSE(SE_Jump, "Assets/Sound/SE/JumpSE.wav", 1, GS_TRUE);
-
+	//エフェクトのロード
 	gsLoadEffect(Effect_Teleportation, "Assets/Effect/MagicCircle01.efkefc");
-
-
+	//サンプル用のステージに変更
 	StageManager::get_instance().select_stage(4);
-
+	//ドアの追加
 	world_.add_actor(new StageSelectDoor{ &world_,{0.0f,0.0f,0.0f},1 });
-
+	//プレイヤーの追加
 	world_.add_actor(new Player{ &world_, {0.0f,0.0f,-3.0f} });
 	world_.add_actor(new DummyPlayer{ &world_ });
-
+	//カメラの追加
 	world_.add_camera(new CameraRotateAround{
 				 &world_, GSvector3{ 0.0f, 1.0f, 3.0f }, GSvector3{ 0.0f, 1.0f, 0.0f } });
-
+	//フィールドの追加
 	world_.add_field(new Field{ Octree_TestStage,Octree_TestStageCollider,Texture_Skybox });
 	world_.add_light(new Light{ &world_ });
-
+	//UIの追加
 	world_.add_actor(new GamePlayUI{ &world_,true });
 
-	max_stage_count_ = StageManager::get_instance().get_total_stage_count();
-
-
+	//終了フラグの初期化
 	is_end_ = false;
 	is_start_ = false;
+	//終了タイマーの初期化
 	start_timer_ = 0.0f;
 	next_scene_ = "GamePlayScene";
 	stage_count_ = 1;
-	arrow_icon_position_ = { 560.0f,382.0f };
+	//BGMの再生
 	gsPlayBGM(BGM_StageSelectBGM);
 }
 
 void StageSelectScene::update(float delta_time) {
 	if (!is_start_) {
 		world_.update(delta_time);
-
+		//ステージ上にいるドアをすべて参照
 		auto doors = world_.find_actor_with_tag("DoorTag");
 		for (size_t i = 0; i < doors.size(); ++i) {
 			StageSelectDoor* stage_select_door = (StageSelectDoor*)doors[i];
+			//ステージに入れるフラグが経っていたら
 			if (stage_select_door->is_into_the_door()) {
+				//入れるフラグを立てる
 				is_into_the_door_ = true;
+				//ドアの持っているステージIDを入手
 				stage_count_ = stage_select_door->get_stage_id();
 				break;
 			}
@@ -141,7 +143,7 @@ void StageSelectScene::update(float delta_time) {
 			stage_count_ = 3;
 			is_start_ = true;
 		}
-
+		//ステージにアイれるフラグが立っていてAボタンが押されたらステージに入る
 		if (is_into_the_door_) {
 			if (gsXBoxPadButtonTrigger(0, GS_XBOX_PAD_A)) {
 				is_start_ = true;
@@ -180,11 +182,15 @@ std::string StageSelectScene::next()const {
 }
 
 void StageSelectScene::end() {
-	gsStopAllEffects();
-	world_.clear();
+	//ステージを確定させる
 	StageManager::get_instance().select_stage(stage_count_);
+	//エフェクトをすべて停止
+	gsStopAllEffects();
+	//ワールドを削除
+	world_.clear();
+	//BGMを止める
 	gsStopBGM();
-
+	//ロードしたものを削除	
 	gsDeleteShader(Shader_Silhouette);
 	gsDeleteBGM(BGM_StageSelectBGM);
 	gsDeleteSE(SE_Select);

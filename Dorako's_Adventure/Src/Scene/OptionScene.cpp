@@ -106,7 +106,9 @@ void OptionScene::camera_option_update() {
 
 }
 void OptionScene::draw()const {
+	//背景の標示
 	draw_back_ground();
+	//状態によって標示の変更
 	if (option_ == Option::CameraOption) {
 		camera_option_draw();
 	}
@@ -130,8 +132,10 @@ void OptionScene::draw_null_select()const {
 	GSvector2 camera_position{ 760.0f,410.0f };
 	GSvector2 sound_position{ 720.0f,560.0f };
 
+	//サイズを少し小さく調整
 	GSvector2 size{ 0.8f,0.8f };
 
+	//選択されているものを点滅させる
 	GScolor camera_color{ 1.0f,1.0f,1.0f,1.0f };
 	GScolor sound_color{ 1.0f,1.0f,1.0f,1.0f };
 	if (is_camera_option_ && std::fmod(flash_time_, 40.0f) <= 10.0f)camera_color = { 1.0f,1.0f,1.0f,0.5f };
@@ -153,22 +157,25 @@ void OptionScene::sound_option_draw()const {
 	GSvector2 BGM_gauge_position{ 800.0f,430.0f };
 	GSvector2 SE_gauge_position{ 800.0f,590.0f };
 
+	//選択されている物を点滅させる
 	GScolor BGM_color{ 1.0f,1.0f,1.0f,1.0f };
 	GScolor SE_color{ 1.0f,1.0f,1.0f,1.0f };
 	if (sound_option_ && std::fmod(flash_time_, 40.0f) <= 10.0f)BGM_color = { 1.0f,1.0f,1.0f,0.5f };
 	if (!sound_option_ && std::fmod(flash_time_, 40.0f) <= 10.0f)SE_color = { 1.0f,1.0f,1.0f,0.5f };
 
-
+	//文字の標示
 	gsDrawSprite2D(Texture_Option, &sound_ui_position, &sound_ui_rect, NULL, NULL, NULL, 0.0f);
 	gsDrawSprite2D(Texture_Option, &BGM_position, &BGM_rect, NULL, &BGM_color, &size, 0.0f);
 	gsDrawSprite2D(Texture_Option, &SE_position, &SE_rect, NULL, &SE_color, &size, 0.0f);
 
+	//空のゲージの標示
 	gsDrawSprite2D(Texture_SoundGaugeEmpty, &BGM_gauge_position, NULL, NULL, NULL, NULL, 0.0f);
 	gsDrawSprite2D(Texture_SoundGaugeEmpty, &SE_gauge_position, NULL, NULL, NULL, NULL, 0.0f);
 
+	//音量ゲージの長さの計算
 	float BGM_gauge_left = (600 / volume_max_) * volume_BGM_;
 	float SE_gauge_left = (600 / volume_max_) * volume_SE_;
-
+	//音量ゲージの標示
 	GSrect BGM_gauge_rect{ 0.0f,0.0f,BGM_gauge_left,46.0f };
 	GSrect SE_gauge_rect{ 0.0f,0.0f,SE_gauge_left,46.0f };
 	gsDrawSprite2D(Texture_SoundGauge, &BGM_gauge_position, &BGM_gauge_rect, NULL, NULL, NULL, 0.0f);
@@ -179,9 +186,11 @@ void OptionScene::camera_option_draw()const {
 	GSvector2 position{ 480.0f,300.0f };
 	gsDrawSprite2D(Texture_kaihatu, &position_, NULL, NULL, NULL, NULL, 0.0f);
 }
+//シーンの終了フラグを返す
 bool OptionScene::is_end() {
 	return is_end_;
 }
+//カメラの反転を返す
 bool OptionScene::is_reverse_camera_x() {
 	return is_reverse_camera_x_;
 }

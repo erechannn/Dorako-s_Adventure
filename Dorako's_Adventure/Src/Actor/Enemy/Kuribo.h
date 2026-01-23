@@ -18,9 +18,7 @@ private:
 	GSvector3 player_position();
 private:
 	EnemyEye enemy_eye_;
-	GSvector3 first_position_{};
 	float walk_timer_{ 0.0f };
-	bool is_move_{ true };
 	bool undead_{ false };
 	GSvector3 planet_to_target_{};
 	Actor* player_{ nullptr };

@@ -29,8 +29,6 @@ void World::draw()const {
 	light_->draw();
 	gsDrawShadowMap(World::shadow_map_callback, (void*)this);
 
-    //field_->draw();
-
     // 背景のみレンダーターゲットに描画
     gsBeginRenderTarget(Rt_Field);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -161,6 +159,5 @@ Field* World::field() {
 void World::shadow_map_callback(void* param, const GSmatrix4*, const GSmatrix4*) {
 	World* self = (World*)param;
 	// シャドウマップにはアクターのみ描画
-
 	self->actors_.draw();
 }

@@ -70,23 +70,25 @@ void GamePlayScene::start() {
     //デフォルトシェーダーの初期化（メッシュファイルを読み込む前に有効にする）
     gsInitDefaultShader();
 
+    //メッシュのロード
     gsLoadSkinMesh(Mesh_Player, "Assets/Mesh/Player/DragonSpark.mshb");
     gsLoadSkinMesh(Mesh_Kuribo, "Assets/Mesh/Enemy/FirePig/FirePig.mshb");
     gsLoadMesh(Mesh_WoodBox, "Assets/Mesh/WoodBox/WoodBox.mshb");
     gsLoadMesh(Mesh_Coin, "Assets/Mesh/Coin/Coin.mshb");
     gsLoadSkinMesh(Mesh_MiniDragon, "Assets/Mesh/Enemy/MiniDragon/MiniDragon.mshb");
 
+    //エフェクトのロード
     gsLoadEffect(Effect_FireBoll, "Assets/Effect/FireBall_Orange.efkefc");
-
+    //スカイボックスのロード
     gsLoadTexture(Texture_Skybox, "Assets/Skybox/CosmicSkybox.dds");
-
+    //オクツリーのロード
     gsLoadOctree(Octree_TestStage, "Assets/Stage/TestStage/TestStageOctree.oct");
     gsLoadOctree(Octree_TestStageCollider, "Assets/Stage/TestStage/TestStageOctreeCollider.oct");
     gsLoadOctree(Octree_Stage1, "Assets/Stage/Stage1/Stage1Octree.oct");
     gsLoadOctree(Octree_Stage1Collider, "Assets/Stage/Stage1/Stage1OctreeCollider.oct");
     gsLoadOctree(Octree_BossStage, "Assets/Stage/BossStage/BossStageOctree.oct");
     gsLoadOctree(Octree_BossStageCollider, "Assets/Stage/BossStage/BossStageOctreeCollider.oct");
-
+    //テクスチャのロード
     gsLoadTexture(Texture_FireCount, "Assets/Texture/GamePlayUI/fire_count_icon.png");
     gsLoadTexture(Texture_EmptyFireCount, "Assets/Texture/GamePlayUI/fire_count_empty.png");
     gsLoadTexture(Texture_HealthIcon, "Assets/Texture/GamePlayUI/health_icon.png");
@@ -105,18 +107,16 @@ void GamePlayScene::start() {
     gsLoadTexture(Texture_SoundGauge, "Assets/Texture/OptionUI/SoundGauge.png");
     gsLoadTexture(Texture_SoundGaugeEmpty, "Assets/Texture/OptionUI/SoundGaugeEmpty.png");
     gsLoadTexture(Texture_kaihatu, "Assets/Texture/kaihatu.png");
-
-
+    //サウンドのロード
     gsLoadBGM(BGM_GamePlayBGM, "Assets/Sound/BGM/GamePlayBGM.oga", GS_TRUE);
     gsLoadSE(SE_Select, "Assets/Sound/SE/SelectSE.wav", 1, GS_TRUE);
     gsLoadSE(SE_WalkSound,"Assets/Sound/SE/WalkSound.wav",10,GS_TRUE);
     gsLoadSE(SE_Jump,"Assets/Sound/SE/JumpSE.wav",1,GS_TRUE);
-
+    //プレイヤーを追加
     world_.add_actor(new Player{ &world_,{0.0f,0.0f,0.0f} });
+    //カメラ用の追加
     world_.add_actor(new DummyPlayer{ &world_ });
-    //world_.add_actor(new Kuribo{ &world_,{0.0f,0.0f,0.0f} });
-    //world_.add_actor(new Coin{ &world_,{0.0f,0.0f,0.0f} });
-    //world_.add_actor(new MiniDragon{ &world_,{0.0f,0.0f,0.0f} });
+    //ステージごとに敵とコインを追加
     if (StageManager::get_instance().get_current_stage_id() == 1) {
         world_.add_actor(new Kuribo{ &world_,{29.6f,-34.0f,1.4f} });
         world_.add_actor(new Kuribo{ &world_,{27.0f,-24.0f,9.0f} });
@@ -146,35 +146,35 @@ void GamePlayScene::start() {
         world_.add_actor(new Kuribo{ &world_,{0.0f,-20.0f,19.0f} });
         world_.add_actor(new Kuribo{ &world_,{0.0f,-20.0f,-20.0f} });
     }
-
+    //ステージ情報を入手
     UINT stage_octree = StageManager::get_instance().get_current_stage_octree();
     UINT stage_collider = StageManager::get_instance().get_current_stage_collider();
-
+    //ステージを追加
     world_.add_field(new Field{ stage_octree,stage_collider,Texture_Skybox });
-
+    //カメラの追加
     world_.add_camera(new CameraRotateAround{
                  &world_, GSvector3{ 0.0f, 1.0f, 3.0f }, GSvector3{ 0.0f, 1.0f, 0.0f } });
-
+    //ライトの追加
     world_.add_light(new Light{ &world_ });
-
-
+    //UIの追加
     world_.add_actor(new GamePlayUI{ &world_,true });
     //ポーズ画面の初期化
     pause_scene_.initialize();
     //状態の初期化
     state_ = State::Playing;
-
-
+    //終了フラグの初期化
 	is_end_ = false;
 	is_start_ = false;
+    //終了タイマーの初期化
 	start_timer_ = 0.0f;
 	next_scene_ = "GameOverScene";
     // 視錐台カリングを有効にする
     gsEnable(GS_FRUSTUM_CULLING);
-    coin_position_ = { -2.0f,-10.2f,-22.5f };
+    //BGMを鳴らす
     gsPlayBGM(BGM_GamePlayBGM);
 }
 void GamePlayScene::update(float delta_time) {
+    //状態ごとに更新を変更する
     switch (state_) {
     case State::Playing:game_play_update(delta_time); break;
     case State::Pause:pause_update(delta_time); break;
@@ -220,12 +220,17 @@ void GamePlayScene::game_play_update(float delta_time) {
     }
 }
 void GamePlayScene::pause_update(float delta_time) {
+    //ポーズ画面の更新
     pause_scene_.update(delta_time);
+    //ポーズ画面空終了フラグが立ったらゲームに戻る
     if (pause_scene_.is_end()) {
         state_ = State::Playing;
     }
+    //ゲーム終了が選ばれたらゲーム終了
     if (pause_scene_.is_game_play_end()) {
+        //次のシーンを得る
         next_scene_ = pause_scene_.get_next_scene_name();
+        //終了フラグを立てる
         is_start_ = true;
     }
 }
@@ -244,9 +249,11 @@ void GamePlayScene::draw()const {
     }
 }
 void GamePlayScene::end() {
+    //ワールドをクリア
     world_.clear();
+    //BGMを切る
     gsStopBGM();
-
+    //ロードした物を削除
     gsDeleteShader(Shader_Silhouette);
 
     gsDeleteSkinMesh(Mesh_Player);

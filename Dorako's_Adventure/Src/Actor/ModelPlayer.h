@@ -3,6 +3,7 @@
 
 #include "Character.h"
 
+//タイトルにいるプレイヤー
 class ModelPlayer :public Character {
 public:
 	ModelPlayer(IWorld* world, GSvector3 position);
@@ -11,8 +12,5 @@ public:
 	void react(Actor& other);
 
 };
-
-
-
 
 #endif // !MODEL_PLAYER_H_

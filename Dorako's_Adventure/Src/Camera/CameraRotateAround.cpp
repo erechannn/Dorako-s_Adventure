@@ -28,6 +28,7 @@ void CameraRotateAround::update(float delta_time) {
 	gsXBoxPadGetRightAxis(0, &result);
 	//スティックの移動量の数値化
 	float result_normalize = std::sqrt(result.x * result.x + result.y * result.y);
+	//カメラ用のプレイヤーを参照(正面ベクトルがずれないため)
 	Actor* dummy_player = world_->find_actor("DummyPlayer");
 	if (dummy_player == nullptr)return;
 	player_up_ = dummy_player->transform().up();
@@ -35,10 +36,12 @@ void CameraRotateAround::update(float delta_time) {
 		transform_.forward(dummy_player->transform().forward());
 	}
 
+	//デバック用のキーボード操作
 	if (gsGetKeyState(GKEY_LEFT)) yaw_ -= 0.2f * delta_time;
 	if (gsGetKeyState(GKEY_RIGHT))yaw_ += 0.2f * delta_time;
 	if (gsGetKeyState(GKEY_UP))pitch_ -= 0.5f * delta_time;
 	if (gsGetKeyState(GKEY_DOWN))pitch_ += 0.5f * delta_time;
+
 	//右スティックの移動量からカメラの移動
 	if (is_reverse_result_x_) {
 		if (result.x > 0.0f) yaw_ += 2.0f * result_normalize * delta_time;
@@ -56,17 +59,16 @@ void CameraRotateAround::update(float delta_time) {
 		if (result.y > 0.0f)pitch_ += 1.0f * result_normalize * delta_time;
 		if (result.y < 0.0f) pitch_ -= 1.0f * result_normalize * delta_time;
 	}
+	//上下の上限を持たせる
 	pitch_ = CLAMP(pitch_, -70.0f, 30.0f);
 
-	GSquaternion player_rotate = dummy_player->transform().rotation();
-	std::cout << "x: " << player_rotate.x << " y: " << player_rotate.y << " z: " << player_rotate.z << " w: " << player_rotate.w << std::endl;
-
+	//注視点の適応
 	GSvector3 at = dummy_player->transform().transformPoint(ReferencePointOffset);
 	//ピッチとヨウの単一ベクトル
 	GSvector3 view = GSvector3::createFromPitchYaw(pitch_, yaw_)*10.0f;
 	//プレイヤーの上方向ベクトルを軸に回転
 	GSvector3 position = dummy_player->transform().transformPoint(view);
-	
+	//カメラがフィールド内にあるオブジェクトに当たったらカメラを近づける
 	GSvector3 center;
 	if (world_->field()->collide(collider(), &center)) {
 		//フィールドとの当たり判定
@@ -84,13 +86,11 @@ void CameraRotateAround::update(float delta_time) {
 		pitch_ = -20.0f;
 	}
 
-	GSvector3 camera_position = GSvector3::lerp(transform_.position(), position, 0.07f);
 	//カメラの移動
 	transform_.position(position);
 
+	//カメラ用のプレイヤーを軸にローカル軸で上方向ベクトルを更新する
 	GSvector3 up=dummy_player->transform().transformVector(GSvector3{0.0f,1.0f,0.0f});
-	//GSquaternion target_rotation = GSquaternion::lookRotation(at, up);
-	//transform_.rotation(target_rotation);
 	transform_.lookAt(at,up);
 
 	//ImGui::Begin("Camera");
