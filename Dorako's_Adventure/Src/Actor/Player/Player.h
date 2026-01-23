@@ -29,6 +29,8 @@ public:
 
 	float get_fly_timer();
 
+	bool ground_gap();
+
 private:
 	bool is_above_enemy(Actor& other);
 	bool is_move_{ false };

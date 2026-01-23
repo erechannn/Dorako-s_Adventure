@@ -211,9 +211,12 @@ void Player::move(float delta_time) {
 		GSvector3 left = GSvector3::cross(up, transform_.forward());
 		GSvector3 forward = GSvector3::cross(left, up);
 		transform_.rotation(GSquaternion::lookRotation(forward, up));
+		//”ò‚ñ‚Å‚¢‚éŽžŠÔ‚ðŒv‘ª
+		flying_timer_ += delta_time;
 	}
 	else {
 		fly_timer_ += delta_time;
+		flying_timer_ = 0.0f;
 		if (fly_timer_ >= MaxFlyTimer) {
 			fly_timer_ = MaxFlyTimer;
 		}
@@ -271,4 +274,7 @@ UINT Player::get_player_now_state() {
 }
 float Player::get_fly_timer() {
 	return fly_timer_;
+}
+bool Player::ground_gap() {
+	return flying_timer_ >= 160.0f;
 }

@@ -11,6 +11,7 @@ public:
     enum class StageType {
         NORMAL,    // 通常ステージ
         BOSS,      // ボスステージ
+        SAMPLE,    //サンプルステージ
     };
     struct StageData {
         int id;

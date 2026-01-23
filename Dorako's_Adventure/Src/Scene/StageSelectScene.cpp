@@ -9,6 +9,7 @@
 #include"../Light/MainLight.h"
 #include"../Actor/Player/Player.h"
 #include "../Actor/StageSelectDoor.h"
+#include "../UI/UIActor/UIActors/GamePlayUI.h"
 #include <GSstandard_shader.h>
 #include <GSeffect.h>
 
@@ -73,6 +74,8 @@ void StageSelectScene::start() {
 
 	gsLoadTexture(Texture_StageSelect, "Assets/Texture/StageSelectUI/StageSelect.png");
 	gsLoadTexture(Texture_StageStartText, "Assets/Texture/StageSelectUI/StageStratText.png");
+	gsLoadTexture(Texture_FlyGaugeEmpty, "Assets/Texture/GamePlayUI/FlyGaugeEmpty.png");
+	gsLoadTexture(Texture_FlyGauge, "Assets/Texture/GamePlayUI/FlyGauge.png");
 
 	gsLoadBGM(BGM_StageSelectBGM, "Assets/Sound/BGM/StageSelectBGM.oga", GS_TRUE);
 	gsLoadSE(SE_Select, "Assets/Sound/SE/SelectSE.wav", 1, GS_TRUE);
@@ -94,6 +97,8 @@ void StageSelectScene::start() {
 
 	world_.add_field(new Field{ Octree_TestStage,Octree_TestStageCollider,Texture_Skybox });
 	world_.add_light(new Light{ &world_ });
+
+	world_.add_actor(new GamePlayUI{ &world_,true });
 
 	max_stage_count_ = StageManager::get_instance().get_total_stage_count();
 
@@ -189,5 +194,10 @@ void StageSelectScene::end() {
 	gsDeleteOctree(Octree_TestStage);
 	gsDeleteOctree(Octree_TestStageCollider);
 	gsDeleteTexture(Texture_Skybox);
+	gsDeleteTexture(Texture_FlyGauge);
+	gsDeleteTexture(Texture_FlyGaugeEmpty);
+	gsDeleteTexture(Texture_StageSelect);
+	gsDeleteTexture(Texture_StageStartText);
+
 	gsDeleteEffect(Effect_Teleportation);
 }

@@ -14,7 +14,7 @@ void StageManager::initialize_stages() {
 		{1,"草原ステージ",Octree_Stage1,Octree_Stage1Collider,{0.0f,-30.0f,0.0f},30.0f,5,StageType::NORMAL,true},
 		{2,"草原ボスステージ",Octree_BossStage,Octree_BossStageCollider,{0.0f,-20.0f,0.0f},20.0f,1,StageType::BOSS,false },
 		{3,"テストステージ",Octree_TestStage,Octree_TestStageCollider,{0.0f,-20.0f,0.0f},20.0f,5,StageType::NORMAL,true},
-		{4,"タイトルステージ",Octree_TestStage,Octree_TestStageCollider,{0.0f,-20.0f,0.0f},20.0f,5,StageType::NORMAL,true}
+		{4,"タイトルステージ",Octree_TestStage,Octree_TestStageCollider,{0.0f,-20.0f,0.0f},20.0f,5,StageType::SAMPLE,true}
 	};
 }
 

@@ -16,7 +16,7 @@ void Light::draw()const {
 	float ambient[4] = { 0.3f,0.3f,0.3f,1.0f };
 	float diffuse[4] = { 1.0f,1.0f,1.0f,1.0f };
 	float specular[4] = { 1.0f,1.0f,1.0f,1.0f };
-	float position[4] = { camera_position_.x,camera_position_.y,camera_position_.z,0.0f };
+	float position[4] = { camera_position_.x,camera_position_.y,camera_position_.z,1.0f };
 	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
