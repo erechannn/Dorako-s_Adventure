@@ -37,8 +37,8 @@ void CameraRotateAround::update(float delta_time) {
 	}
 
 	//デバック用のキーボード操作
-	if (gsGetKeyState(GKEY_LEFT)) yaw_ -= 0.2f * delta_time;
-	if (gsGetKeyState(GKEY_RIGHT))yaw_ += 0.2f * delta_time;
+	if (gsGetKeyState(GKEY_LEFT)) yaw_ -= 0.5f * delta_time;
+	if (gsGetKeyState(GKEY_RIGHT))yaw_ += 0.5f * delta_time;
 	if (gsGetKeyState(GKEY_UP))pitch_ -= 0.5f * delta_time;
 	if (gsGetKeyState(GKEY_DOWN))pitch_ += 0.5f * delta_time;
 
@@ -85,9 +85,10 @@ void CameraRotateAround::update(float delta_time) {
 		yaw_ = -180.0f;
 		pitch_ = -20.0f;
 	}
+	GSvector3 camera_position = GSvector3::lerp(transform_.position(), position, delta_time);
 
 	//カメラの移動
-	transform_.position(position);
+	transform_.position(camera_position);
 
 	//カメラ用のプレイヤーを軸にローカル軸で上方向ベクトルを更新する
 	GSvector3 up=dummy_player->transform().transformVector(GSvector3{0.0f,1.0f,0.0f});

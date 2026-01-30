@@ -70,7 +70,6 @@ void Kuribo::update(float delta_time) {
 	//ImGui::Text("x:%f y:%f z:%f", target_point_.x, target_point_.y, target_point_.z);
 	//ImGui::Text("distance%f",dis);
 	//ImGui::Checkbox("is_move:",&is_move_);
-	//ImGui::Checkbox("undead:",&undead_);
 	//ImGui::Checkbox("is_ground", &is_ground_);
 	//ImGui::Checkbox("next: ", &next_point);
 	//ImGui::Checkbox("is_chase:", &is_chase_);
@@ -81,7 +80,7 @@ void Kuribo::draw()const {
 }
 void Kuribo::react(Actor& other) {
 	//ƒvƒŒƒCƒ„[‚ªã‚©‚ç“–‚½‚Á‚½‚ç€‚Ê
-	if (other.tag()=="PlayerAttackTag" || is_above_player(other) && !undead_ && other.tag() == "PlayerTag") {
+	if (other.tag()=="PlayerAttackTag" || is_above_player(other)  && other.tag() == "PlayerTag") {
 		is_dead_ = true;
 		base_position_ = transform_.position();
 		change_state(EnemyState::Dead);

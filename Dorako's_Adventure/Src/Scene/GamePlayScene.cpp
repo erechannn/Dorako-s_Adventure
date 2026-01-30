@@ -79,6 +79,7 @@ void GamePlayScene::start() {
 
     //エフェクトのロード
     gsLoadEffect(Effect_FireBoll, "Assets/Effect/FireBall_Orange.efkefc");
+    gsLoadEffect(Effect_GetCoin, "Assets/Effect/PickUpItem04.efkefc");
     //スカイボックスのロード
     gsLoadTexture(Texture_Skybox, "Assets/Skybox/CosmicSkybox.dds");
     //オクツリーのロード
@@ -125,11 +126,11 @@ void GamePlayScene::start() {
         world_.add_actor(new Kuribo{ &world_,{0.0f,-58.6f,-9.0f} });
         world_.add_actor(new Kuribo{ &world_,{-10.0f,-58.2f,0.0f} });
 
-        world_.add_actor(new Coin{ &world_,{-0.806f,5.643f,5.894f} });
-        world_.add_actor(new Coin{ &world_,{31.0f,-25.08f,1.43f} });
-        world_.add_actor(new Coin{ &world_,{-2.17f,-15.0f,-26.0f} });
-        world_.add_actor(new Coin{ &world_,{0.0f,-61.0f,1.0f} });
-        world_.add_actor(new Coin{ &world_,{-2.0f,-10.2f,22.5f} });
+        world_.add_actor(new Coin{ &world_,{-1.5f,5.58f,10.0f} });
+        //world_.add_actor(new Coin{ &world_,{31.0f,-25.08f,1.43f} });
+        //world_.add_actor(new Coin{ &world_,{-2.17f,-15.0f,-26.0f} });
+        //world_.add_actor(new Coin{ &world_,{0.0f,-61.0f,1.0f} });
+        //world_.add_actor(new Coin{ &world_,{-2.0f,-10.2f,22.5f} });
     }
     if (StageManager::get_instance().get_current_stage_id() == 2) {
         world_.add_actor(new MiniDragon{ &world_,{0.0f,0.0f,0.0f} });
@@ -172,6 +173,7 @@ void GamePlayScene::start() {
     gsEnable(GS_FRUSTUM_CULLING);
     //BGMを鳴らす
     gsPlayBGM(BGM_GamePlayBGM);
+
 }
 void GamePlayScene::update(float delta_time) {
     //状態ごとに更新を変更する
@@ -198,7 +200,7 @@ void GamePlayScene::game_play_update(float delta_time) {
         pause_scene_.initialize();
         state_ = State::Pause;
     }
-    if (gsGetKeyState(GKEY_ESCAPE)) {
+    if (gsGetKeyState(GKEY_E)) {
         pause_scene_.initialize();
         state_ = State::Pause;
 

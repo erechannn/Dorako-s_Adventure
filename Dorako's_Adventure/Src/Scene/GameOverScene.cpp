@@ -9,8 +9,6 @@ void GameOverScene::start() {
 	is_start_ = false;
 	start_timer_ = 0.0f;
 	next_scene_ = "TitleScene";
-
-	std::cout << "ƒQ[ƒ€ƒNƒŠƒA" << std::endl;
 }
 
 void GameOverScene::update(float delta_time) {

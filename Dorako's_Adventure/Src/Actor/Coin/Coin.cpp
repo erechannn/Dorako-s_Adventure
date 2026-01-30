@@ -3,6 +3,8 @@
 #include "../../Assets.h"
 #include "../../Stage/StageManager.h"
 
+#include <GSeffect.h>
+
 
 Coin::Coin(IWorld* world, GSvector3 position) :
 	Character{ Mesh_Coin } {
@@ -32,6 +34,8 @@ void Coin::draw()const {
 void Coin::react(Actor& other) {
 	if (other.name() == "Player") {
 		world_->add_score(1);
+		GSvector3 effect_position = transform_.position();
+		effect_handle_ = gsPlayEffect(Effect_GetCoin, &effect_position);
 		die();
 	}
 }

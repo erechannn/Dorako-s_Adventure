@@ -71,9 +71,9 @@ void TitleScene::start() {
 	next_scene_ = "StageSelectScene";
 
     ui_position_ = { 583.0f,682.0f };
-    //タイトル用のposition
-    first_pos_ = { 422.0f,-169.0f };
-    end_pos_ = { 422.0f,-120.0f };
+    //タイトル用の position
+    first_pos_ = { 200.0f,-169.0f };
+    end_pos_ = { 200.0f,-120.0f };
     //Tweenを追加
     Tween::vector2(first_pos_, end_pos_, 60, [=](GSvector2 pos) {logo_position_ = pos; });
 

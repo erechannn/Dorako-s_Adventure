@@ -62,7 +62,7 @@ void Player::update(float delta_time) {
 	//ワールド変換行列を設定
 	mesh_->transform(transform_.localToWorldMatrix());
 	//プレイヤーの状態管理
-	if (state_.now_state_ == PlayerState::StateMove && gsXBoxPadButtonTrigger(0,GS_XBOX_PAD_A)) {	//Aボタンでジャンプ
+	if (state_.now_state_ == PlayerState::StateMove &&is_ground_ && gsXBoxPadButtonTrigger(0,GS_XBOX_PAD_A)) {	//Aボタンでジャンプ
 
 		state_.change_state(PlayerState::StateJumpStart);
 		gsPlaySE(SE_Jump);
@@ -97,6 +97,7 @@ void Player::update(float delta_time) {
 	ImGui::Text("x:%f y:%f z:%f", transform_.up().x, transform_.up().y, transform_.up().z);
 	ImGui::Text("gravity:%f", gravity_);
 	ImGui::Text("gravity:%f", foot_offset_);
+	ImGui::Text("flying_timer_:%f", flying_timer_);
 	ImGui::Text("planet_dis:%f", dis);
 	ImGui::Checkbox("地上にいるか", &is_ground_);
 	ImGui::Checkbox("debug_invincible", &debug_invincible_);
@@ -236,7 +237,6 @@ void Player::move(float delta_time) {
 	else {
 		//地面にいる間は飛行時間よ徐々に回復させる
 		fly_timer_ += delta_time;
-		flying_timer_ = 0.0f;
 		if (fly_timer_ >= MaxFlyTimer) {
 			fly_timer_ = MaxFlyTimer;
 		}
@@ -269,6 +269,7 @@ void Player::flying(float delta_time) {
 }
 void Player::landing(float delta_time) {
 	is_zero_gravity_ = false;
+	flying_timer_ = 0.0f;
 }
 void Player::attack() {
 
@@ -309,5 +310,5 @@ float Player::get_fly_timer() {
 }
 //着地の隙を与えるかを返す
 bool Player::ground_gap() {
-	return flying_timer_ >= 160.0f;
+	return flying_timer_ >= 180.0f;
 }

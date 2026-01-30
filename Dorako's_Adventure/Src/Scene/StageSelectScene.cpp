@@ -89,11 +89,11 @@ void StageSelectScene::start() {
 	//ドアの追加
 	world_.add_actor(new StageSelectDoor{ &world_,{0.0f,0.0f,0.0f},1 });
 	//プレイヤーの追加
-	world_.add_actor(new Player{ &world_, {0.0f,0.0f,-3.0f} });
+	world_.add_actor(new Player{ &world_, {0.0f,0.0f,3.0f} });
 	world_.add_actor(new DummyPlayer{ &world_ });
 	//カメラの追加
 	world_.add_camera(new CameraRotateAround{
-				 &world_, GSvector3{ 0.0f, 1.0f, 3.0f }, GSvector3{ 0.0f, 1.0f, 0.0f } });
+				 &world_, GSvector3{ 0.0f, 1.0f, -3.0f }, GSvector3{ 0.0f, 1.0f, 0.0f } });
 	//フィールドの追加
 	world_.add_field(new Field{ Octree_TestStage,Octree_TestStageCollider,Texture_Skybox });
 	world_.add_light(new Light{ &world_ });

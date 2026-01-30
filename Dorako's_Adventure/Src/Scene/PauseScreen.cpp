@@ -151,6 +151,8 @@ void PauseScene::draw_back_ground()const {
 }
 //É|Å[ÉYâÊñ ÇÃï`âÊ
 void PauseScene::draw_pause_menu()const {
+	GSvector2 size{ 0.5f,0.5f };
+
 	GSvector2 restart_position{ 630.0f,170.0f };
 	GSvector2 option_position{ 740.0f,310.0f };
 	GSvector2 reset_stage_position{ 470.0f,434.0f };
@@ -177,11 +179,11 @@ void PauseScene::draw_pause_menu()const {
 	GScolor title_color{ 1.0f,1.0f,1.0f,1.0f };
 	if (select_num_==5 && std::fmod(flash_time_, 40.0f) <= 10.0f)title_color ={ 1.0f,1.0f,1.0f,0.4f };
 
-	gsDrawSprite2D(Texture_Pause, &restart_position, &restart_rect, NULL, &restart_color, NULL, 0.0f);
-	gsDrawSprite2D(Texture_Pause, &option_position, &option_rect, NULL, &option_color, NULL, 0.0f);
-	gsDrawSprite2D(Texture_Pause, &reset_stage_position, &reset_stage_rect, NULL, &reset_stage_color, NULL, 0.0f);
-	gsDrawSprite2D(Texture_Pause, &stage_select_position, &stage_select_rect, NULL, &stage_select_color, NULL, 0.0f);
-	gsDrawSprite2D(Texture_Pause, &title_position, &title_rect, NULL, &title_color, NULL, 0.0f);
+	gsDrawSprite2D(Texture_Pause, &restart_position, &restart_rect, NULL, &restart_color, &size, 0.0f);
+	gsDrawSprite2D(Texture_Pause, &option_position, &option_rect, NULL, &option_color, &size, 0.0f);
+	gsDrawSprite2D(Texture_Pause, &reset_stage_position, &reset_stage_rect, NULL, &reset_stage_color, &size, 0.0f);
+	gsDrawSprite2D(Texture_Pause, &stage_select_position, &stage_select_rect, NULL, &stage_select_color, &size, 0.0f);
+	gsDrawSprite2D(Texture_Pause, &title_position, &title_rect, NULL, &title_color, &size, 0.0f);
 
 	//ñÓàÛÇÃï`âÊ
 	GSvector2 arrow_position{ 0.0f,0.0f };

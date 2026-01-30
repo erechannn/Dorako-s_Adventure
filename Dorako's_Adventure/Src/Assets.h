@@ -52,7 +52,8 @@ enum {
 //エフェクト
 enum {
 	Effect_FireBoll,
-	Effect_Teleportation
+	Effect_Teleportation,
+	Effect_GetCoin,
 };
 //BGM
 enum {

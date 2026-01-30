@@ -17,10 +17,9 @@ private:
 	bool is_player_in_sight();
 	GSvector3 player_position();
 private:
+	//視界
 	EnemyEye enemy_eye_;
-	float walk_timer_{ 0.0f };
-	bool undead_{ false };
-	GSvector3 planet_to_target_{};
+	//アクター上のプレイヤー
 	Actor* player_{ nullptr };
 	bool is_chase_{ true };
 	bool is_dead_{ false };

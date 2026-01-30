@@ -9,6 +9,8 @@ public:
 	void update(float delta_time)override;
 	void draw()const override;
 	void react(Actor& other)override;
+private:
+	GSuint effect_handle_{};
 };
 
 
