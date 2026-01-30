@@ -10,6 +10,11 @@ public:
 	void update(float delta_time)override;
 	void draw()const override;
 	void react(Actor& other);
+private:
+	void to_target(GSvector3 target, float delta_time);
+private: 
+	GSvector3 target_point_{};
+	GSvector3 target_points_[2];
 
 };
 

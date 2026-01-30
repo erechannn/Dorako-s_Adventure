@@ -127,10 +127,10 @@ void GamePlayScene::start() {
         world_.add_actor(new Kuribo{ &world_,{-10.0f,-58.2f,0.0f} });
 
         world_.add_actor(new Coin{ &world_,{-1.5f,5.58f,10.0f} });
-        //world_.add_actor(new Coin{ &world_,{31.0f,-25.08f,1.43f} });
-        //world_.add_actor(new Coin{ &world_,{-2.17f,-15.0f,-26.0f} });
-        //world_.add_actor(new Coin{ &world_,{0.0f,-61.0f,1.0f} });
-        //world_.add_actor(new Coin{ &world_,{-2.0f,-10.2f,22.5f} });
+        world_.add_actor(new Coin{ &world_,{31.0f,-25.08f,1.43f} });
+        world_.add_actor(new Coin{ &world_,{-2.17f,-15.0f,-26.0f} });
+        world_.add_actor(new Coin{ &world_,{0.0f,-61.0f,1.0f} });
+        world_.add_actor(new Coin{ &world_,{-2.0f,-10.2f,22.5f} });
     }
     if (StageManager::get_instance().get_current_stage_id() == 2) {
         world_.add_actor(new MiniDragon{ &world_,{0.0f,0.0f,0.0f} });

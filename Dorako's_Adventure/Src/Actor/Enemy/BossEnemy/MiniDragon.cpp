@@ -73,6 +73,7 @@ void MiniDragon::react(Actor& other) {
 void MiniDragon::idle(float delta_time) {
 	idle_timer_ += delta_time;
 	if (idle_timer_ >= IdleTime) {
+		idle_timer_ = 0.0f;
 		change_state(EnemyState::Chase);
 	}
 }
@@ -87,7 +88,6 @@ void MiniDragon::chase(float delta_time) {
 }
 void MiniDragon::attack(float delta_time) {
 	transform_.position(base_position_);
-	mesh_->change_motion(EnemiesMotion::Idle, true);
 	attack_behavior_tree_->tick();
 }
 void MiniDragon::damage(float delta_time) {
@@ -95,18 +95,6 @@ void MiniDragon::damage(float delta_time) {
 }
 void MiniDragon::dead(float delta_time) {
 
-}
-void MiniDragon::first_fire_attack(float delta_time) {
-	look_to_player(player_->transform().position());
-	mesh_->change_motion(EnemiesMotion::Attack, false);
-	if (mesh_->is_end_motion()) {
-		fire_attack_count_++;
-		if (fire_attack_count_ >= 3) {
-			change_state(EnemyState::Attack);
-			is_fire_attack_finished_ = true;
-			fire_attack_count_ = 0;
-		}
-	}
 }
 void MiniDragon::perform_fire_attack() {
 	transform_.position(saved_position_);
@@ -134,6 +122,7 @@ void MiniDragon::perform_melee_attack() {
 		});
 }
 void MiniDragon::build_attack_behavior_tree() {
+
 	// ルートノード（ORロジック）
 	auto root = std::make_unique<SelectorNode>();
 	// ============================================
@@ -149,19 +138,28 @@ void MiniDragon::build_attack_behavior_tree() {
 
 	//アクション：初回ブレスまでの待機
 	initial_breath_sequence->add_child(std::make_unique<ActionNode>([this]() {
-		mesh_->change_motion(EnemiesMotion::Idle, true);
-		
-
+		change_motion(EnemiesMotion::Idle, true);
+		idle_timer_ += delta_time_;
+		if (idle_timer_ >= 120.0f) {
+			motion_flag_ = true;
+			idle_timer_ = 0.0f;
+			return Status::Success;
+		}
 		return Status::Running;
-	}));
+		}));
 
 	// アクション：ブレス攻撃モーション
 	initial_breath_sequence->add_child(std::make_unique<ActionNode>(
 		[this]() {
-			mesh_->change_motion(EnemiesMotion::Attack, false);
+			change_motion(EnemiesMotion::Attack, false);
 			if (mesh_->is_end_motion()) {
-				has_fired_fire_attack_ = true;
-				return Status::Success;
+				motion_flag_ = true;
+				if (fire_attack_count_ >= 3) {
+					has_fired_fire_attack_ = true;
+					return Status::Success;
+					fire_attack_count_ = 0;
+				}
+				fire_attack_count_++;
 			}
 			return Status::Running;
 		}));
@@ -288,4 +286,10 @@ void MiniDragon::look_to_player(GSvector3 target) {
 	//仮の上方向ベクトル
 	GSvector3 up = to_planet;
 	transform_.lookAt(target, up);
+}
+void MiniDragon::change_motion(GSuint motion, bool loop) {
+	if (motion_flag_) {
+		mesh_->change_motion(motion, loop);
+		motion_flag_ = false;
+	}
 }
