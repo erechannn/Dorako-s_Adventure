@@ -113,6 +113,7 @@ void GamePlayScene::start() {
     gsLoadSE(SE_Select, "Assets/Sound/SE/SelectSE.wav", 1, GS_TRUE);
     gsLoadSE(SE_WalkSound,"Assets/Sound/SE/WalkSound.wav",10,GS_TRUE);
     gsLoadSE(SE_Jump,"Assets/Sound/SE/JumpSE.wav",1,GS_TRUE);
+    gsLoadSE(SE_DamageEnemy, "Assets/Sound/SE/DamageEnemySound.wav", 1, GS_TRUE);
     //プレイヤーを追加
     world_.add_actor(new Player{ &world_,{0.0f,0.0f,0.0f} });
     //カメラ用の追加
@@ -291,4 +292,5 @@ void GamePlayScene::end() {
     gsDeleteSE(SE_Select);
     gsDeleteSE(SE_WalkSound);
     gsDeleteSE(SE_Jump);
+    gsDeleteSE(SE_DamageEnemy);
 }

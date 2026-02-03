@@ -83,6 +83,7 @@ void Kuribo::react(Actor& other) {
 	if (other.tag()=="PlayerAttackTag" || is_above_player(other)  && other.tag() == "PlayerTag") {
 		is_dead_ = true;
 		base_position_ = transform_.position();
+		gsPlaySE(SE_DamageEnemy);
 		change_state(EnemyState::Dead);
 	}
 	else if (other.tag() == "PlayerTag") {

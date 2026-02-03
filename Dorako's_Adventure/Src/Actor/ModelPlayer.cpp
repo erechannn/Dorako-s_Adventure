@@ -38,11 +38,6 @@ void ModelPlayer::update(float delta_time) {
 	//目的地に移動
 	to_target(target_point_,delta_time);
 
-	//デバック表示
-	ImGui::Begin("Player");
-	ImGui::Text("x:%f y:%f z:%f", transform_.position().x, transform_.position().y, transform_.position().z);
-	ImGui::End();
-
 }
 void ModelPlayer::draw()const {
 	mesh_->draw();

@@ -72,6 +72,7 @@ void MiniDragon::react(Actor& other) {
 	if (other.tag() == "PlayerAttackTag" || is_above_player(other) && other.tag() == "PlayerTag") {
 		base_position_ = transform_.position();
 		health_ -= 1;
+		gsPlaySE(SE_DamageEnemy);
 		if (health_ <= 0) {
 			change_state(EnemyState::Dead);
 		}
