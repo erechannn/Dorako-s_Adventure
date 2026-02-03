@@ -126,7 +126,7 @@ void Player::draw()const {
 }
 
 void Player::react(Actor& other) {
-	if (other.tag() == "EnemyTag") {
+	if (other.tag() == "EnemyTag"||other.tag()=="BossEnemyTag") {
 		if (is_above_enemy(other)) {
 			state_.change_state(PlayerState::StateJumpStart);
 		}

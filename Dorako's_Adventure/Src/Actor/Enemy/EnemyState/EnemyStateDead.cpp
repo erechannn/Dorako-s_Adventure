@@ -6,6 +6,7 @@ EnemyStateDead::EnemyStateDead(Enemy* owner) :
 
 }
 void EnemyStateDead::update(float delta_time) {
+	owner_->dead(delta_time);
 	owner_->mesh_->change_motion(EnemiesMotion::Dead, false);
 	if (owner_->mesh_->is_end_motion()) {
 		owner_->die();

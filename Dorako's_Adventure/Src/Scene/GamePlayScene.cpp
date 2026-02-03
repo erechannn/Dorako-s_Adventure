@@ -133,7 +133,7 @@ void GamePlayScene::start() {
         world_.add_actor(new Coin{ &world_,{-2.0f,-10.2f,22.5f} });
     }
     if (StageManager::get_instance().get_current_stage_id() == 2) {
-        world_.add_actor(new MiniDragon{ &world_,{0.0f,0.0f,0.0f} });
+        world_.add_actor(new MiniDragon{ &world_,{0.0f,40.0f,0.0f} });
     }
     if (StageManager::get_instance().get_current_stage_id() == 3) {
         world_.add_actor(new Coin{ &world_,{1.3f,-1.59f,7.37f} });
@@ -206,8 +206,7 @@ void GamePlayScene::game_play_update(float delta_time) {
 
     }
     //ƒQ[ƒ€ƒNƒŠƒA‚ÌðŒ
-    if (world_.get_score() >= StageManager::get_instance().get_clear_score() &&
-        StageManager::get_instance().get_current_stage_type() == StageManager::StageType::NORMAL) {
+    if (world_.get_score() >= StageManager::get_instance().get_clear_score()) {
 
         next_scene_ = "GameClearScene";
         is_start_ = true;

@@ -13,6 +13,7 @@ public:
 	virtual void idle(float delta_time)override;
 	virtual void search(float delta_time)override;
 	virtual void chase(float delta_time)override;
+	virtual void dead(float delta_time)override;
 private:
 	bool is_player_in_sight();
 	GSvector3 player_position();

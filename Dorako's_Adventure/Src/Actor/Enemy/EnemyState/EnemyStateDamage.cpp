@@ -7,7 +7,7 @@ EnemyStateDamage::EnemyStateDamage(Enemy* owner) :
 }
 void EnemyStateDamage::update(float delta_time) {
 	owner_->damage(delta_time);
-	owner_->mesh_->change_motion(EnemiesMotion::Damage);
+	owner_->mesh_->change_motion(EnemiesMotion::Damage,false);
 	if (owner_->mesh_->is_end_motion()) {
 		owner_->change_state(EnemyState::Idle);
 	}

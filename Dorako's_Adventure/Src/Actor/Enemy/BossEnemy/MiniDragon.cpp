@@ -11,13 +11,14 @@
 #include "../EnemiesMotion.h"
 #include "../../../Delay/DelayManager.h"
 #include "../../Player/PlayerState/PlayerState.h"
+#include "../../Coin/Coin.h"
 #include "../../../Assets.h"
 
 #include <iostream>
 
 const float IdleTime = 60.0f;
 // 距離の閾値
-const float CloseDistance = 5.0f;   // 近い判定
+const float CloseDistance = 3.0f;   // 近い判定
 const float FarDistance = 15.0f;     // 遠い判定
 const float SafeDistance = 20.0f;    // 安全距離（空中時の逃げる目標）
 //最大の移動スピード
@@ -28,7 +29,7 @@ MiniDragon::MiniDragon(IWorld* world, GSvector3 position) :
 {
 	world_ = world;
 	name_ = "MiniDragon";
-	tag_ = "BossEnemy";
+	tag_ = "BossEnemyTag";
 	collider_ = BoundingSphere{ 1.0f,{0.0f,1.0f,0.0f} };
 	transform_.position(position);
 	mesh_->transform(transform_.localToWorldMatrix());
@@ -68,7 +69,19 @@ void MiniDragon::draw()const {
 	mesh_->draw();
 }
 void MiniDragon::react(Actor& other) {
-	
+	if (other.tag() == "PlayerAttackTag" || is_above_player(other) && other.tag() == "PlayerTag") {
+		base_position_ = transform_.position();
+		health_ -= 1;
+		if (health_ <= 0) {
+			change_state(EnemyState::Dead);
+		}
+		else change_state(EnemyState::Damage);
+	}
+	else if (other.tag() == "PlayerTag") {
+		base_position_ = transform_.position();
+		change_state(EnemyState::Idle);
+	}
+
 }
 void MiniDragon::idle(float delta_time) {
 	idle_timer_ += delta_time;
@@ -94,7 +107,8 @@ void MiniDragon::damage(float delta_time) {
 
 }
 void MiniDragon::dead(float delta_time) {
-
+	GSvector3 coin_position = transform_.position();
+	world_->add_actor(new Coin(world_, coin_position));
 }
 void MiniDragon::perform_fire_attack() {
 	transform_.position(saved_position_);
@@ -106,20 +120,14 @@ void MiniDragon::perform_fire_attack() {
 	}
 }
 void MiniDragon::perform_charge_attack() {
-	Delay::after(5.0f, [this]() {
-		std::cout << "突進攻撃" << std::endl;
-		});
+	std::cout << "突進攻撃" << std::endl;
 }
 void MiniDragon::perform_escape_action() {
-	Delay::after(5.0f, [this]() {
-		std::cout << "逃げる" << std::endl;
-		});
+	std::cout << "逃げる" << std::endl;
 
 }
 void MiniDragon::perform_melee_attack() {
-	Delay::after(5.0f, [this]() {
-		std::cout << "近接攻撃" << std::endl;
-		});
+	std::cout << "近接攻撃" << std::endl;
 }
 void MiniDragon::build_attack_behavior_tree() {
 
@@ -140,7 +148,7 @@ void MiniDragon::build_attack_behavior_tree() {
 	initial_breath_sequence->add_child(std::make_unique<ActionNode>([this]() {
 		change_motion(EnemiesMotion::Idle, true);
 		idle_timer_ += delta_time_;
-		if (idle_timer_ >= 120.0f) {
+		if (idle_timer_ >= 60.0f) {
 			motion_flag_ = true;
 			idle_timer_ = 0.0f;
 			return Status::Success;
@@ -154,12 +162,9 @@ void MiniDragon::build_attack_behavior_tree() {
 			change_motion(EnemiesMotion::Attack, false);
 			if (mesh_->is_end_motion()) {
 				motion_flag_ = true;
-				if (fire_attack_count_ >= 3) {
-					has_fired_fire_attack_ = true;
-					return Status::Success;
-					fire_attack_count_ = 0;
-				}
-				fire_attack_count_++;
+				has_fired_fire_attack_ = true;
+				mesh_->change_motion(EnemiesMotion::Idle, true);
+				return Status::Success;
 			}
 			return Status::Running;
 		}));
@@ -206,8 +211,13 @@ void MiniDragon::build_attack_behavior_tree() {
 	));
 	safe_distance_breath_seq->add_child(std::make_unique<ActionNode>(
 		[this]() {
-			perform_fire_attack();
-			return Status::Success;
+			change_motion(EnemiesMotion::Attack, false);
+			if (mesh_->is_end_motion()) {
+				motion_flag_ = true;
+				has_fired_fire_attack_ = true;
+				return Status::Success;
+			}
+			return Status::Running;
 		}
 	));
 	auto keep_distance_action = std::make_unique<ActionNode>(

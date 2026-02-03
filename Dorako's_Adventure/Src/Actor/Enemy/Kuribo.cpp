@@ -132,6 +132,9 @@ void Kuribo::chase(float delta_time) {
 		change_state(EnemyState::Idle);
 	}
 }
+void Kuribo::dead(float delta_time) {
+
+}
 //“G‚Ì‹ŠE‚ÉƒvƒŒƒCƒ„[‚ª“ü‚Á‚½‚©
 bool Kuribo::is_player_in_sight() {
 	if (player_ == nullptr)return false;
