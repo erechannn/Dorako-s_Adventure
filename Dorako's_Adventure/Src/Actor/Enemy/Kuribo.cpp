@@ -1,7 +1,6 @@
 #include "Kuribo.h"
 #include "../../World/IWorld.h"
 #include "../../Assets.h"
-#include "../../Collider/BoundingSphere.h"
 #include "EnemyState/EnemyStateSearch.h"
 #include "EnemyState/EnemyStateChase.h"
 #include "EnemyState/EnemyStateIdle.h"

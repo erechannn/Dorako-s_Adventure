@@ -110,6 +110,14 @@ void Character::collide_ground() {
 	else  is_ground_ = false;
 
 }
+void Character::flying_ground() {
+	GSvector3 planet_position = StageManager::get_instance().get_current_stage_planet_position();
+	GSvector3 up = transform_.position() - planet_position;
+	GSvector3 left = GSvector3::cross(up, transform_.forward());
+	GSvector3 forward = GSvector3::cross(left, up);
+	transform_.rotation(GSquaternion::lookRotation(forward, up));
+}
+
 //’…’n‚µ‚Ä‚¢‚é‚©•Ô‚·
 bool Character::is_ground() {
 	return is_ground_;

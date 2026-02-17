@@ -7,19 +7,21 @@
 #include "../EnemyState/EnemyStateDamage.h"
 #include "../EnemyState/EnemyStateDead.h"
 #include "BossAttackState.h"
-#include "AttackStateFirstFireAttack.h"
 #include "../EnemiesMotion.h"
 #include "../../../Delay/DelayManager.h"
+#include "../../BulletClass.h"
+#include "../../AttackCollider.h"
 #include "../../Player/PlayerState/PlayerState.h"
 #include "../../Coin/Coin.h"
 #include "../../../Assets.h"
 
 #include <iostream>
+#include <imgui/imgui.h>
 
 const float IdleTime = 60.0f;
 // 距離の閾値
 const float CloseDistance = 3.0f;   // 近い判定
-const float FarDistance = 15.0f;     // 遠い判定
+const float FarDistance = 13.0f;     // 遠い判定
 const float SafeDistance = 20.0f;    // 安全距離（空中時の逃げる目標）
 //最大の移動スピード
 const float MaxSpeed = 0.5f;
@@ -42,12 +44,13 @@ MiniDragon::MiniDragon(IWorld* world, GSvector3 position) :
 	state_.add_state(EnemyState::Attack, new EnemyStateAttack(this));
 	state_.add_state(EnemyState::Damage, new EnemyStateDamage(this));
 	state_.add_state(EnemyState::Dead, new EnemyStateDead(this));
-	state_.add_state(EnemyState::FirstFireAttack, new AttackStateFirstFireAttack(this));
 	state_.change_state(EnemyState::Idle);
 	build_attack_behavior_tree();
+	mesh_->add_event(EnemiesMotion::Attack, 15, [this] {perform_fire_attack(); });
+	mesh_->add_event(EnemiesMotion::MeleeAttack, 35, [this] {perform_melee_attack(); });
 }
 void MiniDragon::update(float delta_time) {
-	delta_time_ = delta_time;
+	set_delta_time(delta_time);
 	//キャラクターの基礎アップデート
 	state_.update(delta_time);
 	collide_field();
@@ -59,11 +62,17 @@ void MiniDragon::update(float delta_time) {
 	mesh_->transform(transform_.localToWorldMatrix());
 	//アクターのプレイヤーを代入
 	player_ = world_->find_actor("Player");
-	//プレイヤーとの距離
-	player_distance_ = GSvector3::distance(transform_.position(), player_->transform().position());
-	Player* player = (Player*)player_;
-	now_player_state_=player->get_player_now_state();
+	
+	if (player_ != nullptr) {
+		//プレイヤーとの距離
+		player_distance_ = GSvector3::distance(transform_.position(), player_->transform().position());
+		Player* player = (Player*)player_;
+		now_player_state_ = player->get_player_now_state();
+	}
 
+	ImGui::Begin("MiniDragon");
+	ImGui::Text("player_distance;:%f", player_distance_);
+	ImGui::End();
 }
 void MiniDragon::draw()const {
 	mesh_->draw();
@@ -96,12 +105,13 @@ void MiniDragon::chase(float delta_time) {
 	to_target(delta_time, target_point_);
 	if (player_distance_ <= CloseDistance) {
 		base_position_ = transform_.position();
-		change_state(EnemyState::Attack);
 		saved_position_ = transform_.position();
+		motion_flag_ = true;
+		exit_attack_ = true;
+		change_state(EnemyState::Attack);
 	}
 }
 void MiniDragon::attack(float delta_time) {
-	transform_.position(base_position_);
 	attack_behavior_tree_->tick();
 }
 void MiniDragon::damage(float delta_time) {
@@ -112,13 +122,11 @@ void MiniDragon::dead(float delta_time) {
 	world_->add_actor(new Coin(world_, coin_position));
 }
 void MiniDragon::perform_fire_attack() {
-	transform_.position(saved_position_);
-
-	GSvector3 to_player = player_->transform().position() - transform_.position();
-	float dot = GSvector3::dot(to_player, transform_.forward());
-	if (dot > 1.0) {
-		look_to_player(player_->transform().position());
-	}
+	target_point_ = player_->transform().position();
+	look_to_player(target_point_);
+	GSvector3 position = transform_.position() + (transform_.forward()*3.0f);
+	position.y = position.y + 1.0f;
+	world_->add_actor(new BulletClass{ world_,position,transform_.forward(),Effect_FireBoll,"EnemyAttackTag","EnemyFireTag","BossEnemyTag" });
 }
 void MiniDragon::perform_charge_attack() {
 	std::cout << "突進攻撃" << std::endl;
@@ -128,7 +136,9 @@ void MiniDragon::perform_escape_action() {
 
 }
 void MiniDragon::perform_melee_attack() {
-	std::cout << "近接攻撃" << std::endl;
+	GSvector3 attack_position = transform_.position();
+	float attack_size = 2.0f;
+	world_->add_actor(new AttackCollider{ world_,BoundingSphere{attack_size,attack_position},"EnemyAttackTag","MeleeAttack","BossEnemyTag",5.0f,0.0f });
 }
 void MiniDragon::build_attack_behavior_tree() {
 
@@ -234,8 +244,14 @@ void MiniDragon::build_attack_behavior_tree() {
 	airborne_sequence->add_child(std::move(airborne_action_selector));
 	auto grounded_action = std::make_unique<ActionNode>(
 		[this]() {
-			perform_melee_attack();
-			return Status::Success;
+			change_motion(EnemiesMotion::MeleeAttack, false);
+			if (mesh_->is_end_motion()) {
+				motion_flag_ = true;
+				has_fired_fire_attack_ = true;
+				mesh_->change_motion(EnemiesMotion::Idle, true);
+				return Status::Success;
+			}
+			return Status::Running;
 		}
 	);
 	player_state_selector->add_child(std::move(airborne_sequence));
@@ -255,8 +271,14 @@ void MiniDragon::build_attack_behavior_tree() {
 
 	mid_range_sequence->add_child(std::make_unique<ActionNode>(
 		[this]() {
-			perform_fire_attack();
-			return Status::Success;
+			change_motion(EnemiesMotion::Attack, false);
+			if (mesh_->is_end_motion()) {
+				motion_flag_ = true;
+				has_fired_fire_attack_ = true;
+				mesh_->change_motion(EnemiesMotion::Idle, true);
+				return Status::Success;
+			}
+			return Status::Running;
 		}
 	));
 	
@@ -269,8 +291,14 @@ void MiniDragon::build_attack_behavior_tree() {
 
 	far_range_sequence->add_child(std::make_unique<ActionNode>(
 		[this]() {
-			perform_charge_attack();
-			return Status::Success;
+			mesh_->change_motion(EnemiesMotion::Move, true);
+			target_point_ = player_->transform().position();
+			to_target(delta_time_, target_point_);
+			if (exit_attack_) {
+				exit_attack_ = false;
+				return Status::Success;
+			}
+			return Status::Running;
 		}
 	));
 
@@ -303,4 +331,7 @@ void MiniDragon::change_motion(GSuint motion, bool loop) {
 		mesh_->change_motion(motion, loop);
 		motion_flag_ = false;
 	}
+}
+void MiniDragon::set_delta_time(float delta_time) {
+	delta_time_ = delta_time;
 }

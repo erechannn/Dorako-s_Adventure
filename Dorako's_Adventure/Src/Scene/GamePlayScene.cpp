@@ -11,6 +11,7 @@
 #include "../Actor/Enemy/BossEnemy/MiniDragon.h"
 #include "../Actor/WoodBox/WoodBox.h"
 #include "../Actor/Coin/Coin.h"
+#include "../Actor/Enemy/BeeEnemy.h"
 #include "../UI/UIActor/UIActors/GamePlayUI.h"
 #include "../Stage/StageManager.h"
 #include <GSstandard_shader.h>
@@ -76,6 +77,7 @@ void GamePlayScene::start() {
     gsLoadMesh(Mesh_WoodBox, "Assets/Mesh/WoodBox/WoodBox.mshb");
     gsLoadMesh(Mesh_Coin, "Assets/Mesh/Coin/Coin.mshb");
     gsLoadSkinMesh(Mesh_MiniDragon, "Assets/Mesh/Enemy/MiniDragon/MiniDragon.mshb");
+    gsLoadSkinMesh(Mesh_Bee, "Assets/Mesh/Enemy/Bee/Bee.mshb");
 
     //エフェクトのロード
     gsLoadEffect(Effect_FireBoll, "Assets/Effect/FireBall_Orange.efkefc");
@@ -142,10 +144,7 @@ void GamePlayScene::start() {
         world_.add_actor(new Coin{ &world_,{-20.0f,-20.0f,0.0f} });
         world_.add_actor(new Coin{ &world_,{0.0f,-20.0f,20.0f} });
         world_.add_actor(new Coin{ &world_,{0.0f,-20.0f,-20.0f} });
-        world_.add_actor(new Kuribo{ &world_,{1.3f,-1.59f,7.37f} });
-        world_.add_actor(new Kuribo{ &world_,{20.0f,-20.0f,0.0f} });
-        world_.add_actor(new Kuribo{ &world_,{-20.0f,-20.0f,0.0f} });
-        world_.add_actor(new Kuribo{ &world_,{0.0f,-20.0f,19.0f} });
+        world_.add_actor(new BeeEnemy{ &world_,{0.0f,0.0f,0.0f} });
         world_.add_actor(new Kuribo{ &world_,{0.0f,-20.0f,-20.0f} });
     }
     //ステージ情報を入手
@@ -261,7 +260,8 @@ void GamePlayScene::end() {
     gsDeleteSkinMesh(Mesh_Player);
     gsDeleteSkinMesh(Mesh_Kuribo);
     gsDeleteMesh(Mesh_Coin);
-    gsDeleteMesh(Mesh_MiniDragon);
+    gsDeleteSkinMesh(Mesh_MiniDragon);
+    gsDeleteSkinMesh(Mesh_Bee);
 
     gsDeleteOctree(Octree_BossStage);
     gsDeleteOctree(Octree_BossStageCollider);

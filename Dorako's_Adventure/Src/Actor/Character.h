@@ -32,6 +32,8 @@ protected:
 	void gravity_update(float delta_time);
 	//地面との当たり判定処理
 	void collide_ground();
+	//空中にいるときの地面との当たり判定
+	void flying_ground();
 	//重力量
 	float gravity_{ -0.001 };
 	//重力による移動量

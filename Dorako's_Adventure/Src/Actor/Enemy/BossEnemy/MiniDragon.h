@@ -32,6 +32,8 @@ private:
 	void look_to_player( GSvector3 target);
 
 	void change_motion(GSuint motion, bool loop);
+
+	void set_delta_time(float delta_time);
 //プライベートな変数
 private:
 	std::unique_ptr<BehaviorNode>attack_behavior_tree_;
@@ -46,6 +48,7 @@ private:
 	int fire_attack_count_{ 0 };
 	float delta_time_{};
 	bool motion_flag_{ true };
+	bool exit_attack_{ false };
 
 };
 

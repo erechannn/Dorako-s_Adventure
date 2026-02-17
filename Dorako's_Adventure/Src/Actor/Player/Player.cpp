@@ -126,7 +126,7 @@ void Player::draw()const {
 }
 
 void Player::react(Actor& other) {
-	if (other.tag() == "EnemyTag"||other.tag()=="BossEnemyTag") {
+	if (other.tag() == "EnemyTag"||other.tag()=="BossEnemyTag"||other.tag()=="EnemyAttackTag") {
 		if (is_above_enemy(other)) {
 			state_.change_state(PlayerState::StateJumpStart);
 		}
@@ -135,6 +135,8 @@ void Player::react(Actor& other) {
 			GSvector3 now_pos{ transform().position() };
 			GSvector3 knock_pos{ now_pos };
 			knock_pos -= transform().forward() * 2.0f;
+			//重力を適用させる
+			is_zero_gravity_ = false;
 			// 補正後の座標に変更する
 			transform_.position(knock_pos);
 			if (!debug_invincible_) {
@@ -226,11 +228,7 @@ void Player::move(float delta_time) {
 	if (!is_ground_) {
 		//飛んでいる最中にもプレイヤーを星の面に添わせる
 		motion = PlayerMotion::Flying;
-		GSvector3 planet_position = StageManager::get_instance().get_current_stage_planet_position();
-		GSvector3 up = transform_.position() - planet_position;
-		GSvector3 left = GSvector3::cross(up, transform_.forward());
-		GSvector3 forward = GSvector3::cross(left, up);
-		transform_.rotation(GSquaternion::lookRotation(forward, up));
+		flying_ground();
 		//飛んでいる時間を計測
 		flying_timer_ += delta_time;
 	}

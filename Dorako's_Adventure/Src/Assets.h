@@ -10,6 +10,7 @@ enum {
 	Mesh_MiniDragon,
 	Mesh_Coin,
 	Mesh_Door,
+	Mesh_Bee,
 
 };
 //テクスチャ

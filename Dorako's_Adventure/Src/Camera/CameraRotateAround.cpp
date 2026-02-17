@@ -8,8 +8,6 @@
 #include <imgui/imgui.h>
 
 
-const GSvector3 PlayerOffset{ 0.0f,0.0f,-7.0f };
-
 const GSvector3 ReferencePointOffset{ 0.0f,2.0f,0.0f };
 
 CameraRotateAround::CameraRotateAround(IWorld* world,
@@ -60,12 +58,12 @@ void CameraRotateAround::update(float delta_time) {
 		if (result.y < 0.0f) pitch_ -= 1.0f * result_normalize * delta_time;
 	}
 	//上下の上限を持たせる
-	pitch_ = CLAMP(pitch_, -70.0f, 30.0f);
+	pitch_ = CLAMP(pitch_, -70.0f, 10.0f);
 
 	//注視点の適応
 	GSvector3 at = dummy_player->transform().transformPoint(ReferencePointOffset);
 	//ピッチとヨウの単一ベクトル
-	GSvector3 view = GSvector3::createFromPitchYaw(pitch_, yaw_)*10.0f;
+	GSvector3 view = GSvector3::createFromPitchYaw(pitch_, yaw_)*15.0f;
 	//プレイヤーの上方向ベクトルを軸に回転
 	GSvector3 position = dummy_player->transform().transformPoint(view);
 	//カメラがフィールド内にあるオブジェクトに当たったらカメラを近づける

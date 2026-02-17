@@ -9,6 +9,7 @@ public:
 		Attack,
 		Dead,
 		Damage,
+		MeleeAttack,
 	};
 };
 
