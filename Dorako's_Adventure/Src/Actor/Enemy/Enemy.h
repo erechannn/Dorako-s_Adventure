@@ -3,6 +3,7 @@
 
 #include "../Character.h"
 #include "../../State/StateMachine.h"
+#include "../Item/ItemState.h"
 
 class Enemy :public Character {
 public:
@@ -16,8 +17,9 @@ public:
 	virtual void attack(float delta_time) {}
 	virtual void damage(float delta_time) {}
 	virtual void dead(float delta_time) {}
+public:
+	void spawn_item(int item);
 
-	virtual void first_fire_attack(float delta_time){}
 protected:
 	bool is_above_player(Actor& player);
 	void to_target(float delta_time,GSvector3 target);

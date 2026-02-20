@@ -22,6 +22,8 @@ public:
 	int now_health_(){}
 	//‰Î‚Ì‹Ê‚ğŒ¸‚ç‚·
 	void consume_fire_count();
+	//‰Î‚Ì‹Ê‚ğ‘‚â‚·
+	void add_fire_count();
 	//Œ»İ‚Ì‰Î‚Ì‹Ê‚Ì‰ñ”‚ğ•Ô‚·
 	int fire_count();
 	//Œ»İ‚ÌƒvƒŒƒCƒ„[‚Ìó‘Ô‚ğ•Ô‚·

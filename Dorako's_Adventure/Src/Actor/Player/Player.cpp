@@ -1,7 +1,6 @@
 #include "Player.h"
 #include "Assets.h"
 #include "World/IWorld.h"
-#include "World/Field.h"
 #include "../../Shape/Line.h"
 #include "../BulletClass.h"
 #include "PlayerMotion.h"
@@ -90,27 +89,27 @@ void Player::update(float delta_time) {
 
 	GSvector3 planet_position = StageManager::get_instance().get_current_stage_planet_position();
 	float dis = GSvector3::distance(planet_position, transform_.position());
-	//デバック表示
-	ImGui::Begin("Player");
-	ImGui::Text("x:%f y:%f z:%f", transform_.position().x, transform_.position().y, transform_.position().z);
-	ImGui::Text("x:%f y:%f z:%f", velocity_.x, velocity_.y, velocity_.z);
-	ImGui::Text("x:%f y:%f z:%f", transform_.up().x, transform_.up().y, transform_.up().z);
-	ImGui::Text("gravity:%f", gravity_);
-	ImGui::Text("gravity:%f", foot_offset_);
-	ImGui::Text("flying_timer_:%f", flying_timer_);
-	ImGui::Text("planet_dis:%f", dis);
-	ImGui::Checkbox("地上にいるか", &is_ground_);
-	ImGui::Checkbox("debug_invincible", &debug_invincible_);
-	if (ImGui::Button("add_fire_count")) {
-		fire_count_ += 1;
-	}
-	if (ImGui::Button("add_health")) {
-		health_ += 1;
-	}
-	if (ImGui::Button("add_scone")) {
-		world_->add_score(1);
-	}
-	ImGui::End();
+	////デバック表示
+	//ImGui::Begin("Player");
+	//ImGui::Text("x:%f y:%f z:%f", transform_.position().x, transform_.position().y, transform_.position().z);
+	//ImGui::Text("x:%f y:%f z:%f", velocity_.x, velocity_.y, velocity_.z);
+	//ImGui::Text("x:%f y:%f z:%f", transform_.up().x, transform_.up().y, transform_.up().z);
+	//ImGui::Text("gravity:%f", gravity_);
+	//ImGui::Text("gravity:%f", foot_offset_);
+	//ImGui::Text("flying_timer_:%f", flying_timer_);
+	//ImGui::Text("planet_dis:%f", dis);
+	//ImGui::Checkbox("地上にいるか", &is_ground_);
+	//ImGui::Checkbox("debug_invincible", &debug_invincible_);
+	//if (ImGui::Button("add_fire_count")) {
+	//	fire_count_ += 1;
+	//}
+	//if (ImGui::Button("add_health")) {
+	//	health_ += 1;
+	//}
+	//if (ImGui::Button("add_scone")) {
+	//	world_->add_score(1);
+	//}
+	//ImGui::End();
 
 }
 void Player::draw()const {
@@ -293,6 +292,10 @@ bool Player::is_above_enemy(Actor&other) {
 //火の玉の打てる回数を減らす
 void Player::consume_fire_count() {
 	fire_count_ -= 1;
+}
+//火の玉の打てる回数を増やす
+void Player::add_fire_count() {
+	fire_count_ += 1;
 }
 //現在の火の玉の回数を返す
 int Player::fire_count() {

@@ -11,6 +11,7 @@ enum {
 	Mesh_Coin,
 	Mesh_Door,
 	Mesh_Bee,
+	Mesh_Fire
 
 };
 //テクスチャ

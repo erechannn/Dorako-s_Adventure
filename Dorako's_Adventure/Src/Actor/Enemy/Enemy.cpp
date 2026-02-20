@@ -3,6 +3,8 @@
 #include "../../World/Field.h"
 #include "../../Shape/Line.h"
 #include "../../Assets.h"
+#include "../Item/FireItem.h"
+#include "../Coin/Coin.h"
 
 #include <iostream>
 
@@ -97,4 +99,12 @@ void Enemy::up_vector_update() {
 	//Œü‚«‚ðˆÚ“®•ûŒü‚É‰ñ“]
 	transform_.rotation(GSquaternion::lookRotation(forward, up));
 
+}
+void Enemy::spawn_item(int item) {
+	if (item == Item::Fire) {
+		world_->add_actor(new FireItem (world_, transform_.position()));
+	}
+	if (item == Item::CoinItem) {
+		world_->add_actor(new Coin(world_, transform_.position()));
+	}
 }

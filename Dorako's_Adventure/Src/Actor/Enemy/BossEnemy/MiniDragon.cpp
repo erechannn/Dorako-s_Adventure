@@ -6,7 +6,6 @@
 #include "../EnemyState/EnemyStateAttack.h"
 #include "../EnemyState/EnemyStateDamage.h"
 #include "../EnemyState/EnemyStateDead.h"
-#include "BossAttackState.h"
 #include "../EnemiesMotion.h"
 #include "../../../Delay/DelayManager.h"
 #include "../../BulletClass.h"
@@ -119,7 +118,6 @@ void MiniDragon::damage(float delta_time) {
 }
 void MiniDragon::dead(float delta_time) {
 	GSvector3 coin_position = transform_.position();
-	world_->add_actor(new Coin(world_, coin_position));
 }
 void MiniDragon::perform_fire_attack() {
 	target_point_ = player_->transform().position();

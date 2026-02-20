@@ -143,6 +143,7 @@
   <ItemGroup>
     <ClCompile Include="Src\Actor\AttackCollider.cpp" />
     <ClCompile Include="Src\Actor\Enemy\BeeEnemy.cpp" />
+    <ClCompile Include="Src\Actor\Item\FireItem.cpp" />
     <ClCompile Include="Src\Actor\StageSelectDoor.cpp" />
     <ClCompile Include="Src\Scene\OptionScene.cpp" />
     <ClCompile Include="Src\Scene\PauseScreen.cpp" />
@@ -153,7 +154,6 @@
     <ClCompile Include="Src\Actor\BulletClass.cpp" />
     <ClCompile Include="Src\Actor\Character.cpp" />
     <ClCompile Include="Src\Actor\Coin\Coin.cpp" />
-    <ClCompile Include="Src\Actor\Enemy\BossEnemy\AttackStateFirstFireAttack.cpp" />
     <ClCompile Include="Src\Actor\Enemy\BossEnemy\MiniDragon.cpp" />
     <ClCompile Include="Src\Actor\Enemy\Enemy.cpp" />
     <ClCompile Include="Src\Actor\Enemy\EnemyEye.cpp" />
@@ -211,6 +211,8 @@
   <ItemGroup>
     <ClInclude Include="Src\Actor\AttackCollider.h" />
     <ClInclude Include="Src\Actor\Enemy\BeeEnemy.h" />
+    <ClInclude Include="Src\Actor\Item\FireItem.h" />
+    <ClInclude Include="Src\Actor\Item\ItemState.h" />
     <ClInclude Include="Src\Actor\StageSelectDoor.h" />
     <ClInclude Include="Src\Scene\OptionScene.h" />
     <ClInclude Include="Src\Scene\PauseScreen.h" />
@@ -221,8 +223,6 @@
     <ClInclude Include="Src\Actor\BulletClass.h" />
     <ClInclude Include="Src\Actor\Character.h" />
     <ClInclude Include="Src\Actor\Coin\Coin.h" />
-    <ClInclude Include="Src\Actor\Enemy\BossEnemy\AttackStateFirstFireAttack.h" />
-    <ClInclude Include="Src\Actor\Enemy\BossEnemy\BossAttackState.h" />
     <ClInclude Include="Src\Actor\Enemy\BossEnemy\MiniDragon.h" />
     <ClInclude Include="Src\Actor\Enemy\EnemiesMotion.h" />
     <ClInclude Include="Src\Actor\Enemy\Enemy.h" />
