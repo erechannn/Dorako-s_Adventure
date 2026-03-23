@@ -25,8 +25,12 @@ void FireItem::draw()const {
 //“–‚½‚Á‚½‚Ì”»’è
 void FireItem::react(Actor& other) {
 	if (other.tag() == "PlayerTag") {
-		
+		die();
 	}
+	else {
+		die();
+	}
+
 }
 
 //ƒvƒŒƒCƒ„[‚É“–‚½‚Á‚½‚Ì”»’è

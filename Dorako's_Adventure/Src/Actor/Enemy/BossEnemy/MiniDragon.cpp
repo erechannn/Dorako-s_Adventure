@@ -229,6 +229,7 @@ void MiniDragon::build_attack_behavior_tree() {
 			return Status::Running;
 		}
 	));
+	//逃げアクション
 	auto keep_distance_action = std::make_unique<ActionNode>(
 		[this]() {
 			perform_escape_action();
@@ -279,14 +280,14 @@ void MiniDragon::build_attack_behavior_tree() {
 			return Status::Running;
 		}
 	));
-	
+	//プレイヤーが遠ければ突進攻撃
 	auto far_range_sequence = std::make_unique<SequenceNode>();
 	far_range_sequence->add_child(std::make_unique<ConditionNode>(
 		[this]() {
 			return player_distance_ >= FarDistance;
 		}
 	));
-
+	//突進攻撃のアクション
 	far_range_sequence->add_child(std::make_unique<ActionNode>(
 		[this]() {
 			mesh_->change_motion(EnemiesMotion::Move, true);

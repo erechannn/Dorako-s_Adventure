@@ -89,7 +89,7 @@ void Player::update(float delta_time) {
 
 	GSvector3 planet_position = StageManager::get_instance().get_current_stage_planet_position();
 	float dis = GSvector3::distance(planet_position, transform_.position());
-	////デバック表示
+	//デバック表示
 	//ImGui::Begin("Player");
 	//ImGui::Text("x:%f y:%f z:%f", transform_.position().x, transform_.position().y, transform_.position().z);
 	//ImGui::Text("x:%f y:%f z:%f", velocity_.x, velocity_.y, velocity_.z);
@@ -156,7 +156,8 @@ void Player::move(float delta_time) {
 	//左スティックの取得
 	gsXBoxPadGetLeftAxis(0, &result);
 	//スティックの移動量の数値化
-	float result_normalize = std::sqrt(result.x * result.x + result.y * result.y);
+	//float result_normalize = std::sqrt(result.x * result.x + result.y * result.y);
+	float result_normalize = result.magnitude();
 
 	//動ける状態か
 	if (!is_move_)return;
@@ -257,6 +258,7 @@ void Player::flying(float delta_time) {
 		//重力の適応をなくす
 		is_zero_gravity_ = true;
 		fly_timer_ -= delta_time;
+		gsPlaySE(SE_Feather);
 	}
 	else { //押していなければ
 		// 重力を適応

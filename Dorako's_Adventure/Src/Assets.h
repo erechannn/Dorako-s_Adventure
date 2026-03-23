@@ -69,7 +69,8 @@ enum {
 	SE_Select,
 	SE_WalkSound,
 	SE_Jump,
-	SE_DamageEnemy
+	SE_DamageEnemy,
+	SE_Feather
 
 };
 // シェーダー

@@ -83,7 +83,7 @@ void CameraRotateAround::update(float delta_time) {
 		yaw_ = -180.0f;
 		pitch_ = -20.0f;
 	}
-	GSvector3 camera_position = GSvector3::lerp(transform_.position(), position, delta_time);
+	GSvector3 camera_position = GSvector3::lerp(transform_.position(), position, 0.1f);
 
 	//ƒJƒƒ‰‚ÌˆÚ“®
 	transform_.position(camera_position);

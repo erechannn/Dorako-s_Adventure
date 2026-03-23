@@ -116,6 +116,7 @@ void GamePlayScene::start() {
     gsLoadSE(SE_WalkSound,"Assets/Sound/SE/WalkSound.wav",10,GS_TRUE);
     gsLoadSE(SE_Jump,"Assets/Sound/SE/JumpSE.wav",1,GS_TRUE);
     gsLoadSE(SE_DamageEnemy, "Assets/Sound/SE/DamageEnemySound.wav", 1, GS_TRUE);
+    gsLoadSE(SE_Feather, "Assets/Sound/SE/Feather.wav", 1, GS_TRUE);
     //プレイヤーを追加
     world_.add_actor(new Player{ &world_,{0.0f,0.0f,0.0f} });
     //カメラ用の追加
@@ -128,12 +129,25 @@ void GamePlayScene::start() {
         world_.add_actor(new Kuribo{ &world_,{10.0f,-58.0f,0.0f} });
         world_.add_actor(new Kuribo{ &world_,{0.0f,-58.6f,-9.0f} });
         world_.add_actor(new Kuribo{ &world_,{-10.0f,-58.2f,0.0f} });
+        world_.add_actor(new Kuribo{ &world_,{-15.3f,-4.5f,1.5f} });
+        world_.add_actor(new Kuribo{ &world_,{-29.9f,-30.0f,-1.1f} });
+        world_.add_actor(new Kuribo{ &world_,{-26.4f,-34.3f,-13.7f} });
+        world_.add_actor(new Kuribo{ &world_,{-21.8f,-42.4f,16.6f} });
+        world_.add_actor(new Kuribo{ &world_,{-18.9f,-28.8f,23.0f} });
+        world_.add_actor(new Kuribo{ &world_,{1.3f,-38.0f,28.9f} });
+        world_.add_actor(new Kuribo{ &world_,{-7.5f,-48.3f,22.2f} });
+        world_.add_actor(new Kuribo{ &world_,{14.5f,-51.7f,-14.7f} });
+        world_.add_actor(new Kuribo{ &world_,{3.8f,-3.8f,-13.9f} });
+        world_.add_actor(new Kuribo{ &world_,{-17.1f,-14.3f,-18.8f} });
+        world_.add_actor(new Kuribo{ &world_,{-11.5f,-45.6f,-22.6f} });
 
         world_.add_actor(new Coin{ &world_,{-1.5f,5.58f,10.0f} });
         world_.add_actor(new Coin{ &world_,{31.0f,-25.08f,1.43f} });
         world_.add_actor(new Coin{ &world_,{-2.17f,-15.0f,-26.0f} });
         world_.add_actor(new Coin{ &world_,{0.0f,-61.0f,1.0f} });
         world_.add_actor(new Coin{ &world_,{-2.0f,-10.2f,22.5f} });
+        world_.add_actor(new Coin{ &world_,{-44.0f,-25.4f,10.0f} });
+        world_.add_actor(new Coin{ &world_,{-20.0f,-37.7f,30.9f} });
     }
     if (StageManager::get_instance().get_current_stage_id() == 2) {
         world_.add_actor(new MiniDragon{ &world_,{0.0f,40.0f,0.0f} });
@@ -154,7 +168,7 @@ void GamePlayScene::start() {
     world_.add_field(new Field{ stage_octree,stage_collider,Texture_Skybox });
     //カメラの追加
     world_.add_camera(new CameraRotateAround{
-                 &world_, GSvector3{ 0.0f, 1.0f, 3.0f }, GSvector3{ 0.0f, 1.0f, 0.0f } });
+                 &world_, GSvector3{ 0.0f, 1.0f, -3.0f }, GSvector3{ 0.0f, 1.0f, 0.0f } });
     //ライトの追加
     world_.add_light(new Light{ &world_ });
     //UIの追加
@@ -174,6 +188,7 @@ void GamePlayScene::start() {
     //BGMを鳴らす
     gsPlayBGM(BGM_GamePlayBGM);
 
+    coin_position_ = { -20.0f,-38.0f,31.0f };
 }
 void GamePlayScene::update(float delta_time) {
     //状態ごとに更新を変更する
@@ -189,6 +204,7 @@ void GamePlayScene::update(float delta_time) {
     //ImGui::End();
 
     //Actor* coin = world_.find_actor("Coin");
+    //if (coin == nullptr)return;
     //coin->transform().position(coin_position_);
 
 }

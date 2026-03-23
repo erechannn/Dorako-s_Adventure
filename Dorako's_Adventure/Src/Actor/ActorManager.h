@@ -1,9 +1,6 @@
 #ifndef ACTOR_MANAGER_H_
 #define ACTOR_MANAGER_H_
 
-#include <list>
-#include <vector>
-#include<string>
 
 class Actor;
 
